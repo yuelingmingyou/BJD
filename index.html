@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎀 BJD管理屋 🎀</title>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -23,25 +22,22 @@
             --pink-600: #e83e5c;
             --pink-700: #c9184a;
             --pink-800: #a4133c;
-            --red-500: #f43f5e;
             --shadow-soft: 0 4px 20px rgba(255, 77, 109, 0.15);
         }
 
         body {
-            font-family: 'Nunito', 'Microsoft YaHei', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(180deg, var(--pink-50) 0%, #fff5f7 50%, var(--pink-100) 100%);
             min-height: 100vh;
             color: var(--pink-800);
-            overflow-x: hidden;
             padding-bottom: 80px;
         }
 
         /* 头部 */
         .header {
             background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 30%, #ff4d6d 100%);
-            padding: 20px 15px 30px;
+            padding: 20px 15px 25px;
             border-radius: 0 0 30px 30px;
-            position: relative;
         }
 
         .logo {
@@ -60,14 +56,13 @@
             align-items: center;
             justify-content: center;
             font-size: 28px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .logo-text h1 {
-            font-family: 'ZCOOL KuaiLe', cursive;
             font-size: 26px;
             color: white;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            font-weight: 800;
+            letter-spacing: 1px;
         }
 
         .logo-text p {
@@ -80,23 +75,19 @@
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 10px;
             max-width: 500px;
             margin: 0 auto;
         }
 
         .nav-btn {
-            padding: 14px 20px;
+            padding: 12px 16px;
             border-radius: 20px;
             border: none;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
 
         .nav-btn-inactive {
@@ -112,7 +103,7 @@
 
         /* 主内容 */
         .main-container {
-            padding: 20px 15px;
+            padding: 15px;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -128,7 +119,7 @@
         /* 统计 */
         .stats-scroll {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             overflow-x: auto;
             padding: 5px 0 15px;
             scrollbar-width: none;
@@ -139,35 +130,33 @@
         }
 
         .stat-card {
-            min-width: 140px;
+            min-width: 130px;
             background: white;
-            border-radius: 24px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 18px;
             text-align: center;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--pink-100);
         }
 
         .stat-number {
-            font-size: 42px;
+            font-size: 36px;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--pink-500), var(--red-500));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--pink-500);
         }
 
         .stat-label {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--pink-400);
             font-weight: 600;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         /* 卡片 */
         .card {
             background: white;
-            border-radius: 24px;
-            padding: 20px;
+            border-radius: 20px;
+            padding: 18px;
             margin-bottom: 15px;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--pink-100);
@@ -183,19 +172,19 @@
         }
 
         .card-title-icon {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, var(--pink-300), var(--pink-500));
-            border-radius: 14px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             color: white;
         }
 
         .card-title h2 {
-            font-size: 18px;
+            font-size: 17px;
             color: var(--pink-700);
             font-weight: 700;
         }
@@ -206,19 +195,17 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 12px 20px;
-            border-radius: 18px;
+            padding: 10px 18px;
+            border-radius: 16px;
             border: none;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
             color: white;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
         }
 
         .btn-secondary {
@@ -228,14 +215,14 @@
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            background: #ff6b6b;
             color: white;
         }
 
         .btn-sm {
-            padding: 8px 14px;
+            padding: 6px 12px;
             font-size: 12px;
-            border-radius: 14px;
+            border-radius: 12px;
         }
 
         .btn-full {
@@ -244,7 +231,7 @@
 
         /* 输入框 */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 14px;
         }
 
         .form-label {
@@ -259,18 +246,11 @@
             width: 100%;
             padding: 12px 15px;
             border: 2px solid var(--pink-200);
-            border-radius: 16px;
+            border-radius: 14px;
             font-size: 15px;
             color: var(--pink-800);
             background: var(--pink-50);
             font-family: inherit;
-            -webkit-appearance: none;
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--pink-500);
-            background: white;
         }
 
         .form-textarea {
@@ -281,23 +261,22 @@
         /* 素体卡片 */
         .body-card {
             background: white;
-            border-radius: 24px;
+            border-radius: 20px;
             overflow: hidden;
             box-shadow: var(--shadow-soft);
             border: 2px solid var(--pink-100);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
         }
 
         .body-card-image {
-            width: 120px;
-            min-height: 120px;
+            width: 110px;
+            min-height: 110px;
             flex-shrink: 0;
             background: linear-gradient(135deg, var(--pink-100), var(--pink-200));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 50px;
             position: relative;
             overflow: hidden;
         }
@@ -308,23 +287,23 @@
             object-fit: cover;
         }
 
-        .body-card-image .no-image {
+        .no-image {
             font-size: 40px;
             opacity: 0.4;
         }
 
         .body-card-badges {
             position: absolute;
-            top: 8px;
-            left: 8px;
+            top: 6px;
+            left: 6px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
 
         .badge {
-            padding: 4px 10px;
-            border-radius: 12px;
+            padding: 3px 8px;
+            border-radius: 10px;
             font-size: 10px;
             font-weight: 700;
             color: white;
@@ -335,7 +314,7 @@
 
         .body-card-content {
             flex: 1;
-            padding: 15px;
+            padding: 14px;
             min-width: 0;
         }
 
@@ -343,7 +322,7 @@
             font-size: 16px;
             font-weight: 700;
             color: var(--pink-700);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -358,26 +337,22 @@
         .body-card-specs {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             margin-bottom: 10px;
         }
 
         .spec-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 5px 12px;
+            padding: 4px 10px;
             background: var(--pink-50);
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 11px;
         }
 
-        .spec-pill .spec-label {
+        .spec-pill span:first-child {
             color: var(--pink-400);
-            font-weight: 500;
         }
 
-        .spec-pill .spec-value {
+        .spec-pill span:last-child {
             color: var(--pink-600);
             font-weight: 700;
         }
@@ -390,7 +365,7 @@
 
         .body-card-tag {
             padding: 3px 10px;
-            border-radius: 12px;
+            border-radius: 10px;
             font-size: 10px;
             background: var(--pink-100);
             color: var(--pink-600);
@@ -399,8 +374,8 @@
         /* 详情展开 */
         .detail-section {
             display: none;
-            margin-top: 15px;
-            padding-top: 15px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 2px dashed var(--pink-200);
         }
 
@@ -411,13 +386,13 @@
         .detail-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 8px;
         }
 
         .detail-item {
             padding: 10px;
             background: var(--pink-50);
-            border-radius: 14px;
+            border-radius: 12px;
         }
 
         .detail-item .detail-label {
@@ -427,7 +402,7 @@
         }
 
         .detail-item .detail-value {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--pink-600);
         }
@@ -436,34 +411,33 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 12px;
+            gap: 6px;
+            padding: 10px;
             color: var(--pink-500);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         /* 筛选 */
         .filter-panel {
             background: linear-gradient(135deg, var(--pink-50), white);
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 15px;
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 14px;
             border: 2px solid var(--pink-200);
         }
 
         .filter-row {
             display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            overflow-x: auto;
+            gap: 8px;
+            margin-bottom: 8px;
         }
 
         .filter-row input, .filter-row select {
-            min-width: 120px;
             flex: 1;
+            min-width: 0;
         }
 
         /* 标签 */
@@ -479,7 +453,7 @@
             align-items: center;
             gap: 5px;
             padding: 6px 12px;
-            border-radius: 16px;
+            border-radius: 14px;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
@@ -515,7 +489,6 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
             display: none;
             align-items: flex-end;
             z-index: 1000;
@@ -528,7 +501,7 @@
         .modal {
             background: white;
             border-radius: 30px 30px 0 0;
-            padding: 25px 20px;
+            padding: 20px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -544,8 +517,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
             border-bottom: 2px dashed var(--pink-200);
             position: sticky;
             top: 0;
@@ -556,38 +529,32 @@
         .modal-header h3 {
             font-size: 20px;
             color: var(--pink-700);
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .modal-close {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             border: none;
             background: var(--pink-100);
             color: var(--pink-600);
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         /* 图片上传 */
         .upload-zone {
             border: 3px dashed var(--pink-300);
-            border-radius: 20px;
-            padding: 30px 20px;
+            border-radius: 18px;
+            padding: 25px 20px;
             text-align: center;
             background: var(--pink-50);
             cursor: pointer;
         }
 
         .upload-zone-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
+            font-size: 36px;
+            margin-bottom: 8px;
         }
 
         .upload-zone-text {
@@ -611,7 +578,7 @@
         .image-preview img {
             max-width: 150px;
             max-height: 150px;
-            border-radius: 16px;
+            border-radius: 14px;
             border: 3px solid var(--pink-200);
         }
 
@@ -619,17 +586,14 @@
             position: absolute;
             top: -8px;
             right: -8px;
-            width: 28px;
-            height: 28px;
-            background: var(--red-500);
+            width: 26px;
+            height: 26px;
+            background: #ff6b6b;
             color: white;
             border: none;
             border-radius: 50%;
             cursor: pointer;
             font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         /* 网格 */
@@ -651,7 +615,7 @@
         }
 
         .empty-state-icon {
-            font-size: 70px;
+            font-size: 60px;
             margin-bottom: 15px;
             opacity: 0.4;
         }
@@ -671,40 +635,37 @@
         }
 
         .fab {
-            width: 60px;
-            height: 60px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
             color: white;
             border: none;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         /* 衣橱物品 */
         .wardrobe-item {
             display: flex;
-            gap: 15px;
-            padding: 15px;
+            gap: 14px;
+            padding: 14px;
             background: var(--pink-50);
-            border-radius: 20px;
+            border-radius: 18px;
             margin-bottom: 12px;
             align-items: center;
         }
 
         .wardrobe-item-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 16px;
+            width: 70px;
+            height: 70px;
+            border-radius: 14px;
             background: linear-gradient(135deg, var(--pink-200), var(--pink-300));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 35px;
+            font-size: 30px;
             flex-shrink: 0;
         }
 
@@ -712,7 +673,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 16px;
+            border-radius: 14px;
         }
 
         .wardrobe-item-info {
@@ -724,23 +685,20 @@
             font-size: 15px;
             font-weight: 700;
             color: var(--pink-700);
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
 
         .wardrobe-item-meta {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .meta-tag {
-            padding: 4px 12px;
-            border-radius: 12px;
+            padding: 4px 10px;
+            border-radius: 10px;
             font-size: 11px;
             font-weight: 600;
-        }
-
-        .meta-tag.type {
             background: var(--pink-200);
             color: var(--pink-700);
         }
@@ -748,7 +706,7 @@
         /* 脸片/发片卡片 */
         .face-card {
             background: white;
-            border-radius: 20px;
+            border-radius: 18px;
             padding: 15px;
             text-align: center;
             box-shadow: var(--shadow-soft);
@@ -756,15 +714,15 @@
         }
 
         .face-card-image {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             margin: 0 auto 12px;
             background: linear-gradient(135deg, var(--pink-200), var(--pink-300));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 45px;
+            font-size: 40px;
             overflow: hidden;
         }
 
@@ -784,36 +742,19 @@
         .face-card-info {
             font-size: 12px;
             color: var(--pink-400);
+            margin-bottom: 3px;
+        }
+
+        .face-card-actions {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
         }
 
         /* 隐藏 */
         .hidden {
             display: none !important;
-        }
-
-        /* 滚动条 */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--pink-300);
-            border-radius: 10px;
-        }
-
-        @media (min-width: 768px) {
-            .body-card-image {
-                width: 150px;
-            }
-            .modal {
-                max-width: 600px;
-                margin: 0 auto;
-                border-radius: 30px;
-            }
-            .modal-overlay {
-                align-items: center;
-                padding: 20px;
-            }
         }
     </style>
 </head>
@@ -858,7 +799,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="stat-avg-height">0</div>
-                    <div class="stat-label">平均身高</div>
+                    <div class="stat-label">平均身高cm</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="stat-wigs">0</div>
@@ -893,11 +834,11 @@
                     <input type="number" class="form-input" id="filter-foot-min" placeholder="脚长最小" step="0.1" onchange="renderBodies()">
                     <input type="number" class="form-input" id="filter-foot-max" placeholder="脚长最大" step="0.1" onchange="renderBodies()">
                 </div>
-                <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <div class="filter-row" style="margin-bottom:0;">
                     <button class="btn btn-sm btn-secondary" onclick="clearFilters()">🗑️ 清空</button>
                     <button class="btn btn-sm btn-secondary" onclick="exportData()">💾 导出</button>
                     <button class="btn btn-sm btn-secondary" onclick="document.getElementById('import-file').click()">📁 导入</button>
-                    <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importData(event)">
+                    <input type="file" id="import-file" style="display:none;" accept=".json" onchange="importData(event)">
                 </div>
             </div>
 
@@ -905,6 +846,7 @@
             <div id="bodies-empty" class="empty-state">
                 <div class="empty-state-icon">🧸</div>
                 <div class="empty-state-text">还没有素体哦~</div>
+                <div style="font-size:13px;color:var(--pink-300);margin-top:8px;">点击右下角 + 按钮添加</div>
             </div>
         </section>
 
@@ -915,7 +857,7 @@
                     <div class="card-title-icon">👗</div>
                     <h2>我的娃衣橱</h2>
                 </div>
-                <div class="filter-row" style="margin-bottom: 15px;">
+                <div class="filter-row" style="margin-bottom:15px;">
                     <select class="form-select" id="wardrobe-filter-type" onchange="renderWardrobe()">
                         <option value="">全部类型</option>
                         <option value="上衣">上衣</option>
@@ -991,9 +933,9 @@
                     <div class="upload-zone" onclick="document.getElementById('body-image-input').click()">
                         <div class="upload-zone-icon">📷</div>
                         <div class="upload-zone-text">点击上传素体图片</div>
-                        <div class="upload-zone-hint">支持官方尺寸图、实物图</div>
+                        <div class="upload-zone-hint">官方尺寸图、实物图均可</div>
                     </div>
-                    <input type="file" id="body-image-input" style="display: none;" accept="image/*" onchange="handleImageSelect(event, 'body-image')">
+                    <input type="file" id="body-image-input" style="display:none;" accept="image/*" onchange="handleImageSelect(event, 'body-image')">
                     <div id="body-image-preview"></div>
                 </div>
 
@@ -1017,4 +959,40 @@
                             <option value="四分">四分</option>
                             <option value="三分">三分</option>
                             <option value="叔体">叔体</option>
-       
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">肤色 *</label>
+                        <select class="form-select" id="body-skin" required>
+                            <option value="">请选择</option>
+                            <option value="白肌">白肌</option>
+                            <option value="普肌">普肌</option>
+                            <option value="黄肌">黄肌</option>
+                            <option value="烧肌">烧肌</option>
+                            <option value="粉肌">粉肌</option>
+                            <option value="半白">半白</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">企划信息</label>
+                    <input type="text" class="form-input" id="body-project" placeholder="例如：萌职人、IP联名">
+                </div>
+
+                <div class="card-title" style="margin:15px 0 12px;">
+                    <div class="card-title-icon" style="width:32px;height:32px;font-size:14px;">📏</div>
+                    <h2 style="font-size:14px;">尺寸数据 (cm)</h2>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">头围</label>
+                        <input type="number" class="form-input" id="body-head-c" step="0.1" placeholder="12.5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">头高</label>
+                        <input type="number" class="form-input" id="body-head-h" step="0.1" placeholder="4.0">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">脖围</label
