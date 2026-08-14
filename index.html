@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BJD素体尺寸管理 · 萌职衣橱</title>
+    <!-- Font Awesome & Google Font (clean look) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f3f0;
+            color: #2e2a28;
+            padding: 20px;
+        }
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        /* header */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 18px 28px;
+            border-radius: 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 28px;
+        }
+        .logo {
+            font-weight: 600;
+            font-size: 1.6rem;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo i {
+            color: #b8a69a;
+            font-size: 1.8rem;
+        }
+        .logo span {
+            background: #e8e0da;
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #4d443e;
+        }
+        .actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #f0ebe7;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #2e2a28;
+            border: 1px solid transparent;
+        }
+        .btn-primary {
+            background: #d9cdc4;
+            color: #1f1b19;
+            border-color: #cbbbb0;
+        }
+        .btn-primary:hover {
+            background: #cebeb3;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #d6ccc4;
+        }
+        .btn-outline:hover {
+            background: #ede7e2;
+        }
+        .btn i {
+            font-size: 1rem;
+        }
+
+        /* 筛选栏 */
+        .filter-bar {
+            background: #fff;
+            border-radius: 24px;
+            padding: 18px 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 18px 28px;
+        }
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 16px;
+        }
+        .filter-group label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            color: #6b5f58;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .filter-group input, .filter-group select {
+            background: #f4f1ee;
+            border: 1px solid #e2dad4;
+            border-radius: 40px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-family: inherit;
+            width: auto;
+            min-width: 90px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .filter-group input:focus, .filter-group select:focus {
+            border-color: #bbaaa0;
+            background: #fff;
+        }
+        .filter-group input[type="number"] {
+            width: 100px;
+        }
+        .tag-filter {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px;
+        }
+        .tag-pill {
+            background: #ede7e2;
+            border-radius: 40px;
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .tag-pill.active {
+            background: #d3c4ba;
+            border-color: #b09c8f;
+        }
+        .tag-pill i {
+            font-size: 0.6rem;
+            opacity: 0.7;
+        }
+
+        /* 网格 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 22px;
+            margin-top: 6px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 20px 18px 18px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.02);
+            transition: 0.2s;
+            border: 1px solid #f0ebe7;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            border-color: #dccfc6;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        }
+        .card-image {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background: #f8f5f2;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 16px;
+            position: relative;
+            border: 1px solid #eee8e3;
+        }
+        .card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        .card-image .placeholder {
+            color: #bfb2a8;
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+        .card-title .sub {
+            font-weight: 400;
+            font-size: 0.7rem;
+            background: #f0ebe7;
+            padding: 2px 12px;
+            border-radius: 40px;
+            color: #4d443e;
+        }
+        .card-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px 2px;
+            margin: 14px 0 12px;
+            background: #faf8f6;
+            padding: 12px 10px;
+            border-radius: 20px;
+        }
+        .detail-item {
+            font-size: 0.7rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .detail-item .num {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1f1b19;
+        }
+        .detail-item .label {
+            color: #7e7067;
+            font-size: 0.6rem;
+            letter-spacing: 0.2px;
+        }
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 6px 0 10px;
+        }
+        .card-tag {
+            background: #ede7e2;
+            border-radius: 40px;
+            padding: 2px 12px;
+            font-size: 0.65rem;
+            font-weight: 500;
+            color: #3f3732;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .card-meta {
+            font-size: 0.7rem;
+            color: #7e7067;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            border-top: 1px solid #ede7e2;
+            padding-top: 12px;
+            margin-top: 4px;
+        }
+        .card-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            justify-content: flex-end;
+        }
+        .card-actions button {
+            background: none;
+            border: none;
+            font-size: 0.8rem;
+            color: #7e7067;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 40px;
+            transition: 0.2s;
+        }
+        .card-actions button:hover {
+            background: #ede7e2;
+            color: #1f1b19;
+        }
+
+        /* 模态框 (添加/编辑) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(30,26,24,0.3);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .modal {
+            background: #fff;
+            max-width: 600px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 40px;
+            padding: 32px 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+        .modal h2 {
+            font-weight: 500;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+        }
+        .modal .close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: #7e7067;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+            color: #4d443e;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 30px;
+            border: 1px solid #e2dad4;
+            background: #faf8f6;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .form-group textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        .modal-footer {
+            margin-top: 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+        .btn-secondary {
+            background: #ede7e2;
+        }
+        .btn-secondary:hover {
+            background: #ddd3cb;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7e7067;
+        }
+
+        /* 响应式 */
+        @media (max-width: 640px) {
+            .header { flex-direction: column; align-items: stretch; gap: 12px; }
+            .filter-bar { flex-direction: column; align-items: stretch; }
+            .filter-group { flex-wrap: wrap; }
+            .form-row { grid-template-columns: 1fr; }
+            .card-details { grid-template-columns: repeat(3, 1fr); }
+        }
+    </style>
+</head>
+<body>
+<div class="app" id="app">
+    <!-- header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-robot"></i> 萌职素体
+            <span>BJD</span>
+        </div>
+        <div class="actions">
+            <button class="btn btn-primary" @click="openAddModal"><i class="fas fa-plus"></i> 添加素体</button>
+            <button class="btn btn-outline" @click="importSampleData"><i class="fas fa-database"></i> 导入示例</button>
+        </div>
+    </div>
+
+    <!-- 筛选栏 -->
+    <div class="filter-bar">
+        <div class="filter-group">
+            <label><i class="fas fa-ruler"></i> 脚长</label>
+            <input type="number" step="0.1" v-model.number="filters.footMin" placeholder="最小">
+            <span style="color:#8f7e73;">~</span>
+            <input type="number" step="0.1" v-model.number="filters.footMax" placeholder="最大">
+        </div>
+        <div class="filter-group">
+            <label><i class="fas fa-tag"></i> 标签</label>
+            <div class="tag-filter">
+                <span class="tag-pill" v-for="tag in allTags" :key="tag" 
+                      :class="{active: filters.tags.includes(tag)}" 
+                      @click="toggleTagFilter(tag)">
+                    {{ tag }} <i class="fas fa-times" v-if="filters.tags.includes(tag)"></i>
+                </span>
+            </div>
+        </div>
+        <div class="filter-group" style="margin-left: auto;">
+            <label><i class="fas fa-search"></i></label>
+            <input v-model="filters.keyword" placeholder="搜索名称/厂家..." style="min-width:140px;">
+        </div>
+    </div>
+
+    <!-- 网格 -->
+    <div class="grid" v-if="filteredBodies.length">
+        <div class="card" v-for="body in filteredBodies" :key="body.id">
+            <div class="card-image">
+                <img v-if="body.imageData" :src="body.imageData" alt="素体图">
+                <div v-else class="placeholder">
+                    <i class="fas fa-image" style="font-size:2rem;"></i>
+                    <span>无图</span>
+                </div>
+            </div>
+            <div class="card-title">
+                {{ body.name || '未命名素体' }}
+                <span class="sub">{{ body.manufacturer || '未知厂商' }}</span>
+            </div>
+            <!-- 核心尺寸 (展示主要) -->
+            <div class="card-details">
+                <div class="detail-item"><span class="num">{{ body.head || '-' }}</span><span class="label">头围</span></div>
+                <div class="detail-item"><span class="num">{{ body.shoulder || '-' }}</span><span class="label">肩宽</span></div>
+                <div class="detail-item"><span class="num">{{ body.footLength || '-' }}</span><span class="label">脚长</span></div>
+                <div class="detail-item"><span class="num">{{ body.bust || '-' }}</span><span class="label">胸围</span></div>
+                <div class="detail-item"><span class="num">{{ body.waist || '-' }}</span><span class="label">腰围</span></div>
+                <div class="detail-item"><span class="num">{{ body.hip || '-' }}</span><span class="label">臀围</span></div>
+            </div>
+            <!-- 标签 -->
+            <div class="card-tags">
+                <span class="card-tag" v-for="tag in body.tags" :key="tag"><i class="fas fa-hashtag" style="opacity:0.5;"></i> {{ tag }}</span>
+                <span class="card-tag" v-if="body.projectInfo"><i class="fas fa-folder-open"></i> {{ body.projectInfo }}</span>
+            </div>
+            <div class="card-meta">
+                <span><i class="far fa-calendar-alt"></i> {{ body.created || '未知' }}</span>
+                <span><i class="fas fa-edit"></i> {{ body.customField || '' }}</span>
+            </div>
+            <div class="card-actions">
+                <button @click="editBody(body)"><i class="fas fa-pen"></i> 编辑</button>
+                <button @click="deleteBody(body.id)" style="color:#b0857a;"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        </div>
+    </div>
+    <div v-else class="empty-state">
+        <i class="fas fa-box-open" style="font-size:2.4rem; opacity:0.4; display:block; margin-bottom:12px;"></i>
+        <p>还没有素体数据，点击「添加素体」或「导入示例」开始</p>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal-overlay" v-if="showModal" @click.self="closeModal">
+        <div class="modal">
+            <button class="close" @click="closeModal">&times;</button>
+            <h2>{{ editingId ? '编辑素体' : '添加新素体' }}</h2>
+            <div class="form-group">
+                <label>素体名称 *</label>
+                <input v-model="form.name" placeholder="例如：萌职-标准女体">
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>厂家</label><input v-model="form.manufacturer" placeholder="厂商名"></div>
+                <div class="form-group"><label>企划/项目</label><input v-model="form.projectInfo" placeholder="企划名"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>头围 (cm)</label><input type="number" step="0.1" v-model="form.head"></div>
+                <div class="form-group"><label>肩宽 (cm)</label><input type="number" step="0.1" v-model="form.shoulder"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>胸围 (cm)</label><input type="number" step="0.1" v-model="form.bust"></div>
+                <div class="form-group"><label>腰围 (cm)</label><input type="number" step="0.1" v-model="form.waist"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>臀围 (cm)</label><input type="number" step="0.1" v-model="form.hip"></div>
+                <div class="form-group"><label>脚长 (cm)</label><input type="number" step="0.1" v-model="form.footLength"></div>
+            </div>
+            <div class="form-row">
+                <div class="form-group"><label>腿长 (cm)</label><input type="number" step="0.1" v-model="form.legLength"></div>
+                <div class="form-group"><label>臂长 (cm)</label><input type="number" step="0.1" v-model="form.armLength"></div>
+            </div>
+            <div class="form-group">
+                <label>自定义标签 (逗号分隔)</label>
+                <input v-model="form.tagsInput" placeholder="例如：可动, 女体, 白肌">
+            </div>
+            <div class="form-group">
+                <label>自定义字段 (额外信息)</label>
+                <input v-model="form.customField" placeholder="如：手型、脚型备注">
+            </div>
+            <div class="form-group">
+                <label>图片 (点击选择或拖入)</label>
+                <input type="file" accept="image/*" @change="handleImageUpload" ref="fileInput" style="padding:8px; background:#f4f1ee; border-radius:40px;">
+                <div v-if="form.imagePreview" style="margin-top:8px; display:flex; align-items:center; gap:10px;">
+                    <img :src="form.imagePreview" style="height:60px; border-radius:12px; border:1px solid #e2dad4;">
+                    <span style="font-size:0.75rem; color:#7e7067;">已选</span>
+                    <button @click="removeImage" style="background:none; border:none; color:#b0857a;">移除</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" @click="closeModal">取消</button>
+                <button class="btn btn-primary" @click="saveBody"><i class="fas fa-save"></i> 保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script>
+    (function(){
+        const app = new Vue({
+            el: '#app',
+            data: {
+                bodies: [],
+                filters: {
+                    footMin: null,
+                    footMax: null,
+                    tags: [],
+                    keyword: ''
+                },
+                showModal: false,
+                editingId: null,
+                form: {
+                    name: '',
+                    manufacturer: '',
+                    projectInfo: '',
+                    head: null,
+                    shoulder: null,
+                    bust: null,
+                    waist: null,
+                    hip: null,
+                    footLength: null,
+                    legLength: null,
+                    armLength: null,
+                    tagsInput: '',
+                    customField: '',
+                    imageData: null,
+                    imagePreview: null
+                },
+                nextId: 1000,
+            },
+            computed: {
+                allTags() {
+                    const tagSet = new Set();
+                    this.bodies.forEach(b => (b.tags || []).forEach(t => tagSet.add(t)));
+                    return Array.from(tagSet).sort();
+                },
+                filteredBodies() {
+                    return this.bodies.filter(body => {
+                        // 脚长范围
+                        const fl = body.footLength;
+                        if (this.filters.footMin !== null && fl < this.filters.footMin) return false;
+                        if (this.filters.footMax !== null && fl > this.filters.footMax) return false;
+                        // 标签筛选 (至少包含一个)
+                        if (this.filters.tags.length) {
+                            const bodyTags = body.tags || [];
+                            if (!this.filters.tags.some(t => bodyTags.includes(t))) return false;
+                        }
+                        // 关键词
+                        if (this.filters.keyword) {
+                            const kw = this.filters.keyword.toLowerCase();
+                            const name = (body.name || '').toLowerCase();
+                            const mf = (body.manufacturer || '').toLowerCase();
+                            if (!name.includes(kw) && !mf.includes(kw)) return false;
+                        }
+                        return true;
+                    });
+                }
+            },
+            methods: {
+                openAddModal() {
+                    this.editingId = null;
+                    this.resetForm();
+                    this.showModal = true;
+                },
+                editBody(body) {
+                    this.editingId = body.id;
+                    this.form = {
+                        name: body.name || '',
+                        manufacturer: body.manufacturer || '',
+                        projectInfo: body.projectInfo || '',
+                        head: body.head || null,
+                        shoulder: body.shoulder || null,
+                        bust: body.bust || null,
+                        waist: body.waist || null,
+                        hip: body.hip || null,
+                        footLength: body.footLength || null,
+                        legLength: body.legLength || null,
+                        armLength: body.armLength || null,
+                        tagsInput: (body.tags || []).join(', '),
+                        customField: body.customField || '',
+                        imageData: body.imageData || null,
+                        imagePreview: body.imageData || null
+                    };
+                    this.showModal = true;
+                },
+                closeModal() {
+                    this.showModal = false;
+                    this.resetForm();
+                },
+                resetForm() {
+                    this.form = {
+                        name: '',
+                        manufacturer: '',
+                        projectInfo: '',
+                        head: null,
+                        shoulder: null,
+                        bust: null,
+                        waist: null,
+                        hip: null,
+                        footLength: null,
+                        legLength: null,
+                        armLength: null,
+                        tagsInput: '',
+                        customField: '',
+                        imageData: null,
+                        imagePreview: null
+                    };
+                    this.editingId = null;
+                },
+                handleImageUpload(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        this.form.imageData = ev.target.result;
+                        this.form.imagePreview = ev.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                },
+                removeImage() {
+                    this.form.imageData = null;
+                    this.form.imagePreview = null;
+                    this.$refs.fileInput.value = '';
+                },
+                saveBody() {
+                    if (!this.form.name.trim()) {
+                        alert('请输入素体名称');
+                        return;
+                    }
+                    const tags = this.form.tagsInput.split(',').map(s => s.trim()).filter(Boolean);
+                    const newBody = {
+                        id: this.editingId || this.nextId++,
+                        name: this.form.name.trim(),
+                        manufacturer: this.form.manufacturer.trim(),
+                        projectInfo: this.form.projectInfo.trim(),
+                        head: this.form.head,
+                        shoulder: this.form.shoulder,
+                        bust: this.form.bust,
+                        waist: this.form.waist,
+                        hip: this.form.hip,
+                        footLength: this.form.footLength,
+                        legLength: this.form.legLength,
+                        armLength: this.form.armLength,
+                        tags: tags,
+                        customField: this.form.customField.trim(),
+                        imageData: this.form.imageData || null,
+                        created: new Date().toLocaleDateString('zh-CN')
+                    };
+
+                    if (this.editingId) {
+                        const index = this.bodies.findIndex(b => b.id === this.editingId);
+                        if (index !== -1) {
+                            this.bodies.splice(index, 1, newBody);
+                        }
+                    } else {
+                        this.bodies.push(newBody);
+                    }
+                    this.closeModal();
+                },
+                deleteBody(id) {
+                    if (confirm('确定要删除这个素体吗？')) {
+                        this.bodies = this.bodies.filter(b => b.id !== id);
+                    }
+                },
+                toggleTagFilter(tag) {
+                    const idx = this.filters.tags.indexOf(tag);
+                    if (idx > -1) this.filters.tags.splice(idx, 1);
+                    else this.filters.tags.push(tag);
+                },
+                importSampleData() {
+                    // 基于图片中萌萌体素数据
+                    const sample = {
+                        id: this.nextId++,
+                        name: '萌萌体素体 (标准)',
+                        manufacturer: 'S·OOKIVA',
+                        projectInfo: '萌职',
+                        head: 12.5,
+                        shoulder: 2.5,
+                        bust: 6.6,
+                        waist: 5.3,
+                        hip: 8.2,
+                        footLength: 1.8,
+                        legLength: 8.4,
+                        armLength: 3.8,
+                        tags: ['女体', '萌系', '可动'],
+                        customField: '脚宽0.8cm，小胸围5.4',
+                        imageData: null,
+                        created: new Date().toLocaleDateString('zh-CN')
+                    };
+                    // 再添加一个示例
+                    const sample2 = {
+                        id: this.nextId++,
+                        name: '幼体素体 (小尺寸)',
+                        manufacturer: '萌职工坊',
+                        projectInfo: 'Q版企划',
+                        head: 9.2,
+                        shoulder: 2.0,
+                        bust: 4.8,
+                        waist: 4.2,
+                        hip: 6.5,
+                        footLength: 1.4,
+                        legLength: 6.2,
+                        armLength: 3.0,
+                        tags: ['幼体', 'Q版', '可动'],
+                        customField: '手球尺寸: 1.2cm',
+                        imageData: null,
+                        created: new Date().toLocaleDateString('zh-CN')
+                    };
+                    this.bodies.push(sample, sample2);
+                }
+            },
+            mounted() {
+                // 若没有数据，自动导入示例
+                if (!this.bodies.length) {
+                    this.importSampleData();
+                }
+            }
+        });
+    })();
+</script>
+</body>
+  </html>
