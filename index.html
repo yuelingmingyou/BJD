@@ -3,746 +3,1161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BJD素体管理系统</title>
+    <title>🎀 BJD萌萌体管理屋 🎀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pink-50: #fff0f3;
+            --pink-100: #ffd1dc;
+            --pink-200: #ffb3c6;
+            --pink-300: #ff8fab;
+            --pink-400: #ff758f;
+            --pink-500: #ff4d6d;
+            --pink-600: #e83e5c;
+            --pink-700: #c9184a;
+            --pink-800: #a4133c;
+            --red-500: #f43f5e;
+            --red-600: #e11d48;
+            --cream: #fff5f7;
+            --white: #ffffff;
+            --shadow-soft: 0 4px 20px rgba(255, 77, 109, 0.15);
+            --shadow-cute: 0 8px 32px rgba(255, 77, 109, 0.2);
         }
 
         body {
-            font-family: 'Segoe UI', 'PingFang SC', Roboto, 'Helvetica Neue', sans-serif;
-            background: #f5f0eb;
-            color: #333;
-            padding: 20px;
+            font-family: 'Nunito', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, var(--pink-50) 0%, var(--cream) 50%, var(--pink-100) 100%);
+            min-height: 100vh;
+            color: var(--pink-800);
+            overflow-x: hidden;
         }
 
-        .app-container {
+        /* 可爱背景装饰 */
+        .bg-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-decoration::before,
+        .bg-decoration::after {
+            content: '♥';
+            position: absolute;
+            font-size: 200px;
+            opacity: 0.03;
+            color: var(--pink-500);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-decoration::before {
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .bg-decoration::after {
+            bottom: 10%;
+            right: 5%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        /* 头部 */
+        .header {
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, var(--pink-300) 0%, var(--pink-500) 100%);
+            padding: 20px;
+            box-shadow: var(--shadow-cute);
+            border-radius: 0 0 30px 30px;
+        }
+
+        .header-content {
             max-width: 1400px;
             margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        h1 {
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .logo-text h1 {
+            font-family: 'ZCOOL KuaiLe', cursive;
             font-size: 28px;
-            font-weight: 300;
-            letter-spacing: 2px;
-            color: #4a3f3a;
-            border-bottom: 2px solid #ddd6d0;
-            padding-bottom: 12px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            color: var(--white);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
-        h1 small {
-            font-size: 14px;
-            font-weight: 400;
-            color: #887e78;
-            margin-left: 8px;
-        }
-
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px 20px;
-            background: #ffffffdd;
-            backdrop-filter: blur(4px);
-            padding: 16px 20px;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            margin-bottom: 28px;
-            align-items: center;
-            border: 1px solid #e8e0da;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 8px 16px;
-        }
-
-        .filter-group label {
+        .logo-text p {
+            color: var(--pink-100);
             font-size: 13px;
-            font-weight: 500;
-            color: #5a4f49;
+            margin-top: 2px;
+        }
+
+        .nav-tabs {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .filter-group input, .filter-group select {
-            padding: 6px 12px;
-            border-radius: 40px;
-            border: 1px solid #d6cec7;
-            background: white;
-            font-size: 13px;
-            outline: none;
-            transition: 0.2s;
-            max-width: 120px;
-        }
-
-        .filter-group input:focus, .filter-group select:focus {
-            border-color: #b8a99e;
-            box-shadow: 0 0 0 3px rgba(150, 130, 120, 0.15);
-        }
-
-        .btn {
-            background: #e8e0da;
+        .nav-tab {
+            padding: 10px 20px;
+            border-radius: 25px;
             border: none;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #3d3430;
+            background: rgba(255,255,255,0.2);
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
 
-        .btn-primary {
-            background: #d4c5ba;
-            color: #2f2824;
-            border-color: #c2b2a5;
+        .nav-tab:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
         }
 
-        .btn-primary:hover {
-            background: #c8b6a9;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+        .nav-tab.active {
+            background: var(--white);
+            color: var(--pink-600);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #cdc2b9;
+        /* 主内容区 */
+        .main-container {
+            position: relative;
+            z-index: 5;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 25px;
         }
 
-        .btn-outline:hover {
-            background: #f0e9e3;
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
         }
 
-        .btn-success {
-            background: #b6c9b0;
-            border-color: #a2b89a;
-            color: #2b3d26;
+        .section.active {
+            display: block;
         }
 
-        .btn-success:hover {
-            background: #a8bea1;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .btn-sm {
-            padding: 4px 12px;
-            font-size: 12px;
-        }
-
-        .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
+        /* 卡片样式 */
         .card {
-            background: white;
+            background: var(--white);
             border-radius: 24px;
-            padding: 18px 18px 16px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
-            border: 1px solid #eae2db;
-            transition: 0.2s;
-            display: flex;
-            flex-direction: column;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--pink-100);
+            transition: all 0.3s ease;
         }
 
         .card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(0,0,0,0.06);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-            gap: 6px;
+            box-shadow: var(--shadow-cute);
         }
 
         .card-title {
-            font-weight: 600;
-            font-size: 18px;
-            color: #3b312c;
-        }
-
-        .card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .tag {
-            background: #ede7e1;
-            padding: 2px 12px;
-            border-radius: 40px;
-            font-size: 11px;
-            font-weight: 500;
-            color: #4b3f39;
-            letter-spacing: 0.3px;
-        }
-
-        .tag-blue {
-            background: #dee6ed;
-            color: #2a4055;
-        }
-
-        .tag-green {
-            background: #dde8da;
-            color: #2e4a2a;
-        }
-
-        .tag-pink {
-            background: #f0e0e0;
-            color: #6d4343;
-        }
-
-        .measure-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4px 16px;
-            background: #faf7f4;
-            padding: 10px 12px;
-            border-radius: 16px;
-            margin: 8px 0 12px;
-            font-size: 13px;
-        }
-
-        .measure-item {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px dashed #e5ddd6;
-            padding: 3px 0;
-        }
-
-        .measure-item span:first-child {
-            color: #6f625a;
-        }
-
-        .measure-item span:last-child {
-            font-weight: 500;
-            color: #2f2824;
-        }
-
-        .card-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 10px;
-            justify-content: flex-end;
-            border-top: 1px solid #f0e9e3;
-            padding-top: 12px;
-        }
-
-        .badge {
-            background: #f0e9e3;
-            border-radius: 40px;
-            padding: 2px 12px;
-            font-size: 11px;
-            color: #5f524a;
-        }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 400;
-            margin: 36px 0 16px;
-            color: #4d413b;
             display: flex;
             align-items: center;
             gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--pink-200);
         }
 
-        .section-title span {
-            background: #ddd6d0;
-            padding: 0 14px;
-            border-radius: 40px;
+        .card-title-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--pink-300), var(--pink-500));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+        }
+
+        .card-title h2 {
+            font-size: 20px;
+            color: var(--pink-700);
+            font-weight: 700;
+        }
+
+        .card-title h2 span {
+            display: block;
+            font-size: 12px;
+            color: var(--pink-400);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* 按钮 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--pink-50);
+            color: var(--pink-600);
+            border: 2px solid var(--pink-200);
+        }
+
+        .btn-secondary:hover {
+            background: var(--pink-100);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 12px;
+            border-radius: 15px;
+        }
+
+        /* 输入框 */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
             font-size: 13px;
-            font-weight: 400;
-            color: #3d3430;
+            font-weight: 600;
+            color: var(--pink-700);
         }
 
-        .form-inline {
+        .form-label::after {
+            content: ' *';
+            color: var(--red-500);
+        }
+
+        .form-label.optional::after {
+            content: '';
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--pink-200);
+            border-radius: 16px;
+            font-size: 14px;
+            color: var(--pink-800);
+            background: var(--pink-50);
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--pink-500);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        /* 网格布局 */
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        /* 标签 */
+        .tags-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px 18px;
-            background: #faf7f4;
-            padding: 16px 20px;
-            border-radius: 28px;
-            margin: 10px 0 18px;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            display: inline-flex;
             align-items: center;
-            border: 1px solid #e6ded7;
-        }
-
-        .form-inline input, .form-inline select {
+            gap: 6px;
             padding: 6px 14px;
-            border-radius: 40px;
-            border: 1px solid #d6cec7;
-            background: white;
-            font-size: 13px;
-            outline: none;
-            flex: 1 1 140px;
-            min-width: 100px;
-        }
-
-        .form-inline .btn {
-            flex: 0 0 auto;
-        }
-
-        .closet-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .closet-item {
-            background: white;
-            border-radius: 18px;
-            padding: 14px 16px;
-            border: 1px solid #eae2db;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-
-        .closet-item .label {
-            font-weight: 500;
-            font-size: 14px;
-            color: #3b312c;
-        }
-
-        .closet-item .meta {
+            border-radius: 20px;
             font-size: 12px;
-            color: #7f7168;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag-add {
+            background: var(--pink-50);
+            color: var(--pink-500);
+            border: 2px dashed var(--pink-300);
+        }
+
+        .tag-add:hover {
+            background: var(--pink-100);
+            border-style: solid;
+        }
+
+        .tag-item {
+            background: linear-gradient(135deg, var(--pink-300), var(--pink-500));
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 77, 109, 0.2);
+        }
+
+        .tag-item .tag-remove {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .tag-item .tag-remove:hover {
+            background: rgba(255,255,255,0.5);
+        }
+
+        /* 筛选面板 */
+        .filter-panel {
+            background: linear-gradient(135deg, var(--pink-50), var(--white));
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 2px solid var(--pink-200);
+        }
+
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--pink-600);
+            margin-bottom: 6px;
+        }
+
+        .range-inputs {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .range-inputs input {
+            flex: 1;
+            min-width: 80px;
+        }
+
+        .range-inputs span {
+            color: var(--pink-400);
+            font-size: 12px;
+        }
+
+        /* 素体卡片 */
+        .body-card {
+            background: var(--white);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--pink-100);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .body-card:hover {
+            transform: translateY(-5px) rotate(1deg);
+            box-shadow: var(--shadow-cute);
+        }
+
+        .body-card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--pink-100), var(--pink-200));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            position: relative;
+        }
+
+        .body-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .body-card-image .no-image {
+            font-size: 60px;
+            opacity: 0.5;
+        }
+
+        .body-card-badges {
+            position: absolute;
+            top: 15px;
+            left: 15px;
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 6px;
         }
 
-        .empty-state {
-            color: #9a8d84;
-            font-style: italic;
-            padding: 20px 0;
+        .badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 700;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .badge-size { background: rgba(255, 77, 109, 0.85); }
+        .badge-skin { background: rgba(255, 179, 198, 0.85); }
+        .badge-custom { background: rgba(168, 85, 247, 0.85); }
+
+        .body-card-content {
+            padding: 20px;
+        }
+
+        .body-card-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--pink-700);
+            margin-bottom: 5px;
+        }
+
+        .body-card-brand {
+            font-size: 12px;
+            color: var(--pink-400);
+            margin-bottom: 15px;
+        }
+
+        .body-card-specs {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .spec-item {
+            background: var(--pink-50);
+            padding: 10px;
+            border-radius: 12px;
             text-align: center;
         }
 
-        @media (max-width: 640px) {
-            .toolbar {
+        .spec-item .spec-label {
+            font-size: 10px;
+            color: var(--pink-400);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .spec-item .spec-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--pink-600);
+        }
+
+        .body-card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .body-card-tag {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            background: var(--pink-100);
+            color: var(--pink-600);
+        }
+
+        .body-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .body-card-actions .btn {
+            flex: 1;
+            justify-content: center;
+        }
+
+        /* 模态框 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            border: 3px solid var(--pink-200);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--pink-200);
+        }
+
+        .modal-header h3 {
+            font-size: 22px;
+            color: var(--pink-700);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: var(--pink-100);
+            color: var(--pink-600);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--pink-300);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        /* 尺寸表格 */
+        .specs-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+        }
+
+        .specs-table th,
+        .specs-table td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .specs-table th {
+            background: linear-gradient(135deg, var(--pink-300), var(--pink-400));
+            color: white;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .specs-table th:first-child {
+            border-radius: 15px 0 0 0;
+        }
+
+        .specs-table th:last-child {
+            border-radius: 0 15px 0 0;
+        }
+
+        .specs-table tr:nth-child(even) td {
+            background: var(--pink-50);
+        }
+
+        .specs-table tr:hover td {
+            background: var(--pink-100);
+        }
+
+        .specs-table td {
+            font-size: 14px;
+            color: var(--pink-700);
+            border-bottom: 1px solid var(--pink-100);
+        }
+
+        /* 图片上传区域 */
+        .upload-zone {
+            border: 3px dashed var(--pink-300);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            background: var(--pink-50);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-zone:hover {
+            border-color: var(--pink-500);
+            background: var(--pink-100);
+        }
+
+        .upload-zone.active {
+            border-color: var(--pink-500);
+            background: var(--pink-100);
+        }
+
+        .upload-zone-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .upload-zone-text {
+            color: var(--pink-600);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .upload-zone-hint {
+            color: var(--pink-400);
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        /* 衣橱物品 */
+        .wardrobe-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: var(--pink-50);
+            border-radius: 20px;
+            margin-bottom: 15px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .wardrobe-item:hover {
+            border-color: var(--pink-300);
+            transform: translateX(5px);
+        }
+
+        .wardrobe-item-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--pink-200), var(--pink-300));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            flex-shrink: 0;
+        }
+
+        .wardrobe-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+
+        .wardrobe-item-info {
+            flex: 1;
+        }
+
+        .wardrobe-item-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--pink-700);
+            margin-bottom: 5px;
+        }
+
+        .wardrobe-item-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .meta-tag {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .meta-color {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .color-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--pink-200);
+        }
+
+        /* 发片/脸片卡片 */
+        .face-plate-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-soft);
+            border: 2px solid var(--pink-100);
+            transition: all 0.3s ease;
+        }
+
+        .face-plate-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .face-plate-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--pink-200), var(--pink-300));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+        }
+
+        .face-plate-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-state-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state-text {
+            font-size: 18px;
+            color: var(--pink-400);
+            font-weight: 600;
+        }
+
+        .empty-state-hint {
+            font-size: 13px;
+            color: var(--pink-300);
+            margin-top: 10px;
+        }
+
+        /* 颜色选择器 */
+        .color-picker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .color-option {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.15);
+        }
+
+        .color-option.selected {
+            border-color: var(--pink-600);
+            box-shadow: 0 0 0 3px var(--pink-200);
+        }
+
+        .color-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* 统计数字 */
+        .stat-number {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--pink-500), var(--red-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--pink-400);
+            font-weight: 600;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .header-content {
                 flex-direction: column;
-                align-items: stretch;
+                text-align: center;
             }
+
+            .nav-tabs {
+                justify-content: center;
+            }
+
+            .filter-row {
+                flex-direction: column;
+            }
+
             .filter-group {
+                width: 100%;
+            }
+
+            .body-card-specs {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .wardrobe-item {
                 flex-direction: column;
-                align-items: stretch;
+                align-items: center;
+                text-align: center;
             }
-            .filter-group input, .filter-group select {
-                max-width: 100%;
+        }
+
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--pink-50);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--pink-300), var(--pink-500));
+            border-radius: 10px;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--pink-200);
+            border-top-color: var(--pink-500);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 提示气泡 */
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            padding: 8px 16px;
+            background: var(--pink-700);
+            color: white;
+            font-size: 12px;
+            border-radius: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* 展开/收起 */
+        .expandable {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .expandable.expanded {
+            max-height: 2000px;
+        }
+
+        .expand-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 15px;
+            color: var(--pink-500);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border-top: 2px dashed var(--pink-200);
+            margin-top: 15px;
+        }
+
+        /* 图片预览 */
+        .image-preview {
+            position: relative;
+            display: inline-block;
+        }
+
+        .image-preview img {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 16px;
+            border: 3px solid var(--pink-200);
+        }
+
+        .image-preview-remove {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 28px;
+            height: 28px;
+            background: var(--red-500);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 适配信息 */
+        .compatibility-info {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            border: 2px solid #86efac;
+            border-radius: 16px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .compatibility-info.warning {
+            background: linear-gradient(135deg, #fefce8, #fef9c3);
+            border-color: #facc15;
+        }
+
+        .compatibility-info.error {
+            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            border-color: #f87171;
+        }
+
+        /* 手球尺寸 */
+        .joint-size-display {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .joint-size-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: var(--pink-50);
+            border-radius: 16px;
+            border: 2px solid var(--pink-200);
+        }
+
+        .joint-size-item .joint-label {
+            font-size: 12px;
+            color: var(--pink-400);
+        }
+
+        .joint-size-item .joint-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--pink-600);
+        }
+
+        /* 打印样式 */
+        @media print {
+            .header, .nav-tabs, .btn, .modal-overlay {
+                display: none !important;
             }
-            .measure-grid {
-                grid-template-columns: 1fr;
+            
+            .section {
+                display: block !important;
             }
         }
     </style>
 </head>
 <body>
-<div class="app-container" id="app">
-    <h1>
-        🧸 BJD 素体·衣橱·配件
-        <small>管理 & 筛选</small>
-    </h1>
+    <div class="bg-decoration"></div>
 
-    <!-- 工具栏 -->
-    <div class="toolbar">
-        <div class="filter-group">
-            <label>📏 脚长 <input type="number" id="filterFootMin" placeholder="≥" step="0.1" value=""></label>
-            <label>— <input type="number" id="filterFootMax" placeholder="≤" step="0.1" value=""></label>
-            <label>📐 身高 <input type="number" id="filterHeightMin" placeholder="≥" step="0.1" value=""></label>
-            <label>— <input type="number" id="filterHeightMax" placeholder="≤" step="0.1" value=""></label>
+    <!-- 头部 -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🎀</div>
+                <div class="logo-text">
+                    <h1>BJD萌萌体管理屋</h1>
+                    <p>素体 · 衣橱 · 发片脸片一站式管理</p>
+                </div>
+            </div>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('bodies')">🧸 素体管理</button>
+                <button class="nav-tab" onclick="switchTab('wardrobe')">👗 娃衣橱</button>
+                <button class="nav-tab" onclick="switchTab('faceplates')">😊 脸片管理</button>
+                <button class="nav-tab" onclick="switchTab('wigs')">💇 发片管理</button>
+                <button class="nav-tab" onclick="switchTab('stats')">📊 数据统计</button>
+            </nav>
         </div>
-        <div class="filter-group">
-            <label>🏷️ 标签 <select id="filterTag"><option value="">全部</option><option value="八分">八分</option><option value="十二分">十二分</option><option value="特六">特六</option><option value="白肌">白肌</option><option value="普肌">普肌</option><option value="烧肌">烧肌</option></select></label>
-            <label>📦 厂家 <input type="text" id="filterBrand" placeholder="厂家" style="max-width:100px;"></label>
-            <button class="btn btn-primary" onclick="applyFilters()">🔍 筛选</button>
-            <button class="btn btn-outline" onclick="resetFilters()">↺ 重置</button>
-        </div>
-        <button class="btn btn-success" onclick="showAddForm()">＋ 添加素体</button>
-    </div>
+    </header>
 
-    <!-- 添加素体表单 -->
-    <div id="addForm" style="display:none;" class="form-inline">
-        <input type="text" id="newName" placeholder="名称 / 型号" value="新素体">
-        <input type="number" id="newHeight" placeholder="身高 cm" step="0.1" value="12.4">
-        <input type="number" id="newFoot" placeholder="脚长 cm" step="0.1" value="1.8">
-        <input type="number" id="newHead" placeholder="头围 cm" step="0.1" value="12.5">
-        <input type="text" id="newTags" placeholder="标签 用,分隔" value="八分,白肌">
-        <input type="text" id="newBrand" placeholder="厂家" value="S·OOKIVA">
-        <button class="btn btn-primary" onclick="addBody()">✅ 保存</button>
-        <button class="btn btn-outline" onclick="document.getElementById('addForm').style.display='none'">取消</button>
-    </div>
+    <!-- 主内容 -->
+    <main class="main-container">
 
-    <!-- 素体卡片列表 -->
-    <div id="bodyList" class="grid-cards"></div>
-
-    <!-- 衣橱 -->
-    <div class="section-title">👗 BJD 衣橱 <span>颜色 · 尺寸 · 标签</span></div>
-    <div class="form-inline">
-        <input type="text" id="closetName" placeholder="衣物名称" value="小裙子">
-        <input type="text" id="closetColor" placeholder="颜色" value="粉色">
-        <input type="text" id="closetSize" placeholder="适用尺寸 (八分/十二分等)" value="八分">
-        <input type="text" id="closetTags" placeholder="自定义标签,分隔" value="甜美,洛丽塔">
-        <button class="btn btn-primary" onclick="addCloset()">＋ 添加衣物</button>
-        <button class="btn btn-outline" onclick="document.getElementById('closetFilter').value='';renderCloset()">显示全部</button>
-    </div>
-    <div style="margin-bottom:12px;">
-        <input type="text" id="closetFilter" placeholder="🔍 搜索衣橱 (颜色/尺寸/标签)" oninput="renderCloset()" style="padding:8px 16px;border-radius:40px;border:1px solid #d6cec7;width:100%;max-width:360px;">
-    </div>
-    <div id="closetList" class="closet-grid"></div>
-
-    <!-- 配件 (发片 & 脸片) -->
-    <div class="section-title">💇 发片 & 脸片 <span>适配管理</span></div>
-    <div class="form-inline">
-        <input type="text" id="partName" placeholder="名称" value="自然卷发片">
-        <select id="partType"><option value="发片">发片</option><option value="脸片">脸片</option></select>
-        <input type="text" id="partFit" placeholder="适配脸片/眼片尺寸" value="16mm眼">
-        <input type="text" id="partTags" placeholder="标签 (如: 棕色, 直发)" value="棕色,中长">
-        <button class="btn btn-primary" onclick="addPart()">＋ 添加</button>
-    </div>
-    <div id="partList" style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;"></div>
-
-    <div style="margin-top:30px;color:#887e78;font-size:12px;border-top:1px solid #e0d8d1;padding-top:16px;text-align:center;">
-        数据保存在浏览器本地 · 可自由添加编辑
-    </div>
-</div>
-
-<script>
-    // ----- 数据层 -----
-    let bodies = [];
-    let closets = [];
-    let parts = [];
-
-    // 初始示例数据 (基于RAWDATA)
-    function initData() {
-        bodies = [
-            {
-                id: 1,
-                name: '萌萌体素体',
-                height: 12.4,
-                head: 12.5,
-                foot: 1.8,
-                tags: ['八分', '白肌'],
-                brand: 'S·OOKIVA',
-                // 扩展尺寸
-                neck: 2.7,
-                shoulder: 2.5,
-                armLength: 3.8,
-                armCirc: 2.6,
-                bustBig: 6.6,
-                bustSmall: 5.4,
-                waist: 5.3,
-                hip: 8.2,
-                thigh: 4.5,
-                calf: 3.5,
-                legLength: 8.4,
-                footWidth: 0.8,
-                headHeight: 4,
-                earDist: 3.8,
-            },
-            {
-                id: 2,
-                name: '小十二',
-                height: 11.0,
-                head: 10.2,
-                foot: 1.5,
-                tags: ['十二分', '普肌'],
-                brand: 'DollZone',
-                neck: 2.2,
-                shoulder: 2.0,
-                armLength: 3.2,
-                armCirc: 2.1,
-                bustBig: 5.0,
-                bustSmall: 4.2,
-                waist: 4.0,
-                hip: 6.5,
-                thigh: 3.8,
-                calf: 3.0,
-                legLength: 7.2,
-                footWidth: 0.7,
-                headHeight: 3.5,
-                earDist: 3.0,
-            },
-            {
-                id: 3,
-                name: '特六少年',
-                height: 16.0,
-                head: 14.0,
-                foot: 2.2,
-                tags: ['特六', '烧肌'],
-                brand: 'RingDoll',
-                neck: 3.2,
-                shoulder: 3.0,
-                armLength: 4.5,
-                armCirc: 3.0,
-                bustBig: 8.0,
-                bustSmall: 6.8,
-                waist: 6.5,
-                hip: 10.0,
-                thigh: 5.5,
-                calf: 4.2,
-                legLength: 10.0,
-                footWidth: 1.0,
-                headHeight: 4.8,
-                earDist: 4.2,
-            }
-        ];
-
-        closets = [
-            { id: 101, name: '粉色连衣裙', color: '粉色', size: '八分', tags: ['甜美', '春夏'] },
-            { id: 102, name: '黑色西装', color: '黑色', size: '特六', tags: ['正装', '暗黑'] },
-            { id: 103, name: '碎花半身裙', color: '碎花', size: '十二分', tags: ['田园', '清新'] },
-        ];
-
-        parts = [
-            { id: 201, name: '自然卷发片', type: '发片', fit: '适配脸片: 通用', tags: ['棕色', '中长'] },
-            { id: 202, name: '玻璃眼片', type: '脸片', fit: '眼片尺寸 14mm', tags: ['蓝色', '虹膜'] },
-            { id: 203, name: '直发发片', type: '发片', fit: '适配脸片: 小十二', tags: ['黑色', '短直'] },
-        ];
-    }
-
-    // 渲染素体
-    function renderBodies(filtered) {
-        const container = document.getElementById('bodyList');
-        const list = filtered || bodies;
-        if (!list.length) {
-            container.innerHTML = `<div class="empty-state">暂无素体，点击 “添加素体” 创建</div>`;
-            return;
-        }
-        container.innerHTML = list.map(b => {
-            const tags = b.tags.map(t => `<span class="tag">${t}</span>`).join('');
-            return `
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">${b.name}</div>
-                    <div class="card-tags">${tags}</div>
+        <!-- ========== 素体管理 ========== -->
+        <section id="bodies-section" class="section active">
+            <!-- 统计概览 -->
+            <div class="grid grid-4" style="margin-bottom: 25px;">
+                <div class="card" style="text-align: center;">
+                    <div class="stat-number" id="stat-total-bodies">0</div>
+                    <div class="stat-label">素体总数</div>
                 </div>
-                <div style="font-size:13px;color:#6f625a;margin-bottom:4px;">${b.brand || '未知厂家'} · ID:${b.id}</div>
-                <div class="measure-grid">
-                    <div class="measure-item"><span>身高</span><span>${b.height} cm</span></div>
-                    <div class="measure-item"><span>头围</span><span>${b.head} cm</span></div>
-                    <div class="measure-item"><span>脚长</span><span>${b.foot} cm</span></div>
-                    <div class="measure-item"><span>脚宽</span><span>${b.footWidth || '—'}</span></div>
-                    <div class="measure-item"><span>颈围</span><span>${b.neck || '—'}</span></div>
-                    <div class="measure-item"><span>肩宽</span><span>${b.shoulder || '—'}</span></div>
-                    <div class="measure-item"><span>臂长</span><span>${b.armLength || '—'}</span></div>
-                    <div class="measure-item"><span>臂围</span><span>${b.armCirc || '—'}</span></div>
-                    <div class="measure-item"><span>大胸围</span><span>${b.bustBig || '—'}</span></div>
-                    <div class="measure-item"><span>小胸围</span><span>${b.bustSmall || '—'}</span></div>
-                    <div class="measure-item"><span>腰围</span><span>${b.waist || '—'}</span></div>
-                    <div class="measure-item"><span>臀围</span><span>${b.hip || '—'}</span></div>
-                    <div class="measure-item"><span>大腿围</span><span>${b.thigh || '—'}</span></div>
-                    <div class="measure-item"><span>小腿围</span><span>${b.calf || '—'}</span></div>
-                    <div class="measure-item"><span>腿长</span><span>${b.legLength || '—'}</span></div>
-                    <div class="measure-item"><span>头高</span><span>${b.headHeight || '—'}</span></div>
-                    <div class="measure-item"><span>两耳间距</span><span>${b.earDist || '—'}</span></div>
+                <div class="card" style="text-align: center;">
+                    <div class="stat-number" id="stat-total-brands">0</div>
+                    <div class="stat-label">厂家数量</div>
                 </div>
-                <div class="card-actions">
-                    <button class="btn btn-sm btn-outline" onclick="deleteBody(${b.id})">🗑️ 删除</button>
-                    <button class="btn btn-sm btn-outline" onclick="editBody(${b.id})">✏️ 编辑</button>
-                </div>
-            </div>
-            `;
-        }).join('');
-    }
-
-    // 筛选
-    function applyFilters() {
-        const footMin = parseFloat(document.getElementById('filterFootMin').value) || -Infinity;
-        const footMax = parseFloat(document.getElementById('filterFootMax').value) || Infinity;
-        const heightMin = parseFloat(document.getElementById('filterHeightMin').value) || -Infinity;
-        const heightMax = parseFloat(document.getElementById('filterHeightMax').value) || Infinity;
-        const tag = document.getElementById('filterTag').value;
-        const brand = document.getElementById('filterBrand').value.toLowerCase().trim();
-
-        const filtered = bodies.filter(b => {
-            if (b.foot < footMin || b.foot > footMax) return false;
-            if (b.height < heightMin || b.height > heightMax) return false;
-            if (tag && !b.tags.includes(tag)) return false;
-            if (brand && !(b.brand || '').toLowerCase().includes(brand)) return false;
-            return true;
-        });
-        renderBodies(filtered);
-    }
-
-    function resetFilters() {
-        document.getElementById('filterFootMin').value = '';
-        document.getElementById('filterFootMax').value = '';
-        document.getElementById('filterHeightMin').value = '';
-        document.getElementById('filterHeightMax').value = '';
-        document.getElementById('filterTag').value = '';
-        document.getElementById('filterBrand').value = '';
-        renderBodies(bodies);
-    }
-
-    // 添加素体
-    function showAddForm() {
-        document.getElementById('addForm').style.display = 'flex';
-    }
-
-    function addBody() {
-        const name = document.getElementById('newName').value.trim() || '未命名';
-        const height = parseFloat(document.getElementById('newHeight').value) || 12;
-        const foot = parseFloat(document.getElementById('newFoot').value) || 1.8;
-        const head = parseFloat(document.getElementById('newHead').value) || 12;
-        const tagsStr = document.getElementById('newTags').value;
-        const tags = tagsStr.split(',').map(s => s.trim()).filter(Boolean);
-        const brand = document.getElementById('newBrand').value.trim() || '';
-
-        const newBody = {
-            id: Date.now(),
-            name,
-            height,
-            foot,
-            head,
-            tags,
-            brand,
-            // 其他默认
-            neck: 0, shoulder: 0, armLength: 0, armCirc: 0,
-            bustBig: 0, bustSmall: 0, waist: 0, hip: 0,
-            thigh: 0, calf: 0, legLength: 0, footWidth: 0,
-            headHeight: 0, earDist: 0,
-        };
-        bodies.push(newBody);
-        renderBodies(bodies);
-        document.getElementById('addForm').style.display = 'none';
-        // 清空部分字段
-        document.getElementById('newName').value = '';
-        document.getElementById('newTags').value = '';
-    }
-
-    function deleteBody(id) {
-        if (!confirm('确认删除此素体？')) return;
-        bodies = bodies.filter(b => b.id !== id);
-        renderBodies(bodies);
-    }
-
-    function editBody(id) {
-        const b = bodies.find(item => item.id === id);
-        if (!b) return;
-        // 简易编辑：弹窗修改名称和标签
-        const newName = prompt('修改名称:', b.name);
-        if (newName !== null) b.name = newName.trim() || b.name;
-        const newTags = prompt('修改标签 (用逗号分隔):', b.tags.join(','));
-        if (newTags !== null) {
-            b.tags = newTags.split(',').map(s => s.trim()).filter(Boolean);
-        }
-        renderBodies(bodies);
-    }
-
-    // ----- 衣橱 -----
-    function renderCloset() {
-        const container = document.getElementById('closetList');
-        const filter = document.getElementById('closetFilter').value.toLowerCase().trim();
-        let list = closets;
-        if (filter) {
-            list = closets.filter(c => 
-                c.name.toLowerCase().includes(filter) ||
-                c.color.toLowerCase().includes(filter) ||
-                c.size.toLowerCase().includes(filter) ||
-                c.tags.some(t => t.toLowerCase().includes(filter))
-            );
-        }
-        if (!list.length) {
-            container.innerHTML = `<div class="empty-state">衣橱空空，添加衣物吧</div>`;
-            return;
-        }
-        container.innerHTML = list.map(c => `
-            <div class="closet-item">
-                <div class="label">${c.name}</div>
-                <div class="meta">
-                    <span>🎨 ${c.color}</span>
-                    <span>📐 ${c.size}</span>
-                    <span>🏷️ ${c.tags.join(' · ')}</span>
-                </div>
-                <div style="margin-top:8px;">
-                    <button class="btn btn-sm btn-outline" onclick="deleteCloset(${c.id})">删除</button>
-                </div>
-            </div>
-        `).join('');
-    }
-
-    function addCloset() {
-        const name = document.getElementById('closetName').value.trim();
-        const color = document.getElementById('closetColor').value.trim();
-        const size = document.getElementById('closetSize').value.trim();
-        const tagsStr = document.getElementById('closetTags').value;
-        const tags = tagsStr.split(',').map(s => s.trim()).filter(Boolean);
-        if (!name || !color || !size) { alert('请填写完整'); return; }
-        closets.push({ id: Date.now(), name, color, size, tags });
-        renderCloset();
-        document.getElementById('closetName').value = '';
-        document.getElementById('closetColor').value = '';
-        document.getElementById('closetSize').value = '';
-        document.getElementById('closetTags').value = '';
-    }
-
-    function deleteCloset(id) {
-        closets = closets.filter(c => c.id !== id);
-        renderCloset();
-    }
-
-    // ----- 配件 (发片/脸片) -----
-    function renderParts() {
-        const container = document.getElementById('partList');
-        if (!parts.length) {
-            container.innerHTML = `<span class="empty-state">暂无配件</span>`;
-            return;
-        }
-        container.innerHTML = parts.map(p => `
-            <div style="background:white;border-radius:40px;padding:6px 16px 6px 18px;border:1px solid #eae2db;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                <span><strong>${p.name}</strong> <span class="badge">${p.type}</span></span>
-                <span style="font-size:13px;color:#5f524a;">${p.fit}</span>
-                <span style="font-size:12px;color:#887e78;">${p.tags.join(' · ')}</span>
-                <button class="btn btn-sm btn-outline" onclick="deletePart(${p.id})">✕</button>
-            </div>
-        `).join('');
-    }
-
-    function addPart() {
-        const name = document.getElementById('partName').value.trim();
-        const type = document.getElementById('partType').value;
-        const fit = document.getElementById('partFit').value.trim();
-        const tagsStr = document.getElementById('partTags').value;
-        const tags = tagsStr.split(',').map(s => s.trim()).filter(Boolean);
-        if (!name) { alert('请输入名称'); return; }
-        parts.push({ id: Date.now(), name, type, fit: fit || '通用', tags });
-        renderParts();
-        document.getElementById('partName').value = '';
-        document.getElementById('partFit').value = '';
-        document.getElementById('partTags').value = '';
-    }
-
-    function deletePart(id) {
-        parts = parts.filter(p => p.id !== id);
-        renderParts();
-    }
-
-    // 初始化
-    initData();
-    renderBodies(bodies);
-    renderCloset();
-    renderParts();
-</script>
-</body>
-</html>
+      
