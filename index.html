@@ -24,16 +24,12 @@
             --pink-700: #c9184a;
             --pink-800: #a4133c;
             --red-500: #f43f5e;
-            --red-600: #e11d48;
-            --cream: #fff5f7;
-            --white: #ffffff;
             --shadow-soft: 0 4px 20px rgba(255, 77, 109, 0.15);
-            --shadow-cute: 0 8px 32px rgba(255, 77, 109, 0.2);
         }
 
         body {
             font-family: 'Nunito', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(180deg, var(--pink-50) 0%, var(--cream) 50%, var(--pink-100) 100%);
+            background: linear-gradient(180deg, var(--pink-50) 0%, #fff5f7 50%, var(--pink-100) 100%);
             min-height: 100vh;
             color: var(--pink-800);
             overflow-x: hidden;
@@ -46,27 +42,6 @@
             padding: 20px 15px 30px;
             border-radius: 0 0 30px 30px;
             position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '♥';
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 60px;
-            opacity: 0.1;
-            color: white;
-        }
-
-        .header::after {
-            content: '♥';
-            position: absolute;
-            bottom: 5px;
-            left: 30px;
-            font-size: 40px;
-            opacity: 0.08;
-            color: white;
         }
 
         .logo {
@@ -93,7 +68,6 @@
             font-size: 26px;
             color: white;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            line-height: 1.2;
         }
 
         .logo-text p {
@@ -102,7 +76,7 @@
             margin-top: 4px;
         }
 
-        /* 导航按钮 */
+        /* 导航 */
         .nav-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -118,12 +92,11 @@
             font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            backdrop-filter: blur(10px);
         }
 
         .nav-btn-inactive {
@@ -137,10 +110,6 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .nav-btn:active {
-            transform: scale(0.95);
-        }
-
         /* 主内容 */
         .main-container {
             padding: 20px 15px;
@@ -148,14 +117,20 @@
             margin: 0 auto;
         }
 
-        /* 统计卡片 */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* 统计 */
         .stats-scroll {
             display: flex;
             gap: 15px;
             overflow-x: auto;
             padding: 5px 0 15px;
-            margin-bottom: 10px;
-            -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
         }
 
@@ -179,7 +154,6 @@
             background: linear-gradient(135deg, var(--pink-500), var(--red-500));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            line-height: 1;
         }
 
         .stat-label {
@@ -226,14 +200,6 @@
             font-weight: 700;
         }
 
-        .card-title h2 span {
-            display: block;
-            font-size: 11px;
-            color: var(--pink-400);
-            font-weight: 500;
-            margin-top: 2px;
-        }
-
         /* 按钮 */
         .btn {
             display: inline-flex;
@@ -246,7 +212,7 @@
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .btn-primary {
@@ -289,15 +255,6 @@
             color: var(--pink-700);
         }
 
-        .form-label::after {
-            content: ' *';
-            color: var(--red-500);
-        }
-
-        .form-label.optional::after {
-            content: '';
-        }
-
         .form-input, .form-select, .form-textarea {
             width: 100%;
             padding: 12px 15px;
@@ -306,7 +263,6 @@
             font-size: 15px;
             color: var(--pink-800);
             background: var(--pink-50);
-            transition: all 0.3s ease;
             font-family: inherit;
             -webkit-appearance: none;
         }
@@ -315,7 +271,6 @@
             outline: none;
             border-color: var(--pink-500);
             background: white;
-            box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1);
         }
 
         .form-textarea {
@@ -323,7 +278,7 @@
             resize: vertical;
         }
 
-        /* 素体卡片 - 横向布局 */
+        /* 素体卡片 */
         .body-card {
             background: white;
             border-radius: 24px;
@@ -332,11 +287,6 @@
             border: 2px solid var(--pink-100);
             margin-bottom: 15px;
             display: flex;
-            transition: all 0.3s ease;
-        }
-
-        .body-card:active {
-            transform: scale(0.98);
         }
 
         .body-card-image {
@@ -446,7 +396,56 @@
             color: var(--pink-600);
         }
 
-        /* 筛选面板 */
+        /* 详情展开 */
+        .detail-section {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed var(--pink-200);
+        }
+
+        .detail-section.show {
+            display: block;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .detail-item {
+            padding: 10px;
+            background: var(--pink-50);
+            border-radius: 14px;
+        }
+
+        .detail-item .detail-label {
+            font-size: 10px;
+            color: var(--pink-400);
+            margin-bottom: 4px;
+        }
+
+        .detail-item .detail-value {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--pink-600);
+        }
+
+        .expand-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+            color: var(--pink-500);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* 筛选 */
         .filter-panel {
             background: linear-gradient(135deg, var(--pink-50), white);
             border-radius: 20px;
@@ -457,37 +456,14 @@
 
         .filter-row {
             display: flex;
-            flex-wrap: wrap;
             gap: 10px;
+            margin-bottom: 10px;
+            overflow-x: auto;
         }
 
-        .filter-group {
+        .filter-row input, .filter-row select {
+            min-width: 120px;
             flex: 1;
-            min-width: 140px;
-        }
-
-        .filter-group label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--pink-600);
-            margin-bottom: 5px;
-        }
-
-        .range-inputs {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .range-inputs input {
-            flex: 1;
-            min-width: 60px;
-        }
-
-        .range-inputs span {
-            color: var(--pink-400);
-            font-size: 12px;
         }
 
         /* 标签 */
@@ -507,7 +483,6 @@
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
         .tag-add {
@@ -530,7 +505,6 @@
             align-items: center;
             justify-content: center;
             font-size: 10px;
-            cursor: pointer;
         }
 
         /* 模态框 */
@@ -542,29 +516,24 @@
             height: 100%;
             background: rgba(0,0,0,0.5);
             backdrop-filter: blur(5px);
-            display: flex;
+            display: none;
             align-items: flex-end;
             z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
         }
 
         .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
+            display: flex;
         }
 
         .modal {
             background: white;
             border-radius: 30px 30px 0 0;
             padding: 25px 20px;
-            max-width: 100%;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             transform: translateY(100%);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s;
         }
 
         .modal-overlay.active .modal {
@@ -613,13 +582,7 @@
             padding: 30px 20px;
             text-align: center;
             background: var(--pink-50);
-            transition: all 0.3s ease;
             cursor: pointer;
-        }
-
-        .upload-zone:active {
-            border-color: var(--pink-500);
-            background: var(--pink-100);
         }
 
         .upload-zone-icon {
@@ -669,7 +632,7 @@
             justify-content: center;
         }
 
-        /* 网格布局 */
+        /* 网格 */
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -680,6 +643,11 @@
         .empty-state {
             text-align: center;
             padding: 50px 20px;
+            display: none;
+        }
+
+        .empty-state.show {
+            display: block;
         }
 
         .empty-state-icon {
@@ -694,13 +662,7 @@
             font-weight: 700;
         }
 
-        .empty-state-hint {
-            font-size: 12px;
-            color: var(--pink-300);
-            margin-top: 8px;
-        }
-
-        /* 底部固定按钮 */
+        /* 浮动按钮 */
         .fab-container {
             position: fixed;
             bottom: 20px;
@@ -721,11 +683,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .fab:active {
-            transform: scale(0.9);
         }
 
         /* 衣橱物品 */
@@ -788,20 +745,6 @@
             color: var(--pink-700);
         }
 
-        .meta-tag.color {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .color-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 0 0 1px var(--pink-200);
-        }
-
         /* 脸片/发片卡片 */
         .face-card {
             background: white;
@@ -822,13 +765,13 @@
             align-items: center;
             justify-content: center;
             font-size: 45px;
+            overflow: hidden;
         }
 
         .face-card-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
         }
 
         .face-card-name {
@@ -843,51 +786,6 @@
             color: var(--pink-400);
         }
 
-        /* 展开详情 */
-        .detail-section {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px dashed var(--pink-200);
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .detail-item {
-            padding: 10px;
-            background: var(--pink-50);
-            border-radius: 14px;
-        }
-
-        .detail-item .detail-label {
-            font-size: 10px;
-            color: var(--pink-400);
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .detail-item .detail-value {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--pink-600);
-        }
-
-        .expand-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px;
-            color: var(--pink-500);
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
         /* 隐藏 */
         .hidden {
             display: none !important;
@@ -898,48 +796,20 @@
             width: 6px;
         }
 
-        ::-webkit-scrollbar-track {
-            background: var(--pink-50);
-        }
-
         ::-webkit-scrollbar-thumb {
             background: var(--pink-300);
             border-radius: 10px;
         }
 
-        /* 适配信息 */
-        .compat-info {
-            padding: 12px;
-            border-radius: 16px;
-            margin-top: 10px;
-            font-size: 12px;
-        }
-
-        .compat-info.ok {
-            background: #f0fdf4;
-            border: 2px solid #86efac;
-            color: #166534;
-        }
-
-        .compat-info.warn {
-            background: #fefce8;
-            border: 2px solid #facc15;
-            color: #854d0e;
-        }
-
-        /* 响应式 */
         @media (min-width: 768px) {
             .body-card-image {
                 width: 150px;
             }
-            
             .modal {
                 max-width: 600px;
                 margin: 0 auto;
                 border-radius: 30px;
-                max-height: 85vh;
             }
-            
             .modal-overlay {
                 align-items: center;
                 padding: 20px;
@@ -948,7 +818,6 @@
     </style>
 </head>
 <body>
-
     <!-- 头部 -->
     <header class="header">
         <div class="logo">
@@ -976,17 +845,15 @@
 
     <!-- 主内容 -->
     <main class="main-container">
-
-        <!-- ========== 素体管理 ========== -->
-        <section id="section-bodies" class="section">
-            <!-- 统计 -->
+        <!-- 素体管理 -->
+        <section id="section-bodies" class="section active">
             <div class="stats-scroll">
                 <div class="stat-card">
-                    <div class="stat-number" id="stat-total-bodies">0</div>
+                    <div class="stat-number" id="stat-bodies">0</div>
                     <div class="stat-label">素体总数</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="stat-total-brands">0</div>
+                    <div class="stat-number" id="stat-brands">0</div>
                     <div class="stat-label">厂家数量</div>
                 </div>
                 <div class="stat-card">
@@ -994,15 +861,14 @@
                     <div class="stat-label">平均身高</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="stat-total-wigs">0</div>
+                    <div class="stat-number" id="stat-wigs">0</div>
                     <div class="stat-label">发片数</div>
                 </div>
             </div>
 
-            <!-- 筛选 -->
             <div class="filter-panel">
-                <div style="display: flex; gap: 10px; margin-bottom: 12px; overflow-x: auto;">
-                    <select class="form-select" id="filter-size" onchange="applyFilters()" style="min-width: 120px;">
+                <div class="filter-row">
+                    <select class="form-select" id="filter-size" onchange="renderBodies()">
                         <option value="">全部尺寸</option>
                         <option value="十二分">十二分</option>
                         <option value="八分">八分</option>
@@ -1012,7 +878,7 @@
                         <option value="三分">三分</option>
                         <option value="叔体">叔体</option>
                     </select>
-                    <select class="form-select" id="filter-skin" onchange="applyFilters()" style="min-width: 100px;">
+                    <select class="form-select" id="filter-skin" onchange="renderBodies()">
                         <option value="">全部肤色</option>
                         <option value="白肌">白肌</option>
                         <option value="普肌">普肌</option>
@@ -1021,45 +887,36 @@
                         <option value="粉肌">粉肌</option>
                         <option value="半白">半白</option>
                     </select>
-                    <input type="text" class="form-input" id="filter-brand" placeholder="厂家" oninput="applyFilters()" style="min-width: 100px;">
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <div style="flex: 1;">
-                        <input type="number" class="form-input" id="filter-foot-min" placeholder="脚长最小" step="0.1" onchange="applyFilters()">
-                    </div>
-                    <div style="flex: 1;">
-                        <input type="number" class="form-input" id="filter-foot-max" placeholder="脚长最大" step="0.1" onchange="applyFilters()">
-                    </div>
+                <div class="filter-row">
+                    <input type="text" class="form-input" id="filter-brand" placeholder="厂家筛选" oninput="renderBodies()">
+                    <input type="number" class="form-input" id="filter-foot-min" placeholder="脚长最小" step="0.1" onchange="renderBodies()">
+                    <input type="number" class="form-input" id="filter-foot-max" placeholder="脚长最大" step="0.1" onchange="renderBodies()">
                 </div>
-                <div style="margin-top: 10px; display: flex; gap: 8px;">
+                <div style="display: flex; gap: 8px; margin-top: 10px;">
                     <button class="btn btn-sm btn-secondary" onclick="clearFilters()">🗑️ 清空</button>
                     <button class="btn btn-sm btn-secondary" onclick="exportData()">💾 导出</button>
-                    <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importData(event)">
                     <button class="btn btn-sm btn-secondary" onclick="document.getElementById('import-file').click()">📁 导入</button>
+                    <input type="file" id="import-file" style="display: none;" accept=".json" onchange="importData(event)">
                 </div>
             </div>
 
-            <!-- 素体列表 -->
-            <div id="bodies-list">
-                <!-- 动态生成 -->
-            </div>
-
-            <div id="bodies-empty" class="empty-state hidden">
+            <div id="bodies-list"></div>
+            <div id="bodies-empty" class="empty-state">
                 <div class="empty-state-icon">🧸</div>
                 <div class="empty-state-text">还没有素体哦~</div>
-                <div class="empty-state-hint">点击右下角按钮添加你的第一个BJD素体</div>
             </div>
         </section>
 
-        <!-- ========== 娃衣橱 ========== -->
-        <section id="section-wardrobe" class="section hidden">
+        <!-- 娃衣橱 -->
+        <section id="section-wardrobe" class="section">
             <div class="card">
                 <div class="card-title">
                     <div class="card-title-icon">👗</div>
                     <h2>我的娃衣橱</h2>
                 </div>
-                <div style="display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto;">
-                    <select class="form-select" id="wardrobe-filter-type" onchange="renderWardrobe()" style="min-width: 100px;">
+                <div class="filter-row" style="margin-bottom: 15px;">
+                    <select class="form-select" id="wardrobe-filter-type" onchange="renderWardrobe()">
                         <option value="">全部类型</option>
                         <option value="上衣">上衣</option>
                         <option value="下装">下装</option>
@@ -1072,5 +929,92 @@
                         <option value="眼珠">眼珠</option>
                         <option value="其他">其他</option>
                     </select>
-                    <input type="text" class="form-input" id="wardrobe-filter-color" placeholder="颜色筛选" oninput="renderWardrobe()" style="min-width: 100px;">
-                    <input type="text" class="form-input" id="wardrobe-filter-size" placeholder="尺寸筛选" oninput="renderWardrobe()" styl
+                    <input type="text" class="form-input" id="wardrobe-filter-color" placeholder="颜色筛选" oninput="renderWardrobe()">
+                    <input type="text" class="form-input" id="wardrobe-filter-size" placeholder="尺寸筛选" oninput="renderWardrobe()">
+                </div>
+                <div id="wardrobe-list"></div>
+                <div id="wardrobe-empty" class="empty-state">
+                    <div class="empty-state-icon">👗</div>
+                    <div class="empty-state-text">衣橱是空的~</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 脸片管理 -->
+        <section id="section-faceplates" class="section">
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-title-icon">😊</div>
+                    <h2>脸片收藏</h2>
+                </div>
+                <div id="faceplates-list" class="grid-2"></div>
+                <div id="faceplates-empty" class="empty-state">
+                    <div class="empty-state-icon">😊</div>
+                    <div class="empty-state-text">还没有脸片~</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 发片管理 -->
+        <section id="section-wigs" class="section">
+            <div class="card">
+                <div class="card-title">
+                    <div class="card-title-icon">💇</div>
+                    <h2>发片/假发</h2>
+                </div>
+                <div id="wigs-list" class="grid-2"></div>
+                <div id="wigs-empty" class="empty-state">
+                    <div class="empty-state-icon">💇</div>
+                    <div class="empty-state-text">还没有发片~</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 浮动按钮 -->
+    <div class="fab-container">
+        <button class="fab" onclick="showAddModal()" id="fab-btn">➕</button>
+    </div>
+
+    <!-- 添加素体模态框 -->
+    <div class="modal-overlay" id="modal-body">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>🧸 添加素体</h3>
+                <button class="modal-close" onclick="closeModal('modal-body')">×</button>
+            </div>
+            <form id="form-body" onsubmit="saveBody(event)">
+                <input type="hidden" id="body-id">
+                
+                <div class="form-group">
+                    <label class="form-label">素体图片</label>
+                    <div class="upload-zone" onclick="document.getElementById('body-image-input').click()">
+                        <div class="upload-zone-icon">📷</div>
+                        <div class="upload-zone-text">点击上传素体图片</div>
+                        <div class="upload-zone-hint">支持官方尺寸图、实物图</div>
+                    </div>
+                    <input type="file" id="body-image-input" style="display: none;" accept="image/*" onchange="handleImageSelect(event, 'body-image')">
+                    <div id="body-image-preview"></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">素体名称 *</label>
+                        <input type="text" class="form-input" id="body-name" required placeholder="例如：萌萌体">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">厂家 *</label>
+                        <input type="text" class="form-input" id="body-brand" required placeholder="例如：SOOM">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">尺寸 *</label>
+                        <select class="form-select" id="body-size" required>
+                            <option value="">请选择</option>
+                            <option value="十二分">十二分</option>
+                            <option value="八分">八分</option>
+                            <option value="六分">六分</option>
+                            <option value="特六">特六</option>
+                            <option value="四分">四分</option>
+                            <option value="三分">三分</option>
+                            <option value="叔体">叔体</option>
+       
