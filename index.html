@@ -121,7 +121,9 @@
                     </select>
                     <div class="filter-box">
                         <div class="filter-label">筛选企划方：</div>
-                        <div class="filter-tags" id="f-projects"></div>
+                        <div class="filter-tags" id="f-projects">
+                            <!-- 动态生成 -->
+                        </div>
                     </div>
                 </div>
                 <div id="bodies-list"></div>
@@ -328,285 +330,298 @@
     </div>
 
     <script>
-        var data={bodies:[],wardrobe:[]};
-        var current='bodies';
-        var tempImg='';
-        var tempProjects=[];
-        var tempColors=[];
-        var allProjects=['米甜','邦倪兔','儞洛','未语集','悸动瞬息','未启之扉','露露灵','魔屋阿特'];
-        var filterProject='';
+        // 数据初始化
+        var data = {bodies:[], wardrobe:[]};
+        var current = 'bodies';
+        var tempImg = '';
+        var tempProjects = [];
+        var tempColors = [];
+        var allProjects = ['米甜','邦倪兔','儞洛','未语集','悸动瞬息','未启之扉','露露灵','魔屋阿特'];
+        var filterProject = '';
 
-        function load(){var s=localStorage.getItem('bjd');if(s)try{data=JSON.parse(s)}catch(e){}}
-        function save(){localStorage.setItem('bjd',JSON.stringify(data))}
+        // 本地存储
+        function loadData(){
+            var s = localStorage.getItem('bjd');
+            if(s){
+                try{
+                    data = JSON.parse(s);
+                }catch(e){
+                    console.log('load error', e);
+                }
+            }
+        }
+        
+        function saveData(){
+            localStorage.setItem('bjd', JSON.stringify(data));
+        }
 
+        // 切换标签页
         function switchTab(tab){
-            current=tab;
-            document.getElementById('nav-bodies').className=tab=='bodies'?'active':'';
-            document.getElementById('nav-wardrobe').className=tab=='wardrobe'?'active':'';
-            document.getElementById('section-bodies').className='section'+(tab=='bodies'?' active':'');
-            document.getElementById('section-wardrobe').className='section'+(tab=='wardrobe'?' active':'');
-            render();
+            current = tab;
+            document.getElementById('nav-bodies').className = tab == 'bodies' ? 'active' : '';
+            document.getElementById('nav-wardrobe').className = tab == 'wardrobe' ? 'active' : '';
+            document.getElementById('section-bodies').className = 'section' + (tab == 'bodies' ? ' active' : '');
+            document.getElementById('section-wardrobe').className = 'section' + (tab == 'wardrobe' ? ' active' : '');
+            renderAll();
         }
 
+        // 显示添加模态框
         function showAdd(){
-            var id=current=='bodies'?'modal-body':'modal-wardrobe';
-            document.getElementById(id).className='modal show';
-            tempImg='';
-            tempProjects=[];
-            tempColors=[];
-            document.getElementById('b-prev').innerHTML='';
-            document.getElementById('w-prev').innerHTML='';
-            document.getElementById('b-projects').innerHTML='';
-            document.getElementById('w-colors').innerHTML='';
-            var ps=document.querySelectorAll('.preset-tag');
-            for(var i=0;i<ps.length;i++)ps[i].className='preset-tag';
+            var id = current == 'bodies' ? 'modal-body' : 'modal-wardrobe';
+            document.getElementById(id).className = 'modal show';
+            tempImg = '';
+            tempProjects = [];
+            tempColors = [];
+            document.getElementById('b-prev').innerHTML = '';
+            document.getElementById('w-prev').innerHTML = '';
+            document.getElementById('b-projects').innerHTML = '';
+            document.getElementById('w-colors').innerHTML = '';
+            // 重置预设标签样式
+            var ps = document.querySelectorAll('.preset-tag');
+            for(var i = 0; i < ps.length; i++){
+                ps[i].className = 'preset-tag';
+            }
         }
 
+        // 关闭模态框
         function closeModal(id){
-            document.getElementById(id).className='modal';
-            document.getElementById(id).querySelector('form').reset();
-            tempProjects=[];
-            tempColors=[];
+            document.getElementById(id).className = 'modal';
+            var form = document.getElementById(id).querySelector('form');
+            if(form){
+                form.reset();
+            }
+            tempProjects = [];
+            tempColors = [];
         }
 
-        function preview(input,pid){
-            var f=input.files[0];
-            if(!f)return;
-            var r=new FileReader();
-            r.onload=function(e){
-                tempImg=e.target.result;
-                document.getElementById(pid).innerHTML='<img src="'+e.target.result+'">';
+        // 图片预览
+        function preview(input, pid){
+            var file = input.files[0];
+            if(!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e){
+                tempImg = e.target.result;
+                document.getElementById(pid).innerHTML = '<img src="' + e.target.result + '">';
             };
-            r.readAsDataURL(f);
+            reader.readAsDataURL(file);
         }
 
-        // 企划方标签功能
-        function toggleProject(el,name){
-            var idx=tempProjects.indexOf(name);
-            if(idx==-1){
+        // ========== 企划方功能 ==========
+        function toggleProject(el, name){
+            var idx = tempProjects.indexOf(name);
+            if(idx == -1){
                 tempProjects.push(name);
-                el.className='preset-tag active';
+                el.className = 'preset-tag active';
             }else{
-                tempProjects.splice(idx,1);
-                el.className='preset-tag';
+                tempProjects.splice(idx, 1);
+                el.className = 'preset-tag';
             }
             renderProjectTags();
         }
 
         function addCustomProject(){
-            var input=document.getElementById('b-project-input');
-            var c=input.value.trim();
-            if(!c)return;
-            if(tempProjects.indexOf(c)==-1){
-                tempProjects.push(c);
+            var input = document.getElementById('b-project-input');
+            var val = input.value.trim();
+            if(!val) return;
+            if(tempProjects.indexOf(val) == -1){
+                tempProjects.push(val);
                 renderProjectTags();
             }
-            input.value='';
+            input.value = '';
         }
 
-        function removeProject(c){
-            var idx=tempProjects.indexOf(c);
-            if(idx>-1){
-                tempProjects.splice(idx,1);
+        function removeProject(name){
+            var idx = tempProjects.indexOf(name);
+            if(idx > -1){
+                tempProjects.splice(idx, 1);
                 renderProjectTags();
-                var ps=document.querySelectorAll('#b-project-presets .preset-tag');
-                for(var i=0;i<ps.length;i++){
-                    if(ps[i].textContent==c)ps[i].className='preset-tag';
+                // 同步更新预设按钮
+                var ps = document.querySelectorAll('#b-project-presets .preset-tag');
+                for(var i = 0; i < ps.length; i++){
+                    if(ps[i].textContent == name){
+                        ps[i].className = 'preset-tag';
+                    }
                 }
             }
         }
 
         function renderProjectTags(){
-            var box=document.getElementById('b-projects');
-            var h='';
-            for(var i=0;i<tempProjects.length;i++){
-                h+='<span class="tag-item">'+tempProjects[i]+'<span class="del" onclick="removeProject(\''+tempProjects[i]+'\')">×</span></span>';
+            var box = document.getElementById('b-projects');
+            var html = '';
+            for(var i = 0; i < tempProjects.length; i++){
+                html += '<span class="tag-item">' + tempProjects[i] + '<span class="del" onclick="removeProject(\'' + tempProjects[i] + '\')">×</span></span>';
             }
-            box.innerHTML=h;
+            box.innerHTML = html;
         }
 
-        // 颜色标签功能
-        function toggleColor(el,name){
-            var idx=tempColors.indexOf(name);
-            if(idx==-1){
+        // ========== 颜色功能 ==========
+        function toggleColor(el, name){
+            var idx = tempColors.indexOf(name);
+            if(idx == -1){
                 tempColors.push(name);
-                el.className='preset-tag active';
+                el.className = 'preset-tag active';
             }else{
-                tempColors.splice(idx,1);
-                el.className='preset-tag';
+                tempColors.splice(idx, 1);
+                el.className = 'preset-tag';
             }
             renderColorTags();
         }
 
         function addColor(){
-            var input=document.getElementById('w-color-input');
-            var c=input.value.trim();
-            if(!c)return;
-            if(tempColors.indexOf(c)==-1){
-                tempColors.push(c);
+            var input = document.getElementById('w-color-input');
+            var val = input.value.trim();
+            if(!val) return;
+            if(tempColors.indexOf(val) == -1){
+                tempColors.push(val);
                 renderColorTags();
             }
-            input.value='';
+            input.value = '';
         }
 
-        function removeColor(c){
-            var idx=tempColors.indexOf(c);
-            if(idx>-1){
-                tempColors.splice(idx,1);
+        function removeColor(name){
+            var idx = tempColors.indexOf(name);
+            if(idx > -1){
+                tempColors.splice(idx, 1);
                 renderColorTags();
-                var ps=document.querySelectorAll('#w-color-presets .preset-tag');
-                for(var i=0;i<ps.length;i++){
-                    if(ps[i].textContent==c)ps[i].className='preset-tag';
+                var ps = document.querySelectorAll('#w-color-presets .preset-tag');
+                for(var i = 0; i < ps.length; i++){
+                    if(ps[i].textContent == name){
+                        ps[i].className = 'preset-tag';
+                    }
                 }
             }
         }
 
         function renderColorTags(){
-            var box=document.getElementById('w-colors');
-            var h='';
-            for(var i=0;i<tempColors.length;i++){
-                h+='<span class="tag-item">'+tempColors[i]+'<span class="del" onclick="removeColor(\''+tempColors[i]+'\')">×</span></span>';
+            var box = document.getElementById('w-colors');
+            var html = '';
+            for(var i = 0; i < tempColors.length; i++){
+                html += '<span class="tag-item">' + tempColors[i] + '<span class="del" onclick="removeColor(\'' + tempColors[i] + '\')">×</span></span>';
             }
-            box.innerHTML=h;
+            box.innerHTML = html;
         }
 
-        // 筛选企划方
+        // ========== 筛选功能 ==========
         function setFilterProject(name){
-            if(filterProject==name){
-                filterProject='';
+            if(filterProject == name){
+                filterProject = '';
             }else{
-                filterProject=name;
+                filterProject = name;
             }
             renderFilterProjects();
             renderBodies();
         }
 
         function renderFilterProjects(){
-            var box=document.getElementById('f-projects');
-            var h='';
-            for(var i=0;i<allProjects.length;i++){
-                var active=filterProject==allProjects[i]?' active':'';
-                h+='<span class="filter-tag'+active+'" onclick="setFilterProject(\''+allProjects[i]+'\')">'+allProjects[i]+'</span>';
+            var box = document.getElementById('f-projects');
+            if(!box){
+                console.log('filter box not found');
+                return;
             }
-            box.innerHTML=h;
+            var html = '';
+            for(var i = 0; i < allProjects.length; i++){
+                var active = filterProject == allProjects[i] ? ' active' : '';
+                html += '<span class="filter-tag' + active + '" onclick="setFilterProject(\'' + allProjects[i] + '\')">' + allProjects[i] + '</span>';
+            }
+            box.innerHTML = html;
         }
 
+        // ========== 保存数据 ==========
         function saveBody(e){
             e.preventDefault();
-            if(tempProjects.length==0){
+            if(tempProjects.length == 0){
                 alert('请至少选择一个企划方');
                 return;
             }
-            data.bodies.push({
-                id:Date.now(),
-                name:document.getElementById('b-name').value,
-                size:document.getElementById('b-size').value,
-                projects:tempProjects.slice(),
-                brand:document.getElementById('b-brand').value,
-                skin:document.getElementById('b-skin').value,
-                image:tempImg,
-                head:document.getElementById('b-head').value,
-                height:document.getElementById('b-height').value,
-                neck:document.getElementById('b-neck').value,
-                hip:document.getElementById('b-hip').value,
-                footL:document.getElementById('b-foot-l').value,
-                footW:document.getElementById('b-foot-w').value,
-                notes:document.getElementById('b-notes').value
-            });
-            save();
+            var body = {
+                id: Date.now(),
+                name: document.getElementById('b-name').value,
+                size: document.getElementById('b-size').value,
+                projects: tempProjects.slice(),
+                brand: document.getElementById('b-brand').value,
+                skin: document.getElementById('b-skin').value,
+                image: tempImg,
+                head: document.getElementById('b-head').value,
+                height: document.getElementById('b-height').value,
+                neck: document.getElementById('b-neck').value,
+                hip: document.getElementById('b-hip').value,
+                footL: document.getElementById('b-foot-l').value,
+                footW: document.getElementById('b-foot-w').value,
+                notes: document.getElementById('b-notes').value
+            };
+            data.bodies.push(body);
+            saveData();
             closeModal('modal-body');
             renderBodies();
         }
 
         function saveWardrobe(e){
             e.preventDefault();
-            data.wardrobe.push({
-                id:Date.now(),
-                name:document.getElementById('w-name').value,
-                type:document.getElementById('w-type').value,
-                size:document.getElementById('w-size').value,
-                body:document.getElementById('w-body').value,
-                colors:tempColors.slice(),
-                image:tempImg,
-                notes:document.getElementById('w-notes').value
-            });
-            save();
+            var item = {
+                id: Date.now(),
+                name: document.getElementById('w-name').value,
+                type: document.getElementById('w-type').value,
+                size: document.getElementById('w-size').value,
+                body: document.getElementById('w-body').value,
+                colors: tempColors.slice(),
+                image: tempImg,
+                notes: document.getElementById('w-notes').value
+            };
+            data.wardrobe.push(item);
+            saveData();
             closeModal('modal-wardrobe');
             renderWardrobe();
         }
 
-        function render(){
+        // ========== 渲染 ==========
+        function renderAll(){
             renderFilterProjects();
             renderBodies();
             renderWardrobe();
         }
 
         function renderBodies(){
-            var list=document.getElementById('bodies-list');
-            var empty=document.getElementById('bodies-empty');
-            var fs=document.getElementById('f-size').value;
+            var list = document.getElementById('bodies-list');
+            var empty = document.getElementById('bodies-empty');
+            var fs = document.getElementById('f-size').value;
             
-            var arr=[];
-            for(var i=0;i<data.bodies.length;i++){
-                var b=data.bodies[i];
-                if(fs&&b.size!=fs)continue;
+            var arr = [];
+            for(var i = 0; i < data.bodies.length; i++){
+                var b = data.bodies[i];
+                if(fs && b.size != fs) continue;
                 if(filterProject){
-                    var hasP=false;
-                    for(var j=0;j<b.projects.length;j++){
-                        if(b.projects[j]==filterProject){hasP=true;break}
+                    var hasP = false;
+                    for(var j = 0; j < b.projects.length; j++){
+                        if(b.projects[j] == filterProject){
+                            hasP = true;
+                            break;
+                        }
                     }
-                    if(!hasP)continue;
+                    if(!hasP) continue;
                 }
                 arr.push(b);
             }
             
-            if(arr.length==0){list.innerHTML='';empty.className='empty show';return}
-            empty.className='empty';
-            
-            var h='';
-            for(var i=0;i<arr.length;i++){
-                var b=arr[i];
-                h+='<div class="body-card">';
-                h+='<div class="img">'+(b.image?'<img src="'+b.image+'">':'🧸')+'</div>';
-                h+='<div class="info">';
-                h+='<div class="name">'+b.name+'</div>';
-                h+='<div class="meta">'+b.size+' · '+b.skin+(b.brand?' · '+b.brand:'')+'</div>';
-                if(b.projects&&b.projects.length){
-                    h+='<div class="projects">';
-                    for(var j=0;j<b.projects.length;j++){
-                        h+='<span class="project-tag">'+b.projects[j]+'</span>';
-                    }
-                    h+='</div>';
-                }
-                h+='<div class="specs">';
-                if(b.head)h+='<span class="spec"><span>头围 </span><span>'+b.head+'</span></span>';
-                if(b.height)h+='<span class="spec"><span>身高 </span><span>'+b.height+'</span></span>';
-                if(b.neck)h+='<span class="spec"><span>脖围 </span><span>'+b.neck+'</span></span>';
-                if(b.hip)h+='<span class="spec"><span>臀围 </span><span>'+b.hip+'</span></span>';
-                if(b.footL)h+='<span class="spec"><span>脚长 </span><span>'+b.footL+'</span></span>';
-                if(b.footW)h+='<span class="spec"><span>脚宽 </span><span>'+b.footW+'</span></span>';
-                h+='</div>';
-                if(b.notes)h+='<div style="font-size:12px;color:#ff8fab;margin-top:8px">'+b.notes+'</div>';
-                h+='</div></div>';
+            if(arr.length == 0){
+                list.innerHTML = '';
+                empty.className = 'empty show';
+                return;
             }
-            list.innerHTML=h;
-        }
-
-        function renderWardrobe(){
-            var list=document.getElementById('wardrobe-list');
-            var empty=document.getElementById('wardrobe-empty');
-            var ft=document.getElementById('f-type').value;
-            var fc=document.getElementById('f-color').value.toLowerCase();
+            empty.className = 'empty';
             
-            var arr=[];
-            for(var i=0;i<data.wardrobe.length;i++){
-                var w=data.wardrobe[i];
-                if(ft&&w.type!=ft)continue;
-                if(fc){
-                    var hasColor=false;
-                    if(w.colors){
-                        for(var j=0;j<w.colors.length;j++){
-                            if(w.colors[j].toLowerCase().indexOf(fc)>-1){hasColor=true;break}
-                        }
+            var html = '';
+            for(var i = 0; i < arr.length; i++){
+                var b = arr[i];
+                html += '<div class="body-card">';
+                html += '<div class="img">' + (b.image ? '<img src="' + b.image + '">' : '🧸') + '</div>';
+                html += '<div class="info">';
+                html += '<div class="name">' + b.name + '</div>';
+                html += '<div class="meta">' + b.size + ' · ' + b.skin + (b.brand ? ' · ' + b.brand : '') + '</div>';
+                if(b.projects && b.projects.length){
+                    html += '<div class="projects">';
+                    for(var j = 0; j < b.projects.length; j++){
+                        html += '<span class="project-tag">' + b.projects[j] + '</span>';
                     }
-                 
+                    html += '</div>';
+                }
+                html += '<div clas
