@@ -46,6 +46,7 @@
         .body-card .spec span:last-child{color:#e83e5c;font-weight:700}
         .body-card .projects{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
         .body-card .project-tag{padding:3px 10px;border-radius:10px;font-size:11px;background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;font-weight:600}
+        .body-card .spec-img{margin-top:8px;max-width:90px;border-radius:10px;border:2px solid #ffb3c6;cursor:pointer;display:block}
 
         .wardrobe-item{background:#fff;border-radius:18px;padding:15px;margin-bottom:12px;display:flex;gap:15px;align-items:center;border:2px solid #ffd1dc;box-shadow:0 4px 20px rgba(255,77,109,0.12)}
         .wardrobe-item .img{width:70px;height:70px;background:linear-gradient(135deg,#ffd1dc,#ffb3c6);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;overflow:hidden}
@@ -96,6 +97,15 @@
         .filter-tags{display:flex;flex-wrap:wrap;gap:8px}
         .filter-tag{padding:6px 14px;border-radius:14px;font-size:13px;background:#fff0f3;color:#e83e5c;border:2px solid #ffb3c6;cursor:pointer;font-weight:600}
         .filter-tag.active{background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;border-color:#e83e5c}
+
+        /* 数值筛选面板 */
+        .sf-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+        .sf-row span{font-size:13px;font-weight:700;color:#c9184a;width:40px;flex-shrink:0}
+        .sf-row input{flex:1;padding:8px 10px;border:2px solid #ffb3c6;border-radius:10px;font-size:13px;color:#a4133c;background:#fff0f3;min-width:0}
+        .sf-row em{font-style:normal;color:#ff8fab;font-size:12px}
+        .sf-clear{font-size:12px;color:#ff8fab;cursor:pointer;text-decoration:underline}
+
+        .ocr-status{font-size:12px;color:#ff8fab;margin-top:6px;line-height:1.5}
     </style>
 </head>
 <body>
@@ -125,6 +135,15 @@
                     <div class="filter-box">
                         <div class="filter-label">筛选企划方：</div>
                         <div class="filter-tags" id="f-projects"></div>
+                    </div>
+                    <span class="filter-tag" id="sf-toggle" onclick="toggleSpecFilter()">📐 数值筛选 ▾</span>
+                    <div id="spec-filter" style="display:none;margin-top:12px">
+                        <div class="filter-label">按数值范围筛选（cm，留空不限制）：</div>
+                        <div class="sf-row"><span>身高</span><input id="sf-height-min" type="number" step="0.1" placeholder="最小" oninput="renderBodies()"><em>~</em><input id="sf-height-max" type="number" step="0.1" placeholder="最大" oninput="renderBodies()"></div>
+                        <div class="sf-row"><span>臀围</span><input id="sf-hip-min" type="number" step="0.1" placeholder="最小" oninput="renderBodies()"><em>~</em><input id="sf-hip-max" type="number" step="0.1" placeholder="最大" oninput="renderBodies()"></div>
+                        <div class="sf-row"><span>脚长</span><input id="sf-footl-min" type="number" step="0.1" placeholder="最小" oninput="renderBodies()"><em>~</em><input id="sf-footl-max" type="number" step="0.1" placeholder="最大" oninput="renderBodies()"></div>
+                        <div class="sf-row"><span>脚宽</span><input id="sf-footw-min" type="number" step="0.1" placeholder="最小" oninput="renderBodies()"><em>~</em><input id="sf-footw-max" type="number" step="0.1" placeholder="最大" oninput="renderBodies()"></div>
+                        <span class="sf-clear" onclick="clearSpecFilter()">清空数值筛选</span>
                     </div>
                 </div>
                 <div id="bodies-list"></div>
@@ -180,6 +199,17 @@
                     </div>
                     <input type="file" id="b-file" style="display:none" accept="image/*" onchange="preview(this,'b-prev')">
                     <div class="preview" id="b-prev"></div>
+                </div>
+                <div class="form-group">
+                    <label>尺寸图（上传后可自动识别数值）</label>
+                    <div class="upload" onclick="document.getElementById('bs-file').click()">
+                        <div>📐</div>
+                        <div>点击上传官方尺寸图</div>
+                    </div>
+                    <input type="file" id="bs-file" style="display:none" accept="image/*" onchange="previewSpec(this)">
+                    <div class="preview" id="bs-prev"></div>
+                    <button type="button" class="btn btn-sm" id="bs-ocr-btn" style="display:none;margin-top:8px" onclick="runSpecOCR()">🔍 识别图中数值</button>
+                    <div class="ocr-status" id="bs-ocr-status"></div>
                 </div>
                 <div class="grid2">
                     <div class="form-group">
@@ -331,11 +361,15 @@
         </div>
     </div>
 
+    <!-- 图片文字识别组件（OCR） -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
     <script>
         // ========== 数据 ==========
         var data = {bodies:[], wardrobe:[]};
         var current = 'bodies';
         var tempImg = '';
+        var tempSpecImg = '';
         var tempProjects = [];
         var tempColors = [];
         var editingId = null;
@@ -365,7 +399,7 @@
             try{
                 localStorage.setItem('bjd', JSON.stringify(data));
             }catch(e){
-                alert('⚠️ 存储空间不足！图片太多啦~\n请删除一些带大图的项目，或之后少上传几张图片。');
+                alert('⚠️ 存储空间不足！图片太多啦~\n请删除一些带大图的项目后再试。');
             }
         }
 
@@ -382,6 +416,7 @@
         // ========== 模态框 ==========
         function resetFormState(){
             tempImg = '';
+            tempSpecImg = '';
             tempProjects = [];
             tempColors = [];
             editingId = null;
@@ -389,9 +424,13 @@
             document.getElementById('w-prev').innerHTML = '';
             document.getElementById('b-projects').innerHTML = '';
             document.getElementById('w-colors').innerHTML = '';
-            // 关键修复：清空文件选择器，否则再次选同一张图不会触发 onchange
+            document.getElementById('bs-prev').innerHTML = '';
+            document.getElementById('bs-ocr-status').textContent = '';
+            document.getElementById('bs-ocr-btn').style.display = 'none';
+            // 清空文件选择器，否则再次选同一张图不会触发 onchange
             document.getElementById('b-file').value = '';
             document.getElementById('w-file').value = '';
+            document.getElementById('bs-file').value = '';
             var ps = document.querySelectorAll('.preset-tag');
             for(var i = 0; i < ps.length; i++) ps[i].className = 'preset-tag';
         }
@@ -416,7 +455,7 @@
             resetFormState();
         }
 
-        // ========== 图片：读取 + 压缩（修复localStorage爆容量） ==========
+        // ========== 图片：读取 + 压缩（防止localStorage爆容量） ==========
         function preview(input, pid){
             var file = input.files[0];
             if(!file) return;
@@ -428,7 +467,7 @@
                 });
             };
             reader.readAsDataURL(file);
-            input.value = ''; // 允许再次选择同一文件
+            input.value = '';
         }
 
         function compressImage(dataUrl, cb){
@@ -451,6 +490,130 @@
             };
             img.onerror = function(){ cb(dataUrl); };
             img.src = dataUrl;
+        }
+
+        // ========== 尺寸图：上传 + OCR识别 ==========
+        function previewSpec(input){
+            var file = input.files[0];
+            if(!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e){
+                // 尺寸图识别需要清晰度，压缩上限放宽到1600px
+                compressImageMax(e.target.result, 1600, function(dataUrl){
+                    tempSpecImg = dataUrl;
+                    document.getElementById('bs-prev').innerHTML = '<img src="' + dataUrl + '">';
+                    document.getElementById('bs-ocr-btn').style.display = 'inline-block';
+                    document.getElementById('bs-ocr-status').textContent = '已载入尺寸图，点击下方按钮识别数值';
+                });
+            };
+            reader.readAsDataURL(file);
+            input.value = '';
+        }
+
+        function compressImageMax(dataUrl, max, cb){
+            var img = new Image();
+            img.onload = function(){
+                var w = img.width, h = img.height;
+                if(w > max || h > max){
+                    if(w > h){ h = Math.round(h * max / w); w = max; }
+                    else { w = Math.round(w * max / h); h = max; }
+                }
+                try{
+                    var c = document.createElement('canvas');
+                    c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    cb(c.toDataURL('image/jpeg', 0.85));
+                }catch(e){
+                    cb(dataUrl);
+                }
+            };
+            img.onerror = function(){ cb(dataUrl); };
+            img.src = dataUrl;
+        }
+
+        function runSpecOCR(){
+            if(!tempSpecImg){
+                alert('请先上传尺寸图');
+                return;
+            }
+            if(typeof Tesseract === 'undefined'){
+                alert('识别组件还没加载好，请检查网络后稍等几秒再点');
+                return;
+            }
+            var st = document.getElementById('bs-ocr-status');
+            st.textContent = '识别准备中…首次使用要下载中文语言包，可能需要十几秒';
+            Tesseract.recognize(tempSpecImg, 'chi_sim+eng', {
+                logger: function(m){
+                    if(m.status == 'recognizing text'){
+                        st.textContent = '识别中… ' + Math.round(m.progress * 100) + '%';
+                    }
+                }
+            }).then(function(res){
+                var text = (res && res.data && res.data.text) ? res.data.text : '';
+                var count = parseAndFillSpecs(text);
+                if(count > 0){
+                    st.textContent = '✅ 识别出 ' + count + ' 项数值，已自动填入下方，请核对修改后再保存';
+                }else{
+                    st.textContent = '没认出数值😢 可以换一张更清晰的尺寸图重试，或手动填写';
+                }
+            }).catch(function(err){
+                st.textContent = '识别失败：' + err;
+            });
+        }
+
+        // 从识别文本中提取数值并填入表单
+        function parseAndFillSpecs(text){
+            // 全角数字转半角，去掉空白，常见误识别修正
+            var t = text.replace(/[０-９]/g, function(c){
+                return String.fromCharCode(c.charCodeAt(0) - 0xFF10 + 0x30);
+            }).replace(/\s+/g, '').replace(/[oO](?=[\d.])/g, '0');
+
+            var rules = [
+                ['b-height', /(?:身高|全高|体高|站高|总高|高度)[^\d]{0,10}(\d{1,3}(?:\.\d+)?)/],
+                ['b-head',   /(?:头围|頭圍|头圍)[^\d]{0,10}(\d{1,3}(?:\.\d+)?)/],
+                ['b-neck',   /(?:脖围|颈围|脖圍|頸圍|颈圍)[^\d]{0,10}(\d{1,3}(?:\.\d+)?)/],
+                ['b-hip',    /(?:臀围|臀圍)[^\d]{0,10}(\d{1,3}(?:\.\d+)?)/],
+                ['b-foot-l', /(?:脚长|足长|腳長|脚長|足長)[^\d]{0,10}(\d{1,3}(?:\.\d+)?)/],
+                ['b-foot-w', /(?:脚宽|足宽|腳寬|脚寬|足寬)[^\d]{0,10}(\d{1,3}(?:\.\d+)?)/]
+            ];
+            var count = 0;
+            for(var i = 0; i < rules.length; i++){
+                var m = t.match(rules[i][1]);
+                if(m){
+                    var v = parseFloat(m[1]);
+                    if(v > 0 && v < 300){
+                        document.getElementById(rules[i][0]).value = v;
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        // ========== 数值筛选 ==========
+        function toggleSpecFilter(){
+            var p = document.getElementById('spec-filter');
+            p.style.display = (p.style.display == 'none') ? 'block' : 'none';
+        }
+
+        function clearSpecFilter(){
+            var ids = ['sf-height-min','sf-height-max','sf-hip-min','sf-hip-max','sf-footl-min','sf-footl-max','sf-footw-min','sf-footw-max'];
+            for(var i = 0; i < ids.length; i++){
+                document.getElementById(ids[i]).value = '';
+            }
+            renderBodies();
+        }
+
+        // 判断数值是否落在筛选范围内；筛选启用但该素体没有此数值时不显示
+        function specRangeOk(val, minId, maxId){
+            var min = parseFloat(document.getElementById(minId).value);
+            var max = parseFloat(document.getElementById(maxId).value);
+            if(isNaN(min) && isNaN(max)) return true;
+            var v = parseFloat(val);
+            if(isNaN(v)) return false;
+            if(!isNaN(min) && v < min) return false;
+            if(!isNaN(max) && v > max) return false;
+            return true;
         }
 
         // ========== 企划方标签 ==========
@@ -539,7 +702,7 @@
             document.getElementById('w-colors').innerHTML = html;
         }
 
-        // ========== 筛选 ==========
+        // ========== 筛选（企划方） ==========
         function setFilterProject(name){
             filterProject = (filterProject == name) ? '' : name;
             renderFilterProjects();
@@ -572,6 +735,7 @@
                 brand: document.getElementById('b-brand').value,
                 skin: document.getElementById('b-skin').value,
                 image: tempImg,
+                specImage: tempSpecImg,
                 head: document.getElementById('b-head').value,
                 height: document.getElementById('b-height').value,
                 neck: document.getElementById('b-neck').value,
@@ -640,6 +804,11 @@
             tempProjects = (b.projects || []).slice();
             tempImg = b.image || '';
             if(tempImg) document.getElementById('b-prev').innerHTML = '<img src="' + tempImg + '">';
+            tempSpecImg = b.specImage || '';
+            if(tempSpecImg){
+                document.getElementById('bs-prev').innerHTML = '<img src="' + tempSpecImg + '">';
+                document.getElementById('bs-ocr-btn').style.display = 'inline-block';
+            }
             renderProjectTags();
             syncProjectPresets();
             document.getElementById('modal-body').className = 'modal show';
@@ -708,6 +877,11 @@
                     }
                     if(!hasP) continue;
                 }
+                // 数值范围筛选
+                if(!specRangeOk(b.height, 'sf-height-min', 'sf-height-max')) continue;
+                if(!specRangeOk(b.hip, 'sf-hip-min', 'sf-hip-max')) continue;
+                if(!specRangeOk(b.footL, 'sf-footl-min', 'sf-footl-max')) continue;
+                if(!specRangeOk(b.footW, 'sf-footw-min', 'sf-footw-max')) continue;
                 arr.push(b);
             }
 
@@ -747,6 +921,9 @@
                         html += '<div class="spec"><span>' + specs[k][0] + '</span> <span>' + esc(specs[k][1]) + '</span></div>';
                     }
                     html += '</div>';
+                }
+                if(b.specImage){
+                    html += '<img class="spec-img" src="' + b.specImage + '" title="点击查看尺寸图" onclick="window.open(this.src)">';
                 }
                 if(b.notes){
                     html += '<div class="meta" style="margin-top:8px">📝 ' + esc(b.notes) + '</div>';
@@ -819,7 +996,7 @@
             list.innerHTML = html;
         }
 
-        // ========== 初始化（原代码缺失的关键一步） ==========
+        // ========== 初始化 ==========
         loadData();
         renderAll();
     </script>
