@@ -157,8 +157,8 @@
         <!-- 衣橱 -->
         <div class="section" id="section-wardrobe">
             <div class="card">
-                <div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap">
-                    <select id="f-type" onchange="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c">
+                <div style="margin-bottom:15px">
+                    <select id="f-type" onchange="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c;width:100%">
                         <option value="">全部类型</option>
                         <option value="上衣">上衣</option>
                         <option value="下装">下装</option>
@@ -170,7 +170,10 @@
                         <option value="眼珠">眼珠</option>
                         <option value="其他">其他</option>
                     </select>
-                    <input type="text" id="f-color" placeholder="筛选颜色" oninput="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px;color:#a4133c">
+                    <div class="filter-box" style="margin-top:10px;margin-bottom:0">
+                        <div class="filter-label">筛选颜色（可多选，再点一次取消）：</div>
+                        <div class="filter-tags" id="f-colors"></div>
+                    </div>
                 </div>
                 <div id="wardrobe-list"></div>
                 <div class="empty" id="wardrobe-empty">
@@ -375,6 +378,7 @@
         var editingId = null;
         var allProjects = ['米甜','邦倪兔','儞洛','未语集','悸动瞬息','未启之扉','露露灵','魔屋阿特'];
         var filterProject = '';
+        var filterColors = [];
 
         // HTML转义，防止名称里的特殊字符破坏页面
         function esc(s){
@@ -720,6 +724,41 @@
             box.innerHTML = html;
         }
 
+        // ========== 筛选（颜色，多选标签） ==========
+        function toggleFilterColor(el){
+            var name = el.getAttribute('data-color');
+            var idx = filterColors.indexOf(name);
+            if(idx == -1) filterColors.push(name);
+            else filterColors.splice(idx, 1);
+            renderFilterColors();
+            renderWardrobe();
+        }
+
+        function renderFilterColors(){
+            var box = document.getElementById('f-colors');
+            if(!box) return;
+            // 收集衣橱里所有出现过的颜色
+            var colors = [];
+            for(var i = 0; i < data.wardrobe.length; i++){
+                var cs = data.wardrobe[i].colors || [];
+                for(var j = 0; j < cs.length; j++){
+                    if(colors.indexOf(cs[j]) == -1) colors.push(cs[j]);
+                }
+            }
+            // 清掉衣橱里已不存在的选中颜色
+            filterColors = filterColors.filter(function(c){ return colors.indexOf(c) > -1; });
+            if(colors.length == 0){
+                box.innerHTML = '<span style="font-size:12px;color:#ff8fab">给物品打上颜色标签后，这里就能点标签筛选啦</span>';
+                return;
+            }
+            var html = '';
+            for(var i = 0; i < colors.length; i++){
+                var active = filterColors.indexOf(colors[i]) > -1 ? ' active' : '';
+                html += '<span class="filter-tag' + active + '" data-color="' + esc(colors[i]) + '" onclick="toggleFilterColor(this)">' + esc(colors[i]) + '</span>';
+            }
+            box.innerHTML = html;
+        }
+
         // ========== 保存（新增 / 编辑） ==========
         function saveBody(e){
             e.preventDefault();
@@ -940,18 +979,19 @@
         function renderWardrobe(){
             var list = document.getElementById('wardrobe-list');
             var empty = document.getElementById('wardrobe-empty');
+            renderFilterColors();
             var ft = document.getElementById('f-type').value;
-            var fc = document.getElementById('f-color').value.trim();
 
             var arr = [];
             for(var i = 0; i < data.wardrobe.length; i++){
                 var w = data.wardrobe[i];
                 if(ft && w.type != ft) continue;
-                if(fc){
+                // 颜色标签筛选：选中多个时，物品含任一选中颜色即显示
+                if(filterColors.length > 0){
                     var hasC = false;
                     var cs = w.colors || [];
                     for(var j = 0; j < cs.length; j++){
-                        if(cs[j].indexOf(fc) > -1){ hasC = true; break; }
+                        if(filterColors.indexOf(cs[j]) > -1){ hasC = true; break; }
                     }
                     if(!hasC) continue;
                 }
