@@ -3,929 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎀 BJD管理屋 🎀</title>
+    <title>BJD管理屋</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --pink-50: #fff0f3;
-            --pink-100: #ffd1dc;
-            --pink-200: #ffb3c6;
-            --pink-300: #ff8fab;
-            --pink-400: #ff758f;
-            --pink-500: #ff4d6d;
-            --pink-600: #e83e5c;
-            --pink-700: #c9184a;
-            --pink-800: #a4133c;
-            --shadow-soft: 0 4px 20px rgba(255, 77, 109, 0.15);
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(180deg, var(--pink-50) 0%, #fff5f7 50%, var(--pink-100) 100%);
-            min-height: 100vh;
-            color: var(--pink-800);
-            padding-bottom: 80px;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 30%, #ff4d6d 100%);
-            padding: 20px 15px 25px;
-            border-radius: 0 0 30px 30px;
-            position: relative;
-        }
-
-        .header::before {
-            content: '♥';
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 50px;
-            opacity: 0.08;
-            color: white;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 18px;
-        }
-
-        .logo-icon {
-            width: 55px;
-            height: 55px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .logo-text h1 {
-            font-size: 26px;
-            color: white;
-            font-weight: 800;
-            letter-spacing: 1px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .logo-text p {
-            color: rgba(255,255,255,0.85);
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .nav {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .nav button {
-            padding: 12px 16px;
-            border-radius: 20px;
-            border: none;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: rgba(255,255,255,0.25);
-            color: white;
-        }
-
-        .nav button.active {
-            background: white;
-            color: var(--pink-600);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .main {
-            padding: 15px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .stats-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 5px 0 15px;
-            scrollbar-width: none;
-        }
-
-        .stats-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .stat-card {
-            min-width: 130px;
-            background: white;
-            border-radius: 20px;
-            padding: 18px;
-            text-align: center;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--pink-100);
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--pink-500);
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--pink-400);
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 15px;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--pink-100);
-        }
-
-        .card-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            padding-bottom: 12px;
-            border-bottom: 2px dashed var(--pink-200);
-        }
-
-        .card-title-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--pink-300), var(--pink-500));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: white;
-        }
-
-        .card-title h2 {
-            font-size: 17px;
-            color: var(--pink-700);
-            font-weight: 700;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px 18px;
-            border-radius: 16px;
-            border: none;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
-            color: white;
-            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--pink-50);
-            color: var(--pink-600);
-            border: 2px solid var(--pink-200);
-        }
-
-        .btn-danger {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-            border-radius: 12px;
-        }
-
-        .btn-full {
-            width: 100%;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--pink-700);
-        }
-
-        .form-label .required {
-            color: var(--pink-500);
-            margin-left: 2px;
-        }
-
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--pink-200);
-            border-radius: 14px;
-            font-size: 15px;
-            color: var(--pink-800);
-            background: var(--pink-50);
-            font-family: inherit;
-            -webkit-appearance: none;
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: var(--pink-500);
-            background: white;
-        }
-
-        .form-textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        /* 素体卡片 */
-        .body-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--pink-100);
-            margin-bottom: 15px;
-            display: flex;
-            transition: transform 0.2s;
-        }
-
-        .body-card:active {
-            transform: scale(0.98);
-        }
-
-        .body-card-image {
-            width: 130px;
-            min-height: 130px;
-            flex-shrink: 0;
-            background: linear-gradient(135deg, var(--pink-100), var(--pink-200));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .body-card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .no-image {
-            font-size: 50px;
-            opacity: 0.4;
-        }
-
-        .body-card-badges {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .badge-size {
-            background: rgba(255, 77, 109, 0.9);
-        }
-
-        .badge-skin {
-            background: rgba(255, 179, 198, 0.9);
-        }
-
-        .body-card-content {
-            flex: 1;
-            padding: 15px;
-            min-width: 0;
-        }
-
-        .body-card-name {
-            font-size: 17px;
-            font-weight: 700;
-            color: var(--pink-700);
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .body-card-info {
-            font-size: 12px;
-            color: var(--pink-400);
-            margin-bottom: 10px;
-            line-height: 1.6;
-        }
-
-        .body-card-info .label {
-            color: var(--pink-500);
-            font-weight: 600;
-        }
-
-        .body-card-specs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .spec-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            background: var(--pink-50);
-            border-radius: 12px;
-            font-size: 12px;
-        }
-
-        .spec-pill .label {
-            color: var(--pink-400);
-            font-weight: 500;
-        }
-
-        .spec-pill .value {
-            color: var(--pink-600);
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        .body-card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .tag {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            background: var(--pink-100);
-            color: var(--pink-600);
-            font-weight: 600;
-        }
-
-        .tag-custom {
-            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
-            color: white;
-        }
-
-        /* 展开详情 */
-        .detail-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px;
-            color: var(--pink-500);
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 8px;
-            border-top: 2px dashed var(--pink-100);
-        }
-
-        .detail-section {
-            display: none;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 2px dashed var(--pink-200);
-        }
-
-        .detail-section.show {
-            display: block;
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .detail-item {
-            padding: 12px;
-            background: var(--pink-50);
-            border-radius: 14px;
-            text-align: center;
-        }
-
-        .detail-item .label {
-            font-size: 11px;
-            color: var(--pink-400);
-            margin-bottom: 6px;
-        }
-
-        .detail-item .value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--pink-600);
-        }
-
-        .detail-item .unit {
-            font-size: 11px;
-            color: var(--pink-400);
-            margin-left: 2px;
-        }
-
-        /* 筛选 */
-        .filter-panel {
-            background: linear-gradient(135deg, var(--pink-50), white);
-            border-radius: 18px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 2px solid var(--pink-200);
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .filter-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .filter-row input, .filter-row select {
-            flex: 1;
-            min-width: 0;
-        }
-
-        /* 图片上传 */
-        .upload-zone {
-            border: 3px dashed var(--pink-300);
-            border-radius: 18px;
-            padding: 30px 20px;
-            text-align: center;
-            background: var(--pink-50);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .upload-zone:active {
-            border-color: var(--pink-500);
-            background: var(--pink-100);
-        }
-
-        .upload-icon {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .upload-text {
-            color: var(--pink-600);
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .upload-hint {
-            color: var(--pink-400);
-            font-size: 11px;
-            margin-top: 6px;
-        }
-
-        .image-preview {
-            position: relative;
-            display: inline-block;
-            margin-top: 12px;
-        }
-
-        .image-preview img {
-            max-width: 160px;
-            max-height: 160px;
-            border-radius: 14px;
-            border: 3px solid var(--pink-200);
-        }
-
-        .image-preview .remove {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 28px;
-            height: 28px;
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 标签输入 */
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .tag-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 8px 14px;
-            border-radius: 16px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            background: var(--pink-50);
-            color: var(--pink-500);
-            border: 2px dashed var(--pink-300);
-        }
-
-        .tag-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            border-radius: 16px;
-            font-size: 12px;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--pink-300), var(--pink-500));
-            color: white;
-        }
-
-        .tag-item .remove {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            cursor: pointer;
-        }
-
-        /* 空状态 */
-        .empty {
-            text-align: center;
-            padding: 60px 20px;
-            display: none;
-        }
-
-        .empty.show {
-            display: block;
-        }
-
-        .empty-icon {
-            font-size: 70px;
-            margin-bottom: 15px;
-            opacity: 0.3;
-        }
-
-        .empty-text {
-            font-size: 16px;
-            color: var(--pink-400);
-            font-weight: 700;
-        }
-
-        .empty-hint {
-            font-size: 13px;
-            color: var(--pink-300);
-            margin-top: 8px;
-        }
-
-        /* 浮动按钮 */
-        .fab {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
-            color: white;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 模态框 */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: flex-end;
-            z-index: 1000;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: white;
-            border-radius: 30px 30px 0 0;
-            padding: 25px 20px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            transform: translateY(100%);
-            transition: transform 0.3s;
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed var(--pink-200);
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 10;
-        }
-
-        .modal-header h3 {
-            font-size: 20px;
-            color: var(--pink-700);
-            font-weight: 700;
-        }
-
-        .modal-close {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: var(--pink-100);
-            color: var(--pink-600);
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 衣橱物品 */
-        .wardrobe-item {
-            display: flex;
-            gap: 15px;
-            padding: 15px;
-            background: var(--pink-50);
-            border-radius: 18px;
-            margin-bottom: 12px;
-            align-items: center;
-        }
-
-        .wardrobe-image {
-            width: 70px;
-            height: 70px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--pink-200), var(--pink-300));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            flex-shrink: 0;
-        }
-
-        .wardrobe-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 14px;
-        }
-
-        .wardrobe-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .wardrobe-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--pink-700);
-            margin-bottom: 6px;
-        }
-
-        .wardrobe-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .meta-tag {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            background: var(--pink-200);
-            color: var(--pink-700);
-        }
-
-        /* 脸片/发片卡片 */
-        .face-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .face-card {
-            background: white;
-            border-radius: 18px;
-            padding: 18px;
-            text-align: center;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--pink-100);
-        }
-
-        .face-image {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            margin: 0 auto 14px;
-            background: linear-gradient(135deg, var(--pink-200), var(--pink-300));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 45px;
-            overflow: hidden;
-        }
-
-        .face-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .face-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--pink-700);
-            margin-bottom: 6px;
-        }
-
-        .face-info {
-            font-size: 12px;
-            color: var(--pink-400);
-            line-height: 1.6;
-        }
-
-        .face-actions {
-            margin-top: 14px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        /* 隐藏 */
-        .hidden {
-            display: none !important;
-        }
-
-        /* 滚动条 */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--pink-300);
-            border-radius: 10px;
-        }
-
-        @media (min-width: 768px) {
-            .body-card-image {
-                width: 160px;
-            }
-            
-            .modal {
-                max-width: 600px;
-                margin: 0 auto;
-                border-radius: 30px;
-                max-height: 85vh;
-            }
-            
-            .modal-overlay {
-                align-items: center;
-                padding: 20px;
-            }
-            
-            .face-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff0f3;min-height:100vh;color:#c9184a;padding-bottom:80px}
+        
+        .header{background:linear-gradient(135deg,#ff6b9d,#ff4d6d);padding:20px 15px 25px;border-radius:0 0 30px 30px}
+        .header h1{color:#fff;font-size:26px;text-align:center}
+        .header p{color:rgba(255,255,255,0.85);text-align:center;font-size:13px;margin-top:5px}
+        
+        .nav{display:flex;gap:10px;justify-content:center;margin-top:15px}
+        .nav button{padding:12px 24px;border-radius:20px;border:none;font-size:14px;font-weight:700;cursor:pointer;background:rgba(255,255,255,0.25);color:#fff}
+        .nav button.active{background:#fff;color:#e83e5c}
+        
+        .main{padding:15px;max-width:600px;margin:0 auto}
+        .section{display:none}
+        .section.active{display:block}
+        
+        .card{background:#fff;border-radius:20px;padding:18px;margin-bottom:15px;box-shadow:0 4px 20px rgba(255,77,109,0.15);border:2px solid #ffd1dc}
+        
+        .btn{background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;border:none;padding:12px 20px;border-radius:16px;font-size:14px;font-weight:700;cursor:pointer}
+        .btn-sm{padding:8px 14px;font-size:12px}
+        .btn-full{width:100%}
+        .btn-secondary{background:#fff0f3;color:#e83e5c;border:2px solid #ffb3c6}
+        
+        .form-group{margin-bottom:14px}
+        .form-group label{display:block;margin-bottom:6px;font-size:13px;font-weight:700;color:#c9184a}
+        .form-group input,.form-group select{width:100%;padding:12px 15px;border:2px solid #ffb3c6;border-radius:14px;font-size:15px;color:#a4133c;background:#fff0f3}
+        
+        .upload{border:3px dashed #ffb3c6;border-radius:18px;padding:30px;text-align:center;background:#fff0f3;cursor:pointer}
+        .upload div:first-child{font-size:40px;margin-bottom:10px}
+        .upload div:nth-child(2){color:#e83e5c;font-size:14px;font-weight:700}
+        
+        .body-card{background:#fff;border-radius:20px;margin-bottom:12px;display:flex;overflow:hidden;box-shadow:0 4px 20px rgba(255,77,109,0.15);border:2px solid #ffd1dc}
+        .body-card .img{width:120px;min-height:120px;background:linear-gradient(135deg,#ffd1dc,#ffb3c6);display:flex;align-items:center;justify-content:center;font-size:50px;flex-shrink:0}
+        .body-card .img img{width:100%;height:100%;object-fit:cover}
+        .body-card .info{padding:15px;flex:1}
+        .body-card .name{font-size:16px;font-weight:700;color:#c9184a;margin-bottom:4px}
+        .body-card .meta{font-size:12px;color:#ff8fab;margin-bottom:10px}
+        .body-card .specs{display:flex;flex-wrap:wrap;gap:6px}
+        .body-card .spec{padding:4px 10px;background:#fff0f3;border-radius:10px;font-size:11px}
+        .body-card .spec span:first-child{color:#ff8fab}
+        .body-card .spec span:last-child{color:#e83e5c;font-weight:700}
+        
+        .wardrobe-item{background:#fff0f3;border-radius:18px;padding:15px;margin-bottom:12px;display:flex;gap:15px;align-items:center}
+        .wardrobe-item .img{width:70px;height:70px;background:linear-gradient(135deg,#ffd1dc,#ffb3c6);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
+        .wardrobe-item .img img{width:100%;height:100%;object-fit:cover;border-radius:14px}
+        .wardrobe-item .info{flex:1}
+        .wardrobe-item .name{font-size:15px;font-weight:700;color:#c9184a;margin-bottom:5px}
+        .wardrobe-item .meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:#ff8fab}
+        
+        .fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(255,77,109,0.4);z-index:100}
+        
+        .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:flex-end;z-index:1000}
+        .modal.show{display:flex}
+        .modal .content{background:#fff;border-radius:30px 30px 0 0;padding:25px 20px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(100%);transition:transform 0.3s}
+        .modal.show .content{transform:translateY(0)}
+        .modal .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:15px;border-bottom:2px dashed #ffb3c6}
+        .modal .header h3{font-size:20px;color:#c9184a}
+        .modal .header button{width:36px;height:36px;border-radius:50%;border:none;background:#ffd1dc;color:#e83e5c;font-size:20px;cursor:pointer}
+        
+        .empty{text-align:center;padding:60px 20px;display:none}
+        .empty.show{display:block}
+        .empty .icon{font-size:60px;opacity:0.3;margin-bottom:15px}
+        .empty .text{font-size:16px;color:#ff8fab;font-weight:700}
+        
+        .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+        
+        .preview{margin-top:10px}
+        .preview img{max-width:150px;border-radius:14px;border:3px solid #ffb3c6}
     </style>
 </head>
 <body>
-    <!-- 头部 -->
-    <header class="header">
-        <div class="logo">
-            <div class="logo-icon">🎀</div>
-            <div class="logo-text">
-                <h1>BJD管理屋</h1>
-                <p>素体 · 衣橱 · 发片脸片一站式管理</p>
-            </div>
-        </div>
+    <div class="header">
+        <h1>🎀 BJD管理屋</h1>
+        <p>素体 · 衣橱管理</p>
         <div class="nav">
-            <button class="active" onclick="switchTab('bodies')" id="nav-bodies">🧸 素体管理</button>
-            <button onclick="switchTab('wardrobe')" id="nav-wardrobe">👗 娃衣橱</button>
-            <button onclick="switchTab('faceplates')" id="nav-faceplates">😊 脸片管理</button>
-            <button onclick="switchTab('wigs')" id="nav-wigs">💇 发片管理</button>
+            <button class="active" onclick="switchTab('bodies')" id="nav-bodies">🧸 素体</button>
+            <button onclick="switchTab('wardrobe')" id="nav-wardrobe">👗 衣橱</button>
         </div>
-    </header>
+    </div>
 
-    <!-- 主内容 -->
-    <main class="main">
-        <!-- 素体管理 -->
-        <section class="section active" id="section-bodies">
-            <div class="stats-scroll">
-                <div class="stat-card">
-                    <div class="stat-number" id="stat-bodies">0</div>
-                    <div class="stat-label">素体总数</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="stat-brands">0</div>
-                    <div class="stat-label">厂家数量</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="stat-projects">0</div>
-                    <div class="stat-label">企划数量</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="stat-wigs">0</div>
-                    <div class="stat-label">发片数</div>
-                </div>
-            </div>
-
-            <div class="filter-panel">
-                <div class="filter-row">
-                    <select class="form-input" id="filter-size" onchange="renderBodies()">
+    <div class="main">
+        <!-- 素体 -->
+        <div class="section active" id="section-bodies">
+            <div class="card">
+                <div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap">
+                    <select id="f-size" onchange="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c">
                         <option value="">全部尺寸</option>
                         <option value="十二分">十二分</option>
                         <option value="八分">八分</option>
@@ -933,127 +97,376 @@
                         <option value="特六">特六</option>
                         <option value="四分">四分</option>
                         <option value="三分">三分</option>
-                        <option value="叔体">叔体</option>
                     </select>
-                    <select class="form-input" id="filter-skin" onchange="renderBodies()">
-                        <option value="">全部肤色</option>
-                        <option value="白肌">白肌</option>
-                        <option value="普肌">普肌</option>
-                        <option value="黄肌">黄肌</option>
-                        <option value="烧肌">烧肌</option>
-                        <option value="粉肌">粉肌</option>
-                        <option value="半白">半白</option>
-                    </select>
+                    <input type="text" id="f-brand" placeholder="厂家筛选" oninput="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
+                    <button class="btn btn-sm btn-secondary" onclick="clearFilters()">清空</button>
                 </div>
-                <div class="filter-row">
-                    <input type="text" class="form-input" id="filter-brand" placeholder="厂家筛选" oninput="renderBodies()">
-                    <input type="text" class="form-input" id="filter-project" placeholder="企划筛选" oninput="renderBodies()">
-                </div>
-                <div class="filter-row">
-                    <input type="number" class="form-input" id="filter-foot-min" placeholder="脚长最小" step="0.1" onchange="renderBodies()">
-                    <input type="number" class="form-input" id="filter-foot-max" placeholder="脚长最大" step="0.1" onchange="renderBodies()">
-                    <button class="btn btn-sm btn-secondary" onclick="clearFilters()">🗑️ 清空</button>
-                </div>
-                <div class="filter-row" style="margin-bottom:0;">
-                    <button class="btn btn-sm btn-secondary" onclick="exportData()">💾 导出</button>
-                    <button class="btn btn-sm btn-secondary" onclick="document.getElementById('import-file').click()">📁 导入</button>
-                    <input type="file" id="import-file" style="display:none;" accept=".json" onchange="importData(event)">
+                <div id="bodies-list"></div>
+                <div class="empty" id="bodies-empty">
+                    <div class="icon">🧸</div>
+                    <div class="text">还没有素体~<br>点击右下角 + 添加</div>
                 </div>
             </div>
+        </div>
 
-            <div id="bodies-list"></div>
-            <div class="empty" id="bodies-empty">
-                <div class="empty-icon">🧸</div>
-                <div class="empty-text">还没有素体哦~</div>
-                <div class="empty-hint">点击右下角 + 按钮添加你的第一个BJD素体</div>
-            </div>
-        </section>
-
-        <!-- 娃衣橱 -->
-        <section class="section" id="section-wardrobe">
+        <!-- 衣橱 -->
+        <div class="section" id="section-wardrobe">
             <div class="card">
-                <div class="card-title">
-                    <div class="card-title-icon">👗</div>
-                    <h2>我的娃衣橱</h2>
-                </div>
-                <div class="filter-row" style="margin-bottom:15px;">
-                    <select class="form-input" id="wardrobe-filter-type" onchange="renderWardrobe()">
+                <div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap">
+                    <select id="f-type" onchange="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c">
                         <option value="">全部类型</option>
                         <option value="上衣">上衣</option>
                         <option value="下装">下装</option>
                         <option value="连衣裙">连衣裙</option>
                         <option value="外套">外套</option>
                         <option value="鞋子">鞋子</option>
-                        <option value="袜子">袜子</option>
                         <option value="配饰">配饰</option>
                         <option value="假发">假发</option>
                         <option value="眼珠">眼珠</option>
-                        <option value="其他">其他</option>
                     </select>
-                    <input type="text" class="form-input" id="wardrobe-filter-color" placeholder="颜色筛选" oninput="renderWardrobe()">
-                    <input type="text" class="form-input" id="wardrobe-filter-size" placeholder="尺寸筛选" oninput="renderWardrobe()">
+                    <input type="text" id="f-color" placeholder="颜色筛选" oninput="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
                 </div>
                 <div id="wardrobe-list"></div>
                 <div class="empty" id="wardrobe-empty">
-                    <div class="empty-icon">👗</div>
-                    <div class="empty-text">衣橱是空的~</div>
-                    <div class="empty-hint">添加一些可爱的衣服吧！</div>
+                    <div class="icon">👗</div>
+                    <div class="text">衣橱是空的~</div>
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <!-- 脸片管理 -->
-        <section class="section" id="section-faceplates">
-            <div class="card">
-                <div class="card-title">
-                    <div class="card-title-icon">😊</div>
-                    <h2>脸片收藏</h2>
-                </div>
-                <div class="face-grid" id="faceplates-list"></div>
-                <div class="empty" id="faceplates-empty">
-                    <div class="empty-icon">😊</div>
-                    <div class="empty-text">还没有脸片~</div>
-                    <div class="empty-hint">记录你的脸片收藏和适配眼珠</div>
-                </div>
-            </div>
-        </section>
+    <button class="fab" onclick="showAdd()">➕</button>
 
-        <!-- 发片管理 -->
-        <section class="section" id="section-wigs">
-            <div class="card">
-                <div class="card-title">
-                    <div class="card-title-icon">💇</div>
-                    <h2>发片/假发</h2>
-                </div>
-                <div class="face-grid" id="wigs-list"></div>
-                <div class="empty" id="wigs-empty">
-                    <div class="empty-icon">💇</div>
-                    <div class="empty-text">还没有发片~</div>
-                    <div class="empty-hint">记录发片尺寸和适配情况</div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- 浮动按钮 -->
-    <button class="fab" onclick="showAddModal()" id="fab-btn">➕</button>
-
-    <!-- 添加素体模态框 -->
-    <div class="modal-overlay" id="modal-body">
-        <div class="modal">
-            <div class="modal-header">
+    <!-- 添加素体 -->
+    <div class="modal" id="modal-body">
+        <div class="content">
+            <div class="header">
                 <h3>🧸 添加素体</h3>
-                <button class="modal-close" onclick="closeModal('modal-body')">×</button>
+                <button onclick="closeModal('modal-body')">×</button>
             </div>
-            <form id="form-body" onsubmit="saveBody(event)">
-                <input type="hidden" id="body-id">
-                
-                <!-- 图片上传 -->
+            <form onsubmit="saveBody(event)">
                 <div class="form-group">
-                    <label class="form-label">素体图片</label>
-                    <div class="upload-zone" onclick="document.getElementById('body-file').click()">
-                        <div class="upload-icon">📷</div>
-                        <div class="upload-text">点击上传素体图片</div>
-                        <div class="upload-hint">官方尺寸图、实物图均可</div>
+                    <label>素体图片</label>
+                    <div class="upload" onclick="document.getElementById('b-file').click()">
+                        <div>📷</div>
+                        <div>点击上传图片</div>
                     </div>
-                    <input type="file" id="body-file" style="display:none;" accept="image/*" o
+                    <input type="file" id="b-file" style="display:none" accept="image/*" onchange="preview(this,'b-prev')">
+                    <div class="preview" id="b-prev"></div>
+                </div>
+                <div class="grid2">
+                    <div class="form-group">
+                        <label>名称 *</label>
+                        <input type="text" id="b-name" required placeholder="萌萌体">
+                    </div>
+                    <div class="form-group">
+                        <label>尺寸 *</label>
+                        <select id="b-size" required>
+                            <option value="">请选择</option>
+                            <option>十二分</option><option>八分</option><option>六分</option>
+                            <option>特六</option><option>四分</option><option>三分</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid2">
+                    <div class="form-group">
+                        <label>厂家 *</label>
+                        <input type="text" id="b-brand" required placeholder="SOOM">
+                    </div>
+                    <div class="form-group">
+                        <label>企划方</label>
+                        <input type="text" id="b-project" placeholder="萌职人">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>肤色 *</label>
+                    <select id="b-skin" required>
+                        <option value="">请选择</option>
+                        <option>白肌</option><option>普肌</option><option>黄肌</option>
+                        <option>烧肌</option><option>粉肌</option><option>半白</option>
+                    </select>
+                </div>
+                <div class="grid2">
+                    <div class="form-group">
+                        <label>头围(cm)</label>
+                        <input type="number" id="b-head" step="0.1" placeholder="12.5">
+                    </div>
+                    <div class="form-group">
+                        <label>素体身高(cm)</label>
+                        <input type="number" id="b-height" step="0.1" placeholder="12.4">
+                    </div>
+                    <div class="form-group">
+                        <label>脖围(cm)</label>
+                        <input type="number" id="b-neck" step="0.1" placeholder="2.7">
+                    </div>
+                    <div class="form-group">
+                        <label>臀围(cm)</label>
+                        <input type="number" id="b-hip" step="0.1" placeholder="8.2">
+                    </div>
+                    <div class="form-group">
+                        <label>脚长(cm)</label>
+                        <input type="number" id="b-foot-l" step="0.1" placeholder="1.8">
+                    </div>
+                    <div class="form-group">
+                        <label>脚宽(cm)</label>
+                        <input type="number" id="b-foot-w" step="0.1" placeholder="0.8">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>备注</label>
+                    <input type="text" id="b-notes" placeholder="购买渠道、妆师等">
+                </div>
+                <button type="submit" class="btn btn-full">💾 保存素体</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 添加衣橱 -->
+    <div class="modal" id="modal-wardrobe">
+        <div class="content">
+            <div class="header">
+                <h3>👗 添加物品</h3>
+                <button onclick="closeModal('modal-wardrobe')">×</button>
+            </div>
+            <form onsubmit="saveWardrobe(event)">
+                <div class="form-group">
+                    <label>物品图片</label>
+                    <div class="upload" onclick="document.getElementById('w-file').click()">
+                        <div>📷</div>
+                        <div>点击上传图片</div>
+                    </div>
+                    <input type="file" id="w-file" style="display:none" accept="image/*" onchange="preview(this,'w-prev')">
+                    <div class="preview" id="w-prev"></div>
+                </div>
+                <div class="grid2">
+                    <div class="form-group">
+                        <label>名称 *</label>
+                        <input type="text" id="w-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>类型 *</label>
+                        <select id="w-type" required>
+                            <option value="">请选择</option>
+                            <option>上衣</option><option>下装</option><option>连衣裙</option>
+                            <option>外套</option><option>鞋子</option><option>配饰</option>
+                            <option>假发</option><option>眼珠</option><option>其他</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid2">
+                    <div class="form-group">
+                        <label>颜色</label>
+                        <input type="text" id="w-color" placeholder="粉色">
+                    </div>
+                    <div class="form-group">
+                        <label>适用尺寸</label>
+                        <input type="text" id="w-size" placeholder="六分、四分">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>适配体子</label>
+                    <input type="text" id="w-body" placeholder="例如：萌萌体、SOOM四分">
+                </div>
+                <div class="form-group">
+                    <label>备注</label>
+                    <input type="text" id="w-notes" placeholder="材质、版型等">
+                </div>
+                <button type="submit" class="btn btn-full">💾 保存物品</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var data={bodies:[],wardrobe:[]};
+        var current='bodies';
+        var tempImg='';
+
+        function load(){var s=localStorage.getItem('bjd');if(s)try{data=JSON.parse(s)}catch(e){}}
+        function save(){localStorage.setItem('bjd',JSON.stringify(data))}
+
+        function switchTab(tab){
+            current=tab;
+            document.getElementById('nav-bodies').className=tab=='bodies'?'active':'';
+            document.getElementById('nav-wardrobe').className=tab=='wardrobe'?'active':'';
+            document.getElementById('section-bodies').className='section'+(tab=='bodies'?' active':'');
+            document.getElementById('section-wardrobe').className='section'+(tab=='wardrobe'?' active':'');
+            render();
+        }
+
+        function showAdd(){
+            var id=current=='bodies'?'modal-body':'modal-wardrobe';
+            document.getElementById(id).className='modal show';
+            tempImg='';
+            document.getElementById('b-prev').innerHTML='';
+            document.getElementById('w-prev').innerHTML='';
+        }
+
+        function closeModal(id){
+            document.getElementById(id).className='modal';
+            document.getElementById(id).querySelector('form').reset();
+        }
+
+        function preview(input,pid){
+            var f=input.files[0];
+            if(!f)return;
+            var r=new FileReader();
+            r.onload=function(e){
+                tempImg=e.target.result;
+                document.getElementById(pid).innerHTML='<img src="'+e.target.result+'">';
+            };
+            r.readAsDataURL(f);
+        }
+
+        function saveBody(e){
+            e.preventDefault();
+            data.bodies.push({
+                id:Date.now(),
+                name:document.getElementById('b-name').value,
+                size:document.getElementById('b-size').value,
+                brand:document.getElementById('b-brand').value,
+                project:document.getElementById('b-project').value,
+                skin:document.getElementById('b-skin').value,
+                image:tempImg,
+                head:document.getElementById('b-head').value,
+                height:document.getElementById('b-height').value,
+                neck:document.getElementById('b-neck').value,
+                hip:document.getElementById('b-hip').value,
+                footL:document.getElementById('b-foot-l').value,
+                footW:document.getElementById('b-foot-w').value,
+                notes:document.getElementById('b-notes').value
+            });
+            save();
+            closeModal('modal-body');
+            renderBodies();
+        }
+
+        function saveWardrobe(e){
+            e.preventDefault();
+            data.wardrobe.push({
+                id:Date.now(),
+                name:document.getElementById('w-name').value,
+                type:document.getElementById('w-type').value,
+                color:document.getElementById('w-color').value,
+                size:document.getElementById('w-size').value,
+                body:document.getElementById('w-body').value,
+                image:tempImg,
+                notes:document.getElementById('w-notes').value
+            });
+            save();
+            closeModal('modal-wardrobe');
+            renderWardrobe();
+        }
+
+        function render(){
+            renderBodies();
+            renderWardrobe();
+        }
+
+        function renderBodies(){
+            var list=document.getElementById('bodies-list');
+            var empty=document.getElementById('bodies-empty');
+            var fs=document.getElementById('f-size').value;
+            var fb=document.getElementById('f-brand').value.toLowerCase();
+            
+            var arr=[];
+            for(var i=0;i<data.bodies.length;i++){
+                var b=data.bodies[i];
+                if(fs&&b.size!=fs)continue;
+                if(fb&&b.brand.toLowerCase().indexOf(fb)==-1)continue;
+                arr.push(b);
+            }
+            
+            if(arr.length==0){list.innerHTML='';empty.className='empty show';return}
+            empty.className='empty';
+            
+            var h='';
+            for(var i=0;i<arr.length;i++){
+                var b=arr[i];
+                h+='<div class="body-card">';
+                h+='<div class="img">'+(b.image?'<img src="'+b.image+'">':'🧸')+'</div>';
+                h+='<div class="info">';
+                h+='<div class="name">'+b.name+'</div>';
+                h+='<div class="meta">'+b.brand+(b.project?' · '+b.project:'')+' · '+b.size+' · '+b.skin+'</div>';
+                h+='<div class="specs">';
+                if(b.head)h+='<span class="spec"><span>头围 </span><span>'+b.head+'</span></span>';
+                if(b.height)h+='<span class="spec"><span>身高 </span><span>'+b.height+'</span></span>';
+                if(b.neck)h+='<span class="spec"><span>脖围 </span><span>'+b.neck+'</span></span>';
+                if(b.hip)h+='<span class="spec"><span>臀围 </span><span>'+b.hip+'</span></span>';
+                if(b.footL)h+='<span class="spec"><span>脚长 </span><span>'+b.footL+'</span></span>';
+                if(b.footW)h+='<span class="spec"><span>脚宽 </span><span>'+b.footW+'</span></span>';
+                h+='</div>';
+                if(b.notes)h+='<div style="font-size:12px;color:#ff8fab;margin-top:8px">'+b.notes+'</div>';
+                h+='</div></div>';
+            }
+            list.innerHTML=h;
+        }
+
+        function renderWardrobe(){
+            var list=document.getElementById('wardrobe-list');
+            var empty=document.getElementById('wardrobe-empty');
+            var ft=document.getElementById('f-type').value;
+            var fc=document.getElementById('f-color').value.toLowerCase();
+            
+            var arr=[];
+            for(var i=0;i<data.wardrobe.length;i++){
+                var w=data.wardrobe[i];
+                if(ft&&w.type!=ft)continue;
+                if(fc&&(!w.color||w.color.toLowerCase().indexOf(fc)==-1))continue;
+                arr.push(w);
+            }
+            
+            if(arr.length==0){list.innerHTML='';empty.className='empty show';return}
+            empty.className='empty';
+            
+            var h='';
+            for(var i=0;i<arr.length;i++){
+                var w=arr[i];
+                h+='<div class="wardrobe-item">';
+                h+='<div class="img">'+(w.image?'<img src="'+w.image+'">':'👗')+'</div>';
+                h+='<div class="info">';
+                h+='<div class="name">'+w.name+'</div>';
+                h+='<div class="meta">';
+                h+='<span>'+w.type+'</span>';
+                if(w.color)h+='<span> · '+w.color+'</span>';
+                if(w.size)h+='<span> · '+w.size+'</span>';
+                h+='</div>';
+                if(w.body)h+='<div style="font-size:12px;color:#e83e5c;margin-top:5px">适配: '+w.body+'</div>';
+                if(w.notes)h+='<div style="font-size:12px;color:#ff8fab;margin-top:5px">'+w.notes+'</div>';
+                h+='</div>';
+                h+='<button class="btn btn-sm btn-secondary" onclick="delW('+w.id+')">删除</button>';
+                h+='</div>';
+            }
+            list.innerHTML=h;
+        }
+
+        function delW(id){
+            if(!confirm('确定删除？'))return;
+            var arr=[];
+            for(var i=0;i<data.wardrobe.length;i++){
+                if(data.wardrobe[i].id!=id)arr.push(data.wardrobe[i]);
+            }
+            data.wardrobe=arr;
+            save();
+            renderWardrobe();
+        }
+
+        function clearFilters(){
+            document.getElementById('f-size').value='';
+            document.getElementById('f-brand').value='';
+            renderBodies();
+        }
+
+        // 点击外部关闭
+        document.addEventListener('click',function(e){
+            if(e.target.className=='modal show'){
+                e.target.className='modal';
+                e.target.querySelector('form').reset();
+            }
+        });
+
+        load();
+        render();
+    </script>
+</body>
+</html>
+
