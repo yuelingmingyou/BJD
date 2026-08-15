@@ -2,931 +2,322 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎀 BJD管理屋 🎀</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BJD管理屋</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        :root {
-            --pink-50: #fff0f3;
-            --pink-100: #ffd1dc;
-            --pink-200: #ffb3c6;
-            --pink-300: #ff8fab;
-            --pink-400: #ff758f;
-            --pink-500: #ff4d6d;
-            --pink-600: #e83e5c;
-            --pink-700: #c9184a;
-            --pink-800: #a4133c;
-            --shadow-soft: 0 4px 20px rgba(255, 77, 109, 0.15);
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(180deg, var(--pink-50) 0%, #fff5f7 50%, var(--pink-100) 100%);
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(180deg, #fff0f3 0%, #fff5f7 50%, #ffd1dc 100%);
             min-height: 100vh;
-            color: var(--pink-800);
-            padding-bottom: 80px;
+            color: #c9184a;
         }
-
         .header {
-            background: linear-gradient(135deg, #ff6b9d 0%, #ff8fab 30%, #ff4d6d 100%);
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff4d6d 100%);
             padding: 20px 15px 25px;
             border-radius: 0 0 30px 30px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .logo-icon {
-            width: 55px;
-            height: 55px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
-
-        .logo-text h1 {
-            font-size: 26px;
             color: white;
-            font-weight: 800;
-            letter-spacing: 1px;
         }
-
-        .logo-text p {
-            color: rgba(255,255,255,0.85);
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .nav-grid {
+        .header h1 { font-size: 26px; font-weight: 800; }
+        .header p { font-size: 12px; opacity: 0.85; margin-top: 5px; }
+        
+        .nav {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             max-width: 500px;
-            margin: 0 auto;
+            margin: 15px auto 0;
         }
-
-        .nav-btn {
-            padding: 12px 16px;
+        .nav button {
+            padding: 12px;
             border-radius: 20px;
             border: none;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .nav-btn-inactive {
             background: rgba(255,255,255,0.25);
             color: white;
         }
-
-        .nav-btn-active {
+        .nav button.active {
             background: white;
-            color: var(--pink-600);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            color: #e83e5c;
         }
-
-        .main-container {
-            padding: 15px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .stats-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 5px 0 15px;
-            scrollbar-width: none;
-        }
-
-        .stats-scroll::-webkit-scrollbar {
-            display: none;
-        }
-
-        .stat-card {
-            min-width: 130px;
-            background: white;
-            border-radius: 20px;
-            padding: 18px;
-            text-align: center;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--pink-100);
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: 800;
-            color: var(--pink-500);
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--pink-400);
-            font-weight: 600;
-            margin-top: 6px;
-        }
-
+        
+        .main { padding: 15px; max-width: 800px; margin: 0 auto; }
+        .section { display: none; }
+        .section.active { display: block; }
+        
         .card {
             background: white;
             border-radius: 20px;
             padding: 18px;
             margin-bottom: 15px;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--pink-100);
+            box-shadow: 0 4px 20px rgba(255, 77, 109, 0.15);
+            border: 2px solid #ffd1dc;
         }
-
-        .card-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .card h2 {
+            font-size: 17px;
+            color: #c9184a;
             margin-bottom: 15px;
             padding-bottom: 12px;
-            border-bottom: 2px dashed var(--pink-200);
+            border-bottom: 2px dashed #ffb3c6;
         }
-
-        .card-title-icon {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, var(--pink-300), var(--pink-500));
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: white;
-        }
-
-        .card-title h2 {
-            font-size: 17px;
-            color: var(--pink-700);
-            font-weight: 700;
-        }
-
+        
         .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            display: inline-block;
             padding: 10px 18px;
             border-radius: 16px;
             border: none;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+            background: linear-gradient(135deg, #ff758f, #e83e5c);
             color: white;
         }
-
         .btn-secondary {
-            background: var(--pink-50);
-            color: var(--pink-600);
-            border: 2px solid var(--pink-200);
+            background: #fff0f3;
+            color: #e83e5c;
+            border: 2px solid #ffb3c6;
         }
-
-        .btn-danger {
-            background: #ff6b6b;
-            color: white;
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-            border-radius: 12px;
-        }
-
-        .btn-full {
-            width: 100%;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-
-        .form-label {
+        
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
             display: block;
             margin-bottom: 6px;
             font-size: 13px;
             font-weight: 700;
-            color: var(--pink-700);
+            color: #c9184a;
         }
-
-        .form-input, .form-select, .form-textarea {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 12px 15px;
-            border: 2px solid var(--pink-200);
+            border: 2px solid #ffb3c6;
             border-radius: 14px;
             font-size: 15px;
-            color: var(--pink-800);
-            background: var(--pink-50);
-            font-family: inherit;
+            color: #a4133c;
+            background: #fff0f3;
         }
-
-        .form-textarea {
-            min-height: 80px;
-            resize: vertical;
+        
+        .upload-zone {
+            border: 3px dashed #ffb3c6;
+            border-radius: 18px;
+            padding: 30px;
+            text-align: center;
+            background: #fff0f3;
+            cursor: pointer;
         }
-
+        .upload-zone .icon { font-size: 40px; margin-bottom: 10px; }
+        .upload-zone .text { color: #e83e5c; font-size: 14px; font-weight: 700; }
+        
         .body-card {
             background: white;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--pink-100);
             margin-bottom: 12px;
             display: flex;
+            box-shadow: 0 4px 20px rgba(255, 77, 109, 0.15);
+            border: 2px solid #ffd1dc;
         }
-
-        .body-card-image {
-            width: 110px;
-            min-height: 110px;
+        .body-card .img {
+            width: 120px;
+            min-height: 120px;
+            background: linear-gradient(135deg, #ffd1dc, #ffb3c6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
             flex-shrink: 0;
-            background: linear-gradient(135deg, var(--pink-100), var(--pink-200));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
         }
-
-        .body-card-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .no-image {
-            font-size: 40px;
-            opacity: 0.4;
-        }
-
-        .body-card-badges {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .badge {
-            padding: 3px 8px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .badge-size { background: rgba(255, 77, 109, 0.9); }
-        .badge-skin { background: rgba(255, 179, 198, 0.9); }
-
-        .body-card-content {
-            flex: 1;
-            padding: 14px;
-            min-width: 0;
-        }
-
-        .body-card-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--pink-700);
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .body-card-brand {
-            font-size: 12px;
-            color: var(--pink-400);
-            margin-bottom: 10px;
-        }
-
-        .body-card-specs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 10px;
-        }
-
-        .spec-pill {
-            padding: 4px 10px;
-            background: var(--pink-50);
-            border-radius: 10px;
-            font-size: 11px;
-        }
-
-        .spec-pill span:first-child {
-            color: var(--pink-400);
-        }
-
-        .spec-pill span:last-child {
-            color: var(--pink-600);
-            font-weight: 700;
-        }
-
-        .body-card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .body-card-tag {
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-size: 10px;
-            background: var(--pink-100);
-            color: var(--pink-600);
-        }
-
-        .detail-section {
-            display: none;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 2px dashed var(--pink-200);
-        }
-
-        .detail-section.show {
-            display: block;
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-
-        .detail-item {
-            padding: 10px;
-            background: var(--pink-50);
-            border-radius: 12px;
-        }
-
-        .detail-item .detail-label {
-            font-size: 10px;
-            color: var(--pink-400);
-            margin-bottom: 4px;
-        }
-
-        .detail-item .detail-value {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--pink-600);
-        }
-
-        .expand-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px;
-            color: var(--pink-500);
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 8px;
-        }
-
-        .filter-panel {
-            background: linear-gradient(135deg, var(--pink-50), white);
-            border-radius: 18px;
-            padding: 14px;
-            margin-bottom: 14px;
-            border: 2px solid var(--pink-200);
-        }
-
-        .filter-row {
+        .body-card .img img { width: 100%; height: 100%; object-fit: cover; }
+        .body-card .info { padding: 15px; flex: 1; }
+        .body-card .name { font-size: 16px; font-weight: 700; color: #c9184a; }
+        .body-card .brand { font-size: 12px; color: #ff8fab; margin-top: 3px; }
+        .body-card .specs {
             display: flex;
             gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .filter-row input, .filter-row select {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            border-radius: 14px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .tag-add {
-            background: var(--pink-50);
-            color: var(--pink-500);
-            border: 2px dashed var(--pink-300);
-        }
-
-        .tag-item {
-            background: linear-gradient(135deg, var(--pink-300), var(--pink-500));
-            color: white;
-        }
-
-        .tag-remove {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            align-items: flex-end;
-            z-index: 1000;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background: white;
-            border-radius: 30px 30px 0 0;
-            padding: 20px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            transform: translateY(100%);
-            transition: transform 0.3s;
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 18px;
-            padding-bottom: 12px;
-            border-bottom: 2px dashed var(--pink-200);
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 10;
-        }
-
-        .modal-header h3 {
-            font-size: 20px;
-            color: var(--pink-700);
-        }
-
-        .modal-close {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: var(--pink-100);
-            color: var(--pink-600);
-            font-size: 18px;
-            cursor: pointer;
-        }
-
-        .upload-zone {
-            border: 3px dashed var(--pink-300);
-            border-radius: 18px;
-            padding: 25px 20px;
-            text-align: center;
-            background: var(--pink-50);
-            cursor: pointer;
-        }
-
-        .upload-zone-icon {
-            font-size: 36px;
-            margin-bottom: 8px;
-        }
-
-        .upload-zone-text {
-            color: var(--pink-600);
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .upload-zone-hint {
-            color: var(--pink-400);
-            font-size: 11px;
-            margin-top: 6px;
-        }
-
-        .image-preview {
-            position: relative;
-            display: inline-block;
             margin-top: 10px;
+            flex-wrap: wrap;
         }
-
-        .image-preview img {
-            max-width: 150px;
-            max-height: 150px;
-            border-radius: 14px;
-            border: 3px solid var(--pink-200);
+        .body-card .spec {
+            padding: 4px 10px;
+            background: #fff0f3;
+            border-radius: 10px;
+            font-size: 11px;
         }
-
-        .image-preview-remove {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            width: 26px;
-            height: 26px;
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            display: none;
-        }
-
-        .empty-state.show {
-            display: block;
-        }
-
-        .empty-state-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-            opacity: 0.4;
-        }
-
-        .empty-state-text {
-            font-size: 16px;
-            color: var(--pink-400);
-            font-weight: 700;
-        }
-
-        .fab-container {
+        .body-card .spec span:first-child { color: #ff8fab; }
+        .body-card .spec span:last-child { color: #e83e5c; font-weight: 700; }
+        
+        .fab {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            z-index: 100;
-        }
-
-        .fab {
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--pink-400), var(--pink-600));
+            background: linear-gradient(135deg, #ff758f, #e83e5c);
             color: white;
             border: none;
             font-size: 24px;
             cursor: pointer;
             box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
         }
-
-        .wardrobe-item {
-            display: flex;
-            gap: 14px;
-            padding: 14px;
-            background: var(--pink-50);
-            border-radius: 18px;
-            margin-bottom: 12px;
-            align-items: center;
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: flex-end;
+            z-index: 1000;
         }
-
-        .wardrobe-item-image {
-            width: 70px;
-            height: 70px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, var(--pink-200), var(--pink-300));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            flex-shrink: 0;
-        }
-
-        .wardrobe-item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 14px;
-        }
-
-        .wardrobe-item-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .wardrobe-item-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--pink-700);
-            margin-bottom: 6px;
-        }
-
-        .wardrobe-item-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .meta-tag {
-            padding: 4px 10px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: 600;
-            background: var(--pink-200);
-            color: var(--pink-700);
-        }
-
-        .face-card {
+        .modal-overlay.active { display: flex; }
+        .modal {
             background: white;
-            border-radius: 18px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: var(--shadow-soft);
-            border: 2px solid var(--pink-100);
-        }
-
-        .face-card-image {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            margin: 0 auto 12px;
-            background: linear-gradient(135deg, var(--pink-200), var(--pink-300));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
-            overflow: hidden;
-        }
-
-        .face-card-image img {
+            border-radius: 30px 30px 0 0;
+            padding: 25px 20px;
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.3s;
         }
-
-        .face-card-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--pink-700);
-            margin-bottom: 5px;
-        }
-
-        .face-card-info {
-            font-size: 12px;
-            color: var(--pink-400);
-            margin-bottom: 3px;
-        }
-
-        .face-card-actions {
-            margin-top: 12px;
+        .modal-overlay.active .modal { transform: translateY(0); }
+        .modal-header {
             display: flex;
-            gap: 8px;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed #ffb3c6;
         }
-
-        .hidden {
-            display: none !important;
+        .modal-header h3 { font-size: 20px; color: #c9184a; }
+        .modal-close {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: #ffd1dc;
+            color: #e83e5c;
+            font-size: 18px;
+            cursor: pointer;
         }
+        
+        .empty { text-align: center; padding: 50px; display: none; }
+        .empty.show { display: block; }
+        .empty .icon { font-size: 60px; opacity: 0.4; }
+        .empty .text { font-size: 16px; color: #ff8fab; font-weight: 700; margin-top: 15px; }
+        
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     </style>
 </head>
 <body>
-    <!-- 头部 -->
-    <header class="header">
-        <div class="logo">
-            <div class="logo-icon">🎀</div>
-            <div class="logo-text">
-                <h1>BJD管理屋</h1>
-                <p>素体 · 衣橱 · 发片脸片一站式管理</p>
-            </div>
+    <div class="header">
+        <h1>🎀 BJD管理屋</h1>
+        <p>素体 · 衣橱 · 发片脸片一站式管理</p>
+        <div class="nav">
+            <button class="active" onclick="switchTab('bodies')" id="nav-bodies">🧸 素体管理</button>
+            <button onclick="switchTab('wardrobe')" id="nav-wardrobe">👗 娃衣橱</button>
+            <button onclick="switchTab('faceplates')" id="nav-faceplates">😊 脸片管理</button>
+            <button onclick="switchTab('wigs')" id="nav-wigs">💇 发片管理</button>
         </div>
-        <div class="nav-grid">
-            <button class="nav-btn nav-btn-active" onclick="switchTab('bodies')" id="nav-bodies">🧸 素体管理</button>
-            <button class="nav-btn nav-btn-inactive" onclick="switchTab('wardrobe')" id="nav-wardrobe">👗 娃衣橱</button>
-            <button class="nav-btn nav-btn-inactive" onclick="switchTab('faceplates')" id="nav-faceplates">😊 脸片管理</button>
-            <button class="nav-btn nav-btn-inactive" onclick="switchTab('wigs')" id="nav-wigs">💇 发片管理</button>
-        </div>
-    </header>
+    </div>
 
-    <!-- 主内容 -->
-    <main class="main-container">
-        <!-- 素体管理 -->
-        <section id="section-bodies" class="section active">
-            <div class="stats-scroll">
-                <div class="stat-card">
-                    <div class="stat-number" id="stat-bodies">0</div>
-                    <div class="stat-label">素体总数</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="stat-brands">0</div>
-                    <div class="stat-label">厂家数量</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="stat-avg-height">0</div>
-                    <div class="stat-label">平均身高cm</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="stat-wigs">0</div>
-                    <div class="stat-label">发片数</div>
-                </div>
+    <div class="main">
+        <!-- 素体 -->
+        <div class="section active" id="section-bodies">
+            <div class="card">
+                <h2>📊 统计</h2>
+                <p>素体数量: <span id="count-bodies">0</span></p>
             </div>
-
-            <div class="filter-panel">
-                <div class="filter-row">
-                    <select class="form-select" id="filter-size" onchange="renderBodies()">
+            <div class="card">
+                <h2>🔍 筛选</h2>
+                <div class="grid-2">
+                    <select class="form-group" id="filter-size" onchange="renderBodies()" style="padding:12px;border-radius:14px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c;">
                         <option value="">全部尺寸</option>
                         <option value="十二分">十二分</option>
                         <option value="八分">八分</option>
                         <option value="六分">六分</option>
                         <option value="特六">特六</option>
                         <option value="四分">四分</option>
-                        <option value="三分">三分</option>
-                        <option value="叔体">叔体</option>
                     </select>
-                    <select class="form-select" id="filter-skin" onchange="renderBodies()">
-                        <option value="">全部肤色</option>
-                        <option value="白肌">白肌</option>
-                        <option value="普肌">普肌</option>
-                        <option value="黄肌">黄肌</option>
-                        <option value="烧肌">烧肌</option>
-                        <option value="粉肌">粉肌</option>
-                        <option value="半白">半白</option>
-                    </select>
+                    <input type="text" placeholder="厂家筛选" id="filter-brand" oninput="renderBodies()" style="padding:12px;border-radius:14px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c;">
                 </div>
-                <div class="filter-row">
-                    <input type="text" class="form-input" id="filter-brand" placeholder="厂家筛选" oninput="renderBodies()">
-                    <input type="number" class="form-input" id="filter-foot-min" placeholder="脚长最小" step="0.1" onchange="renderBodies()">
-                    <input type="number" class="form-input" id="filter-foot-max" placeholder="脚长最大" step="0.1" onchange="renderBodies()">
-                </div>
-                <div class="filter-row" style="margin-bottom:0;">
-                    <button class="btn btn-sm btn-secondary" onclick="clearFilters()">🗑️ 清空</button>
-                    <button class="btn btn-sm btn-secondary" onclick="exportData()">💾 导出</button>
-                    <button class="btn btn-sm btn-secondary" onclick="document.getElementById('import-file').click()">📁 导入</button>
-                    <input type="file" id="import-file" style="display:none;" accept=".json" onchange="importData(event)">
-                </div>
+                <button class="btn btn-secondary" onclick="clearFilters()" style="margin-top:10px;">🗑️ 清空筛选</button>
             </div>
-
             <div id="bodies-list"></div>
-            <div id="bodies-empty" class="empty-state show">
-                <div class="empty-state-icon">🧸</div>
-                <div class="empty-state-text">还没有素体哦~</div>
-                <div style="font-size:13px;color:var(--pink-300);margin-top:8px;">点击右下角 + 按钮添加</div>
+            <div class="empty" id="bodies-empty">
+                <div class="icon">🧸</div>
+                <div class="text">还没有素体哦~<br>点击右下角 + 添加</div>
             </div>
-        </section>
+        </div>
 
-        <!-- 娃衣橱 -->
-        <section id="section-wardrobe" class="section">
+        <!-- 衣橱 -->
+        <div class="section" id="section-wardrobe">
             <div class="card">
-                <div class="card-title">
-                    <div class="card-title-icon">👗</div>
-                    <h2>我的娃衣橱</h2>
-                    <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="showAddWardrobeModal()">➕ 添加</button>
-                </div>
-                <div class="filter-row" style="margin-bottom:15px;">
-                    <select class="form-select" id="wardrobe-filter-type" onchange="renderWardrobe()">
-                        <option value="">全部类型</option>
-                        <option value="上衣">上衣</option>
-                        <option value="下装">下装</option>
-                        <option value="连衣裙">连衣裙</option>
-                        <option value="外套">外套</option>
-                        <option value="鞋子">鞋子</option>
-                        <option value="袜子">袜子</option>
-                        <option value="配饰">配饰</option>
-                        <option value="假发">假发</option>
-                        <option value="眼珠">眼珠</option>
-                        <option value="其他">其他</option>
-                    </select>
-                    <input type="text" class="form-input" id="wardrobe-filter-color" placeholder="颜色筛选" oninput="renderWardrobe()">
-                    <input type="text" class="form-input" id="wardrobe-filter-size" placeholder="尺寸筛选" oninput="renderWardrobe()">
-                </div>
+                <h2>👗 我的娃衣橱</h2>
                 <div id="wardrobe-list"></div>
-                <div id="wardrobe-empty" class="empty-state show">
-                    <div class="empty-state-icon">👗</div>
-                    <div class="empty-state-text">衣橱是空的~</div>
+                <div class="empty" id="wardrobe-empty">
+                    <div class="icon">👗</div>
+                    <div class="text">衣橱是空的~</div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- 脸片管理 -->
-        <section id="section-faceplates" class="section">
+        <!-- 脸片 -->
+        <div class="section" id="section-faceplates">
             <div class="card">
-                <div class="card-title">
-                    <div class="card-title-icon">😊</div>
-                    <h2>脸片收藏</h2>
-                    <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="showAddFaceplateModal()">➕ 添加</button>
-                </div>
-                <div id="faceplates-list" class="grid-2"></div>
-                <div id="faceplates-empty" class="empty-state show">
-                    <div class="empty-state-icon">😊</div>
-                    <div class="empty-state-text">还没有脸片~</div>
+                <h2>😊 脸片收藏</h2>
+                <div class="grid-2" id="faceplates-list"></div>
+                <div class="empty" id="faceplates-empty">
+                    <div class="icon">😊</div>
+                    <div class="text">还没有脸片~</div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- 发片管理 -->
-        <section id="section-wigs" class="section">
+        <!-- 发片 -->
+        <div class="section" id="section-wigs">
             <div class="card">
-                <div class="card-title">
-                    <div class="card-title-icon">💇</div>
-                    <h2>发片/假发</h2>
-                    <button class="btn btn-primary btn-sm" style="margin-left:auto;" onclick="showAddWigModal()">➕ 添加</button>
-                </div>
-                <div id="wigs-list" class="grid-2"></div>
-                <div id="wigs-empty" class="empty-state show">
-                    <div class="empty-state-icon">💇</div>
-                    <div class="empty-state-text">还没有发片~</div>
+                <h2>💇 发片/假发</h2>
+                <div class="grid-2" id="wigs-list"></div>
+                <div class="empty" id="wigs-empty">
+                    <div class="icon">💇</div>
+                    <div class="text">还没有发片~</div>
                 </div>
             </div>
-        </section>
-    </main>
-
-    <!-- 浮动按钮 -->
-    <div class="fab-container" id="fab-container">
-        <button class="fab" onclick="showAddModal()" id="fab-btn">➕</button>
+        </div>
     </div>
+
+    <button class="fab" onclick="showAddModal()">➕</button>
 
     <!-- 添加素体模态框 -->
     <div class="modal-overlay" id="modal-body">
         <div class="modal">
             <div class="modal-header">
-                <h3 id="modal-body-title">🧸 添加素体</h3>
+                <h3>🧸 添加素体</h3>
                 <button class="modal-close" onclick="closeModal('modal-body')">×</button>
             </div>
-            <form id="form-body" onsubmit="saveBody(event)">
-                <input type="hidden" id="body-id">
-                
+            <form onsubmit="saveBody(event)">
                 <div class="form-group">
-                    <label class="form-label">素体图片</label>
-                    <div class="upload-zone" onclick="triggerFileInput('body-image-input')">
-                        <div class="upload-zone-icon">📷</div>
-                        <div class="upload-zone-text">点击上传素体图片</div>
-                        <div class="upload-zone-hint">官方尺寸图、实物图均可</div>
+                    <label>素体图片</label>
+                    <div class="upload-zone" onclick="document.getElementById('body-file').click()">
+                        <div class="icon">📷</div>
+                        <div class="text">点击上传素体图片</div>
                     </div>
-                    <input type="file" id="body-image-input" style="display:none;" accept="image/*" onchange="handleImageSelect(event, 'body-image')">
-                    <div id="body-image-preview"></div>
+                    <input type="file" id="body-file" style="display:none;" accept="image/*" onchange="previewImage(this, 'body-preview')">
+                    <div id="body-preview" style="margin-top:10px;"></div>
                 </div>
-
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">素体名称 *</label>
-                        <input type="text" class="form-input" id="body-name" required placeholder="例如：萌萌体">
+                        <label>素体名称 *</label>
+                        <input type="text" id="body-name" required placeholder="例如：萌萌体">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">厂家 *</label>
-                        <input type="text" class="form-input" id="body-brand" required placeholder="例如：SOOM">
+                        <label>厂家 *</label>
+                        <input type="text" id="body-brand" required placeholder="例如：SOOM">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">尺寸 *</label>
-                        <select class="form-select" id="body-size" required>
+                        <label>尺寸 *</label>
+                        <select id="body-size" required>
                             <option value="">请选择</option>
                             <option value="十二分">十二分</option>
                             <option value="八分">八分</option>
@@ -938,8 +329,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">肤色 *</label>
-                        <select class="form-select" id="body-skin" required>
+                        <label>肤色 *</label>
+                        <select id="body-skin" required>
                             <option value="">请选择</option>
                             <option value="白肌">白肌</option>
                             <option value="普肌">普肌</option>
@@ -950,26 +341,348 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="form-group">
-                    <label class="form-label">企划信息</label>
-                    <input type="text" class="form-input" id="body-project" placeholder="例如：萌职人、IP联名">
+                    <label>脚长 (cm)</label>
+                    <input type="number" id="body-foot" step="0.1" placeholder="1.8">
                 </div>
-
-                <div class="card-title" style="margin:15px 0 12px;">
-                    <div class="card-title-icon" style="width:32px;height:32px;font-size:14px;">📏</div>
-                    <h2 style="font-size:14px;">尺寸数据 (cm)</h2>
+                <div class="form-group">
+                    <label>备注</label>
+                    <input type="text" id="body-notes" placeholder="购买渠道、妆师等...">
                 </div>
+                <button type="submit" class="btn" style="width:100%;margin-top:15px;">💾 保存素体</button>
+            </form>
+        </div>
+    </div>
 
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label class="form-label">头围</label>
-                        <input type="number" class="form-input" id="body-head-c" step="0.1" placeholder="12.5">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">头高</label>
-                        <input type="number" class="form-input" id="body-head-h" step="0.1" placeholder="4.0">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">脖围</label>
-                      
+    <!-- 添加衣橱模态框 -->
+    <div class="modal-overlay" id="modal-wardrobe">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>👗 添加物品</h3>
+                <button class="modal-close" onclick="closeModal('modal-wardrobe')">×</button>
+            </div>
+            <form onsubmit="saveWardrobe(event)">
+                <div class="form-group">
+                    <label>物品名称 *</label>
+                    <input type="text" id="wardrobe-name" required>
+                </div>
+                <div class="form-group">
+                    <label>类型 *</label>
+                    <select id="wardrobe-type" required>
+                        <option value="">请选择</option>
+                        <option value="上衣">上衣</option>
+                        <option value="下装">下装</option>
+                        <option value="连衣裙">连衣裙</option>
+                        <option value="外套">外套</option>
+                        <option value="鞋子">鞋子</option>
+                        <option value="配饰">配饰</option>
+                        <option value="眼珠">眼珠</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn" style="width:100%;margin-top:15px;">💾 保存物品</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 添加脸片模态框 -->
+    <div class="modal-overlay" id="modal-faceplate">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>😊 添加脸片</h3>
+                <button class="modal-close" onclick="closeModal('modal-faceplate')">×</button>
+            </div>
+            <form onsubmit="saveFaceplate(event)">
+                <div class="form-group">
+                    <label>脸片名称 *</label>
+                    <input type="text" id="faceplate-name" required>
+                </div>
+                <div class="form-group">
+                    <label>适配眼珠尺寸</label>
+                    <input type="text" id="faceplate-eye" placeholder="例如：14mm">
+                </div>
+                <button type="submit" class="btn" style="width:100%;margin-top:15px;">💾 保存脸片</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 添加发片模态框 -->
+    <div class="modal-overlay" id="modal-wig">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>💇 添加发片</h3>
+                <button class="modal-close" onclick="closeModal('modal-wig')">×</button>
+            </div>
+            <form onsubmit="saveWig(event)">
+                <div class="form-group">
+                    <label>发片名称 *</label>
+                    <input type="text" id="wig-name" required>
+                </div>
+                <div class="form-group">
+                    <label>颜色</label>
+                    <input type="text" id="wig-color" placeholder="粉色">
+                </div>
+                <button type="submit" class="btn" style="width:100%;margin-top:15px;">💾 保存发片</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 数据
+        var data = { bodies: [], wardrobe: [], faceplates: [], wigs: [] };
+        var currentTab = 'bodies';
+        var tempImage = '';
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            renderAll();
+        });
+
+        // 切换标签
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // 更新按钮样式
+            var buttons = document.querySelectorAll('.nav button');
+            for (var i = 0; i < buttons.length; i++) {
+                buttons[i].className = '';
+            }
+            document.getElementById('nav-' + tab).className = 'active';
+            
+            // 切换显示
+            var sections = document.querySelectorAll('.section');
+            for (var i = 0; i < sections.length; i++) {
+                sections[i].className = 'section';
+            }
+            document.getElementById('section-' + tab).className = 'section active';
+            
+            renderAll();
+        }
+
+        // 显示添加模态框
+        function showAddModal() {
+            var map = { bodies: 'modal-body', wardrobe: 'modal-wardrobe', faceplates: 'modal-faceplate', wigs: 'modal-wig' };
+            var modal = document.getElementById(map[currentTab]);
+            modal.className = 'modal-overlay active';
+            tempImage = '';
+            document.getElementById('body-preview').innerHTML = '';
+        }
+
+        // 关闭模态框
+        function closeModal(id) {
+            document.getElementById(id).className = 'modal-overlay';
+        }
+
+        // 图片预览
+        function previewImage(input, previewId) {
+            var file = input.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                tempImage = e.target.result;
+                document.getElementById(previewId).innerHTML = '<img src="' + e.target.result + '" style="max-width:150px;border-radius:14px;border:3px solid #ffb3c6;">';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 保存素体
+        function saveBody(e) {
+            e.preventDefault();
+            var body = {
+                id: Date.now().toString(),
+                name: document.getElementById('body-name').value,
+                brand: document.getElementById('body-brand').value,
+                size: document.getElementById('body-size').value,
+                skin: document.getElementById('body-skin').value,
+                foot: document.getElementById('body-foot').value,
+                notes: document.getElementById('body-notes').value,
+                image: tempImage
+            };
+            data.bodies.push(body);
+            saveData();
+            closeModal('modal-body');
+            e.target.reset();
+            renderBodies();
+        }
+
+        // 保存衣橱
+        function saveWardrobe(e) {
+            e.preventDefault();
+            data.wardrobe.push({
+                id: Date.now().toString(),
+                name: document.getElementById('wardrobe-name').value,
+                type: document.getElementById('wardrobe-type').value
+            });
+            saveData();
+            closeModal('modal-wardrobe');
+            e.target.reset();
+            renderWardrobe();
+        }
+
+        // 保存脸片
+        function saveFaceplate(e) {
+            e.preventDefault();
+            data.faceplates.push({
+                id: Date.now().toString(),
+                name: document.getElementById('faceplate-name').value,
+                eyeSize: document.getElementById('faceplate-eye').value
+            });
+            saveData();
+            closeModal('modal-faceplate');
+            e.target.reset();
+            renderFaceplates();
+        }
+
+        // 保存发片
+        function saveWig(e) {
+            e.preventDefault();
+            data.wigs.push({
+                id: Date.now().toString(),
+                name: document.getElementById('wig-name').value,
+                color: document.getElementById('wig-color').value
+            });
+            saveData();
+            closeModal('modal-wig');
+            e.target.reset();
+            renderWigs();
+        }
+
+        // 渲染
+        function renderAll() {
+            renderBodies();
+            renderWardrobe();
+            renderFaceplates();
+            renderWigs();
+        }
+
+        function renderBodies() {
+            var list = document.getElementById('bodies-list');
+            var empty = document.getElementById('bodies-empty');
+            var sizeFilter = document.getElementById('filter-size').value;
+            var brandFilter = document.getElementById('filter-brand').value.toLowerCase();
+            
+            var filtered = [];
+            for (var i = 0; i < data.bodies.length; i++) {
+                var b = data.bodies[i];
+                if (sizeFilter && b.size !== sizeFilter) continue;
+                if (brandFilter && b.brand.toLowerCase().indexOf(brandFilter) === -1) continue;
+                filtered.push(b);
+            }
+            
+            document.getElementById('count-bodies').textContent = data.bodies.length;
+            
+            if (filtered.length === 0) {
+                list.innerHTML = '';
+                empty.className = 'empty show';
+                return;
+            }
+            empty.className = 'empty';
+            
+            var html = '';
+            for (var i = 0; i < filtered.length; i++) {
+                var b = filtered[i];
+                html += '<div class="body-card">';
+                html += '<div class="img">' + (b.image ? '<img src="' + b.image + '">' : '🧸') + '</div>';
+                html += '<div class="info">';
+                html += '<div class="name">' + b.name + '</div>';
+                html += '<div class="brand">' + b.brand + ' · ' + b.size + ' · ' + b.skin + '</div>';
+                html += '<div class="specs">';
+                if (b.foot) html += '<div class="spec"><span>脚</span> <span>' + b.foot + 'cm</span></div>';
+                html += '</div>';
+                if (b.notes) html += '<div style="font-size:12px;color:#ff8fab;margin-top:8px;">' + b.notes + '</div>';
+                html += '</div></div>';
+            }
+            list.innerHTML = html;
+        }
+
+        function renderWardrobe() {
+            var list = document.getElementById('wardrobe-list');
+            var empty = document.getElementById('wardrobe-empty');
+            if (data.wardrobe.length === 0) {
+                list.innerHTML = '';
+                empty.className = 'empty show';
+                return;
+            }
+            empty.className = 'empty';
+            var html = '';
+            for (var i = 0; i < data.wardrobe.length; i++) {
+                var w = data.wardrobe[i];
+                html += '<div style="background:white;padding:15px;border-radius:16px;margin-bottom:10px;display:flex;align-items:center;gap:15px;">';
+                html += '<div style="width:60px;height:60px;background:linear-gradient(135deg,#ffd1dc,#ffb3c6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;">👗</div>';
+                html += '<div style="flex:1;"><div style="font-weight:700;color:#c9184a;">' + w.name + '</div><div style="font-size:12px;color:#ff8fab;">' + w.type + '</div></div>';
+                html += '</div>';
+            }
+            list.innerHTML = html;
+        }
+
+        function renderFaceplates() {
+            var list = document.getElementById('faceplates-list');
+            var empty = document.getElementById('faceplates-empty');
+            if (data.faceplates.length === 0) {
+                list.innerHTML = '';
+                empty.className = 'empty show';
+                return;
+            }
+            empty.className = 'empty';
+            var html = '';
+            for (var i = 0; i < data.faceplates.length; i++) {
+                var f = data.faceplates[i];
+                html += '<div style="background:white;padding:15px;border-radius:18px;text-align:center;">';
+                html += '<div style="width:80px;height:80px;background:linear-gradient(135deg,#ffd1dc,#ffb3c6);border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:40px;">😊</div>';
+                html += '<div style="font-weight:700;color:#c9184a;">' + f.name + '</div>';
+                if (f.eyeSize) html += '<div style="font-size:12px;color:#ff8fab;">眼珠: ' + f.eyeSize + '</div>';
+                html += '</div>';
+            }
+            list.innerHTML = html;
+        }
+
+        function renderWigs() {
+            var list = document.getElementById('wigs-list');
+            var empty = document.getElementById('wigs-empty');
+            if (data.wigs.length === 0) {
+                list.innerHTML = '';
+                empty.className = 'empty show';
+                return;
+            }
+            empty.className = 'empty';
+            var html = '';
+            for (var i = 0; i < data.wigs.length; i++) {
+                var w = data.wigs[i];
+                html += '<div style="background:white;padding:15px;border-radius:18px;text-align:center;">';
+                html += '<div style="width:80px;height:80px;background:linear-gradient(135deg,#ffd1dc,#ffb3c6);border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:40px;">💇</div>';
+                html += '<div style="font-weight:700;color:#c9184a;">' + w.name + '</div>';
+                if (w.color) html += '<div style="font-size:12px;color:#ff8fab;">' + w.color + '</div>';
+                html += '</div>';
+            }
+            list.innerHTML = html;
+        }
+
+        function clearFilters() {
+            document.getElementById('filter-size').value = '';
+            document.getElementById('filter-brand').value = '';
+            renderBodies();
+        }
+
+        // 数据存储
+        function saveData() {
+            localStorage.setItem('bjd-data', JSON.stringify(data));
+        }
+
+        function loadData() {
+            var saved = localStorage.getItem('bjd-data');
+            if (saved) {
+                try { data = JSON.parse(saved); } catch(e) {}
+            }
+        }
+
+        // 点击外部关闭
+        document.addEventListener('click', function(e) {
+            if (e.target.className === 'modal-overlay active') {
+                e.target.className = 'modal-overlay';
+            }
+        });
+    </script>
+</body>
+</html>
+
