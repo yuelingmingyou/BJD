@@ -97,8 +97,8 @@
         <h1>🎀 BJD管理屋</h1>
         <p>素体 · 衣橱管理</p>
         <div class="nav">
-            <button class="active" onclick="switchTab('bodies')" id="nav-bodies">🧸 素体</button>
-            <button onclick="switchTab('wardrobe')" id="nav-wardrobe">👗 衣橱</button>
+            <button class="active" onclick="goTab('bodies')" id="nav-bodies">🧸 素体</button>
+            <button onclick="goTab('wardrobe')" id="nav-wardrobe">👗 衣橱</button>
         </div>
     </div>
 
@@ -107,7 +107,7 @@
         <div class="section active" id="section-bodies">
             <div class="card">
                 <div style="margin-bottom:15px">
-                    <select id="f-size" onchange="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c;width:100%;margin-bottom:10px">
+                    <select id="f-size" onchange="doFilter()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c;width:100%;margin-bottom:10px">
                         <option value="">全部尺寸</option>
                         <option value="十二分">十二分</option>
                         <option value="八分">八分</option>
@@ -131,7 +131,7 @@
         <div class="section" id="section-wardrobe">
             <div class="card">
                 <div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap">
-                    <select id="f-type" onchange="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c">
+                    <select id="f-type" onchange="doFilter()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;color:#a4133c">
                         <option value="">全部类型</option>
                         <option value="上衣">上衣</option>
                         <option value="下装">下装</option>
@@ -142,7 +142,7 @@
                         <option value="假发">假发</option>
                         <option value="眼珠">眼珠</option>
                     </select>
-                    <input type="text" id="f-color" placeholder="筛选颜色" oninput="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
+                    <input type="text" id="f-color" placeholder="筛选颜色" oninput="doFilter()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
                 </div>
                 <div id="wardrobe-list"></div>
                 <div class="empty" id="wardrobe-empty">
@@ -153,23 +153,23 @@
         </div>
     </div>
 
-    <button class="fab" onclick="showAdd()">➕</button>
+    <button class="fab" onclick="doAdd()">➕</button>
 
     <!-- 添加素体 -->
     <div class="modal" id="modal-body">
         <div class="content">
             <div class="header">
                 <h3>🧸 添加素体</h3>
-                <button onclick="closeModal('modal-body')">×</button>
+                <button onclick="doClose('modal-body')">×</button>
             </div>
-            <form onsubmit="saveBody(event)">
+            <form onsubmit="doSaveBody(event)">
                 <div class="form-group">
                     <label>素体图片</label>
                     <div class="upload" onclick="document.getElementById('b-file').click()">
                         <div>📷</div>
                         <div>点击上传图片</div>
                     </div>
-                    <input type="file" id="b-file" style="display:none" accept="image/*" onchange="preview(this,'b-prev')">
+                    <input type="file" id="b-file" style="display:none" accept="image/*" onchange="doPreview(this,'b-prev')">
                     <div class="preview" id="b-prev"></div>
                 </div>
                 <div class="grid2">
@@ -256,16 +256,16 @@
         <div class="content">
             <div class="header">
                 <h3>👗 添加物品</h3>
-                <button onclick="closeModal('modal-wardrobe')">×</button>
+                <button onclick="doClose('modal-wardrobe')">×</button>
             </div>
-            <form onsubmit="saveWardrobe(event)">
+            <form onsubmit="doSaveWardrobe(event)">
                 <div class="form-group">
                     <label>物品图片</label>
                     <div class="upload" onclick="document.getElementById('w-file').click()">
                         <div>📷</div>
                         <div>点击上传图片</div>
                     </div>
-                    <input type="file" id="w-file" style="display:none" accept="image/*" onchange="preview(this,'w-prev')">
+                    <input type="file" id="w-file" style="display:none" accept="image/*" onchange="doPreview(this,'w-prev')">
                     <div class="preview" id="w-prev"></div>
                 </div>
                 <div class="grid2">
@@ -323,6 +323,7 @@
     </div>
 
     <script>
+        // 数据
         var data={bodies:[],wardrobe:[]};
         var current='bodies';
         var tempImg='';
@@ -331,25 +332,34 @@
         var allProjects=['米甜','邦倪兔','儞洛','未语集','悸动瞬息','未启之扉','露露灵','魔屋阿特'];
         var filterProject='';
 
-        function load(){var s=localStorage.getItem('bjd');if(s)try{data=JSON.parse(s)}catch(e){}}
-        function save(){localStorage.setItem('bjd',JSON.stringify(data))}
+        // 加载保存的数据
+        function load(){
+            var s=localStorage.getItem('bjd-v2');
+            if(s){
+                try{data=JSON.parse(s)}catch(e){}
+            }
+        }
+        function saveData(){
+            localStorage.setItem('bjd-v2',JSON.stringify(data));
+        }
 
-        function switchTab(tab){
+        // 切换标签页
+        function goTab(tab){
             current=tab;
             document.getElementById('nav-bodies').className=tab=='bodies'?'active':'';
             document.getElementById('nav-wardrobe').className=tab=='wardrobe'?'active':'';
             document.getElementById('section-bodies').className='section'+(tab=='bodies'?' active':'');
             document.getElementById('section-wardrobe').className='section'+(tab=='wardrobe'?' active':'');
-            render();
+            doRender();
         }
 
-        function showAdd(){
+        // 显示添加弹窗
+        function doAdd(){
             var id=current=='bodies'?'modal-body':'modal-wardrobe';
             document.getElementById(id).className='modal show';
             tempImg='';
             tempProjects=[];
             tempColors=[];
-            filterProject='';
             document.getElementById('b-prev').innerHTML='';
             document.getElementById('w-prev').innerHTML='';
             document.getElementById('b-projects').innerHTML='';
@@ -358,14 +368,17 @@
             for(var i=0;i<ps.length;i++)ps[i].className='preset-tag';
         }
 
-        function closeModal(id){
+        // 关闭弹窗
+        function doClose(id){
             document.getElementById(id).className='modal';
-            document.getElementById(id).querySelector('form').reset();
+            var form=document.getElementById(id).querySelector('form');
+            if(form)form.reset();
             tempProjects=[];
             tempColors=[];
         }
 
-        function preview(input,pid){
+        // 图片预览
+        function doPreview(input,pid){
             var f=input.files[0];
             if(!f)return;
             var r=new FileReader();
@@ -376,7 +389,7 @@
             r.readAsDataURL(f);
         }
 
-        // 企划方标签功能
+        // 企划方标签
         function toggleProject(el,name){
             var idx=tempProjects.indexOf(name);
             if(idx==-1){
@@ -386,7 +399,7 @@
                 tempProjects.splice(idx,1);
                 el.className='preset-tag';
             }
-            renderProjectTags();
+            showProjects();
         }
 
         function addProject(){
@@ -395,7 +408,7 @@
             if(!c)return;
             if(tempProjects.indexOf(c)==-1){
                 tempProjects.push(c);
-                renderProjectTags();
+                showProjects();
             }
             input.value='';
         }
@@ -404,7 +417,7 @@
             var idx=tempProjects.indexOf(c);
             if(idx>-1){
                 tempProjects.splice(idx,1);
-                renderProjectTags();
+                showProjects();
                 var ps=document.querySelectorAll('#b-project-presets .preset-tag');
                 for(var i=0;i<ps.length;i++){
                     if(ps[i].textContent==c)ps[i].className='preset-tag';
@@ -412,7 +425,7 @@
             }
         }
 
-        function renderProjectTags(){
+        function showProjects(){
             var box=document.getElementById('b-projects');
             var h='';
             for(var i=0;i<tempProjects.length;i++){
@@ -421,7 +434,7 @@
             box.innerHTML=h;
         }
 
-        // 颜色标签功能
+        // 颜色标签
         function toggleColor(el,name){
             var idx=tempColors.indexOf(name);
             if(idx==-1){
@@ -431,7 +444,7 @@
                 tempColors.splice(idx,1);
                 el.className='preset-tag';
             }
-            renderColorTags();
+            showColors();
         }
 
         function addColor(){
@@ -440,7 +453,7 @@
             if(!c)return;
             if(tempColors.indexOf(c)==-1){
                 tempColors.push(c);
-                renderColorTags();
+                showColors();
             }
             input.value='';
         }
@@ -449,7 +462,7 @@
             var idx=tempColors.indexOf(c);
             if(idx>-1){
                 tempColors.splice(idx,1);
-                renderColorTags();
+                showColors();
                 var ps=document.querySelectorAll('#modal-wardrobe .preset-tag');
                 for(var i=0;i<ps.length;i++){
                     if(ps[i].textContent==c)ps[i].className='preset-tag';
@@ -457,7 +470,7 @@
             }
         }
 
-        function renderColorTags(){
+        function showColors(){
             var box=document.getElementById('w-colors');
             var h='';
             for(var i=0;i<tempColors.length;i++){
@@ -473,11 +486,11 @@
             }else{
                 filterProject=name;
             }
-            renderFilterProjects();
-            renderBodies();
+            showFilterProjects();
+            doRender();
         }
 
-        function renderFilterProjects(){
+        function showFilterProjects(){
             var box=document.getElementById('f-projects');
             var h='';
             for(var i=0;i<allProjects.length;i++){
@@ -487,7 +500,8 @@
             box.innerHTML=h;
         }
 
-        function saveBody(e){
+        // 保存素体
+        function doSaveBody(e){
             e.preventDefault();
             if(tempProjects.length==0){
                 alert('请至少选择一个企划方');
@@ -509,12 +523,13 @@
                 footW:document.getElementById('b-foot-w').value,
                 notes:document.getElementById('b-notes').value
             });
-            save();
-            closeModal('modal-body');
-            renderBodies();
+            saveData();
+            doClose('modal-body');
+            doRender();
         }
 
-        function saveWardrobe(e){
+        // 保存衣橱
+        function doSaveWardrobe(e){
             e.preventDefault();
             data.wardrobe.push({
                 id:Date.now(),
@@ -526,13 +541,14 @@
                 image:tempImg,
                 notes:document.getElementById('w-notes').value
             });
-            save();
-            closeModal('modal-wardrobe');
-            renderWardrobe();
+            saveData();
+            doClose('modal-wardrobe');
+            doRender();
         }
 
-        function render(){
-            renderFilterProjects();
+        // 渲染
+        function doRender(){
+            showFilterProjects();
             renderBodies();
             renderWardrobe();
         }
@@ -607,9 +623,4 @@
                     }
                     if(!hasColor)continue;
                 }
-                arr.push(w);
-            }
-            
-            if(arr.length==0){list.innerHTML='';empty.className='empty show';return}
-            empty.className='empty';
-          
+                arr.pu
