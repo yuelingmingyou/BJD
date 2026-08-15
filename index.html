@@ -52,6 +52,8 @@
         .wardrobe-item .info{flex:1}
         .wardrobe-item .name{font-size:15px;font-weight:700;color:#c9184a;margin-bottom:5px}
         .wardrobe-item .meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:#ff8fab}
+        .wardrobe-item .colors{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+        .wardrobe-item .color-tag{padding:3px 10px;border-radius:10px;font-size:11px;background:#ffb3c6;color:#fff;font-weight:600}
         
         .fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(255,77,109,0.4);z-index:100}
         
@@ -72,6 +74,17 @@
         
         .preview{margin-top:10px}
         .preview img{max-width:150px;border-radius:14px;border:3px solid #ffb3c6}
+        
+        .tag-input{display:flex;gap:8px;margin-top:8px}
+        .tag-input input{flex:1}
+        .tag-input button{padding:10px 16px}
+        .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+        .tag-item{padding:5px 12px;border-radius:12px;font-size:12px;background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;font-weight:600;display:flex;align-items:center;gap:5px}
+        .tag-item .del{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
+        
+        .color-options{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+        .color-opt{padding:6px 14px;border-radius:14px;font-size:13px;background:#fff0f3;color:#e83e5c;border:2px solid #ffb3c6;cursor:pointer;font-weight:600}
+        .color-opt.active{background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;border-color:#e83e5c}
     </style>
 </head>
 <body>
@@ -98,7 +111,7 @@
                         <option value="四分">四分</option>
                         <option value="三分">三分</option>
                     </select>
-                    <input type="text" id="f-brand" placeholder="厂家筛选" oninput="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
+                    <input type="text" id="f-project" placeholder="筛选企划方" oninput="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
                     <button class="btn btn-sm btn-secondary" onclick="clearFilters()">清空</button>
                 </div>
                 <div id="bodies-list"></div>
@@ -124,7 +137,9 @@
                         <option value="假发">假发</option>
                         <option value="眼珠">眼珠</option>
                     </select>
-                    <input type="text" id="f-color" placeholder="颜色筛选" oninput="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
+                    <div style="flex:1;min-width:120px;position:relative">
+                        <input type="text" id="f-color" placeholder="筛选颜色" oninput="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;width:100%">
+                    </div>
                 </div>
                 <div id="wardrobe-list"></div>
                 <div class="empty" id="wardrobe-empty">
@@ -170,12 +185,12 @@
                 </div>
                 <div class="grid2">
                     <div class="form-group">
-                        <label>厂家 *</label>
-                        <input type="text" id="b-brand" required placeholder="SOOM">
+                        <label>企划方 *</label>
+                        <input type="text" id="b-project" required placeholder="萌职人">
                     </div>
                     <div class="form-group">
-                        <label>企划方</label>
-                        <input type="text" id="b-project" placeholder="萌职人">
+                        <label>厂家（工厂）</label>
+                        <input type="text" id="b-brand" placeholder="SOOM">
                     </div>
                 </div>
                 <div class="form-group">
@@ -255,17 +270,33 @@
                 </div>
                 <div class="grid2">
                     <div class="form-group">
-                        <label>颜色</label>
-                        <input type="text" id="w-color" placeholder="粉色">
-                    </div>
-                    <div class="form-group">
                         <label>适用尺寸</label>
                         <input type="text" id="w-size" placeholder="六分、四分">
                     </div>
+                    <div class="form-group">
+                        <label>适配体子</label>
+                        <input type="text" id="w-body" placeholder="萌萌体">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>适配体子</label>
-                    <input type="text" id="w-body" placeholder="例如：萌萌体、SOOM四分">
+                    <label>颜色标签（可多个）</label>
+                    <div class="tag-input">
+                        <input type="text" id="w-color-input" placeholder="输入颜色，如：粉色">
+                        <button type="button" class="btn btn-sm" onclick="addColor()">添加</button>
+                    </div>
+                    <div class="color-options" id="color-preset">
+                        <span class="color-opt" onclick="toggleColor(this,'粉色')">粉色</span>
+                        <span class="color-opt" onclick="toggleColor(this,'白色')">白色</span>
+                        <span class="color-opt" onclick="toggleColor(this,'黑色')">黑色</span>
+                        <span class="color-opt" onclick="toggleColor(this,'红色')">红色</span>
+                        <span class="color-opt" onclick="toggleColor(this,'蓝色')">蓝色</span>
+                        <span class="color-opt" onclick="toggleColor(this,'紫色')">紫色</span>
+                        <span class="color-opt" onclick="toggleColor(this,'黄色')">黄色</span>
+                        <span class="color-opt" onclick="toggleColor(this,'绿色')">绿色</span>
+                        <span class="color-opt" onclick="toggleColor(this,'棕色')">棕色</span>
+                        <span class="color-opt" onclick="toggleColor(this,'灰色')">灰色</span>
+                    </div>
+                    <div class="tags" id="w-colors"></div>
                 </div>
                 <div class="form-group">
                     <label>备注</label>
@@ -280,6 +311,7 @@
         var data={bodies:[],wardrobe:[]};
         var current='bodies';
         var tempImg='';
+        var tempColors=[];
 
         function load(){var s=localStorage.getItem('bjd');if(s)try{data=JSON.parse(s)}catch(e){}}
         function save(){localStorage.setItem('bjd',JSON.stringify(data))}
@@ -297,13 +329,19 @@
             var id=current=='bodies'?'modal-body':'modal-wardrobe';
             document.getElementById(id).className='modal show';
             tempImg='';
+            tempColors=[];
             document.getElementById('b-prev').innerHTML='';
             document.getElementById('w-prev').innerHTML='';
+            document.getElementById('w-colors').innerHTML='';
+            var opts=document.querySelectorAll('.color-opt');
+            for(var i=0;i<opts.length;i++)opts[i].className='color-opt';
         }
 
         function closeModal(id){
             document.getElementById(id).className='modal';
             document.getElementById(id).querySelector('form').reset();
+            tempColors=[];
+            document.getElementById('w-colors').innerHTML='';
         }
 
         function preview(input,pid){
@@ -317,14 +355,60 @@
             r.readAsDataURL(f);
         }
 
+        // 颜色标签功能
+        function addColor(){
+            var input=document.getElementById('w-color-input');
+            var c=input.value.trim();
+            if(!c)return;
+            if(tempColors.indexOf(c)==-1){
+                tempColors.push(c);
+                renderColors();
+            }
+            input.value='';
+        }
+
+        function toggleColor(el,c){
+            var idx=tempColors.indexOf(c);
+            if(idx==-1){
+                tempColors.push(c);
+                el.className='color-opt active';
+            }else{
+                tempColors.splice(idx,1);
+                el.className='color-opt';
+            }
+            renderColors();
+        }
+
+        function removeColor(c){
+            var idx=tempColors.indexOf(c);
+            if(idx>-1){
+                tempColors.splice(idx,1);
+                renderColors();
+                // 同步更新预设按钮状态
+                var opts=document.querySelectorAll('.color-opt');
+                for(var i=0;i<opts.length;i++){
+                    if(opts[i].textContent==c)opts[i].className='color-opt';
+                }
+            }
+        }
+
+        function renderColors(){
+            var box=document.getElementById('w-colors');
+            var h='';
+            for(var i=0;i<tempColors.length;i++){
+                h+='<span class="tag-item">'+tempColors[i]+'<span class="del" onclick="removeColor(\''+tempColors[i]+'\')">×</span></span>';
+            }
+            box.innerHTML=h;
+        }
+
         function saveBody(e){
             e.preventDefault();
             data.bodies.push({
                 id:Date.now(),
                 name:document.getElementById('b-name').value,
                 size:document.getElementById('b-size').value,
-                brand:document.getElementById('b-brand').value,
                 project:document.getElementById('b-project').value,
+                brand:document.getElementById('b-brand').value,
                 skin:document.getElementById('b-skin').value,
                 image:tempImg,
                 head:document.getElementById('b-head').value,
@@ -346,9 +430,9 @@
                 id:Date.now(),
                 name:document.getElementById('w-name').value,
                 type:document.getElementById('w-type').value,
-                color:document.getElementById('w-color').value,
                 size:document.getElementById('w-size').value,
                 body:document.getElementById('w-body').value,
+                colors:tempColors.slice(),
                 image:tempImg,
                 notes:document.getElementById('w-notes').value
             });
@@ -366,13 +450,13 @@
             var list=document.getElementById('bodies-list');
             var empty=document.getElementById('bodies-empty');
             var fs=document.getElementById('f-size').value;
-            var fb=document.getElementById('f-brand').value.toLowerCase();
+            var fp=document.getElementById('f-project').value.toLowerCase();
             
             var arr=[];
             for(var i=0;i<data.bodies.length;i++){
                 var b=data.bodies[i];
                 if(fs&&b.size!=fs)continue;
-                if(fb&&b.brand.toLowerCase().indexOf(fb)==-1)continue;
+                if(fp&&(!b.project||b.project.toLowerCase().indexOf(fp)==-1))continue;
                 arr.push(b);
             }
             
@@ -386,7 +470,9 @@
                 h+='<div class="img">'+(b.image?'<img src="'+b.image+'">':'🧸')+'</div>';
                 h+='<div class="info">';
                 h+='<div class="name">'+b.name+'</div>';
-                h+='<div class="meta">'+b.brand+(b.project?' · '+b.project:'')+' · '+b.size+' · '+b.skin+'</div>';
+                h+='<div class="meta">'+(b.project||'');
+                if(b.brand)h+=' · '+b.brand;
+                h+=' · '+b.size+' · '+b.skin+'</div>';
                 h+='<div class="specs">';
                 if(b.head)h+='<span class="spec"><span>头围 </span><span>'+b.head+'</span></span>';
                 if(b.height)h+='<span class="spec"><span>身高 </span><span>'+b.height+'</span></span>';
@@ -411,7 +497,15 @@
             for(var i=0;i<data.wardrobe.length;i++){
                 var w=data.wardrobe[i];
                 if(ft&&w.type!=ft)continue;
-                if(fc&&(!w.color||w.color.toLowerCase().indexOf(fc)==-1))continue;
+                if(fc){
+                    var hasColor=false;
+                    if(w.colors){
+                        for(var j=0;j<w.colors.length;j++){
+                            if(w.colors[j].toLowerCase().indexOf(fc)>-1){hasColor=true;break}
+                        }
+                    }
+                    if(!hasColor)continue;
+                }
                 arr.push(w);
             }
             
@@ -427,9 +521,15 @@
                 h+='<div class="name">'+w.name+'</div>';
                 h+='<div class="meta">';
                 h+='<span>'+w.type+'</span>';
-                if(w.color)h+='<span> · '+w.color+'</span>';
                 if(w.size)h+='<span> · '+w.size+'</span>';
                 h+='</div>';
+                if(w.colors&&w.colors.length){
+                    h+='<div class="colors">';
+                    for(var j=0;j<w.colors.length;j++){
+                        h+='<span class="color-tag">'+w.colors[j]+'</span>';
+                    }
+                    h+='</div>';
+                }
                 if(w.body)h+='<div style="font-size:12px;color:#e83e5c;margin-top:5px">适配: '+w.body+'</div>';
                 if(w.notes)h+='<div style="font-size:12px;color:#ff8fab;margin-top:5px">'+w.notes+'</div>';
                 h+='</div>';
@@ -452,15 +552,16 @@
 
         function clearFilters(){
             document.getElementById('f-size').value='';
-            document.getElementById('f-brand').value='';
+            document.getElementById('f-project').value='';
             renderBodies();
         }
 
-        // 点击外部关闭
         document.addEventListener('click',function(e){
             if(e.target.className=='modal show'){
                 e.target.className='modal';
                 e.target.querySelector('form').reset();
+                tempColors=[];
+                document.getElementById('w-colors').innerHTML='';
             }
         });
 
