@@ -7,38 +7,37 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#fff0f3;min-height:100vh;color:#c9184a;padding-bottom:80px}
-        
+
         .header{background:linear-gradient(135deg,#ff6b9d,#ff4d6d);padding:20px 15px 25px;border-radius:0 0 30px 30px}
         .header h1{color:#fff;font-size:26px;text-align:center}
         .header p{color:rgba(255,255,255,0.85);text-align:center;font-size:13px;margin-top:5px}
-        
+
         .nav{display:flex;gap:10px;justify-content:center;margin-top:15px}
         .nav button{padding:12px 24px;border-radius:20px;border:none;font-size:14px;font-weight:700;cursor:pointer;background:rgba(255,255,255,0.25);color:#fff}
         .nav button.active{background:#fff;color:#e83e5c}
-        
+
         .main{padding:15px;max-width:600px;margin:0 auto}
         .section{display:none}
         .section.active{display:block}
-        
+
         .card{background:#fff;border-radius:20px;padding:18px;margin-bottom:15px;box-shadow:0 4px 20px rgba(255,77,109,0.15);border:2px solid #ffd1dc}
-        
+
         .btn{background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;border:none;padding:12px 20px;border-radius:16px;font-size:14px;font-weight:700;cursor:pointer}
         .btn-sm{padding:8px 14px;font-size:12px}
         .btn-full{width:100%}
-        .btn-secondary{background:#fff0f3;color:#e83e5c;border:2px solid #ffb3c6}
-        
+
         .form-group{margin-bottom:14px}
         .form-group label{display:block;margin-bottom:6px;font-size:13px;font-weight:700;color:#c9184a}
         .form-group input,.form-group select{width:100%;padding:12px 15px;border:2px solid #ffb3c6;border-radius:14px;font-size:15px;color:#a4133c;background:#fff0f3}
-        
+
         .upload{border:3px dashed #ffb3c6;border-radius:18px;padding:30px;text-align:center;background:#fff0f3;cursor:pointer}
         .upload div:first-child{font-size:40px;margin-bottom:10px}
         .upload div:nth-child(2){color:#e83e5c;font-size:14px;font-weight:700}
-        
+
         .body-card{background:#fff;border-radius:20px;margin-bottom:12px;display:flex;overflow:hidden;box-shadow:0 4px 20px rgba(255,77,109,0.15);border:2px solid #ffd1dc}
         .body-card .img{width:120px;min-height:120px;background:linear-gradient(135deg,#ffd1dc,#ffb3c6);display:flex;align-items:center;justify-content:center;font-size:50px;flex-shrink:0}
         .body-card .img img{width:100%;height:100%;object-fit:cover}
-        .body-card .info{padding:15px;flex:1}
+        .body-card .info{padding:15px;flex:1;min-width:0}
         .body-card .name{font-size:16px;font-weight:700;color:#c9184a;margin-bottom:4px}
         .body-card .meta{font-size:12px;color:#ff8fab;margin-bottom:10px}
         .body-card .specs{display:flex;flex-wrap:wrap;gap:6px}
@@ -47,18 +46,22 @@
         .body-card .spec span:last-child{color:#e83e5c;font-weight:700}
         .body-card .projects{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
         .body-card .project-tag{padding:3px 10px;border-radius:10px;font-size:11px;background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;font-weight:600}
-        
-        .wardrobe-item{background:#fff0f3;border-radius:18px;padding:15px;margin-bottom:12px;display:flex;gap:15px;align-items:center}
-        .wardrobe-item .img{width:70px;height:70px;background:linear-gradient(135deg,#ffd1dc,#ffb3c6);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0}
-        .wardrobe-item .img img{width:100%;height:100%;object-fit:cover;border-radius:14px}
-        .wardrobe-item .info{flex:1}
+
+        .wardrobe-item{background:#fff;border-radius:18px;padding:15px;margin-bottom:12px;display:flex;gap:15px;align-items:center;border:2px solid #ffd1dc;box-shadow:0 4px 20px rgba(255,77,109,0.12)}
+        .wardrobe-item .img{width:70px;height:70px;background:linear-gradient(135deg,#ffd1dc,#ffb3c6);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;overflow:hidden}
+        .wardrobe-item .img img{width:100%;height:100%;object-fit:cover}
+        .wardrobe-item .info{flex:1;min-width:0}
         .wardrobe-item .name{font-size:15px;font-weight:700;color:#c9184a;margin-bottom:5px}
         .wardrobe-item .meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:#ff8fab}
         .wardrobe-item .colors{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
         .wardrobe-item .color-tag{padding:3px 10px;border-radius:10px;font-size:11px;background:#ffb3c6;color:#fff;font-weight:600}
-        
+
+        .card-actions{display:flex;gap:8px;margin-top:10px}
+        .card-actions button{padding:6px 14px;border-radius:12px;font-size:12px;cursor:pointer;font-weight:700;border:2px solid #ffb3c6;background:#fff0f3;color:#e83e5c}
+        .card-actions .del{background:#ffd1dc;color:#c9184a;border-color:#ffb3c6}
+
         .fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(255,77,109,0.4);z-index:100}
-        
+
         .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:flex-end;z-index:1000}
         .modal.show{display:flex}
         .modal .content{background:#fff;border-radius:30px 30px 0 0;padding:25px 20px;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(100%);transition:transform 0.3s}
@@ -66,28 +69,28 @@
         .modal .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:15px;border-bottom:2px dashed #ffb3c6}
         .modal .header h3{font-size:20px;color:#c9184a}
         .modal .header button{width:36px;height:36px;border-radius:50%;border:none;background:#ffd1dc;color:#e83e5c;font-size:20px;cursor:pointer}
-        
+
         .empty{text-align:center;padding:60px 20px;display:none}
         .empty.show{display:block}
         .empty .icon{font-size:60px;opacity:0.3;margin-bottom:15px}
         .empty .text{font-size:16px;color:#ff8fab;font-weight:700}
-        
+
         .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-        
+
         .preview{margin-top:10px}
         .preview img{max-width:150px;border-radius:14px;border:3px solid #ffb3c6}
-        
+
         .tag-input{display:flex;gap:8px;margin-top:8px}
         .tag-input input{flex:1}
         .tag-input button{padding:10px 16px}
         .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
         .tag-item{padding:5px 12px;border-radius:12px;font-size:12px;background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;font-weight:600;display:flex;align-items:center;gap:5px}
         .tag-item .del{width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
-        
+
         .preset-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
         .preset-tag{padding:6px 14px;border-radius:14px;font-size:13px;background:#fff0f3;color:#e83e5c;border:2px solid #ffb3c6;cursor:pointer;font-weight:600}
         .preset-tag.active{background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;border-color:#e83e5c}
-        
+
         .filter-box{margin-bottom:10px}
         .filter-label{font-size:13px;color:#c9184a;font-weight:700;margin-bottom:8px}
         .filter-tags{display:flex;flex-wrap:wrap;gap:8px}
@@ -121,9 +124,7 @@
                     </select>
                     <div class="filter-box">
                         <div class="filter-label">筛选企划方：</div>
-                        <div class="filter-tags" id="f-projects">
-                            <!-- 动态生成 -->
-                        </div>
+                        <div class="filter-tags" id="f-projects"></div>
                     </div>
                 </div>
                 <div id="bodies-list"></div>
@@ -148,8 +149,9 @@
                         <option value="配饰">配饰</option>
                         <option value="假发">假发</option>
                         <option value="眼珠">眼珠</option>
+                        <option value="其他">其他</option>
                     </select>
-                    <input type="text" id="f-color" placeholder="筛选颜色" oninput="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
+                    <input type="text" id="f-color" placeholder="筛选颜色" oninput="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px;color:#a4133c">
                 </div>
                 <div id="wardrobe-list"></div>
                 <div class="empty" id="wardrobe-empty">
@@ -162,11 +164,11 @@
 
     <button class="fab" onclick="showAdd()">➕</button>
 
-    <!-- 添加素体 -->
+    <!-- 添加/编辑素体 -->
     <div class="modal" id="modal-body">
         <div class="content">
             <div class="header">
-                <h3>🧸 添加素体</h3>
+                <h3 id="body-modal-title">🧸 添加素体</h3>
                 <button onclick="closeModal('modal-body')">×</button>
             </div>
             <form id="form-body" onsubmit="saveBody(event)">
@@ -258,11 +260,11 @@
         </div>
     </div>
 
-    <!-- 添加衣橱 -->
+    <!-- 添加/编辑衣橱 -->
     <div class="modal" id="modal-wardrobe">
         <div class="content">
             <div class="header">
-                <h3>👗 添加物品</h3>
+                <h3 id="wardrobe-modal-title">👗 添加物品</h3>
                 <button onclick="closeModal('modal-wardrobe')">×</button>
             </div>
             <form id="form-wardrobe" onsubmit="saveWardrobe(event)">
@@ -330,32 +332,44 @@
     </div>
 
     <script>
-        // 数据初始化
+        // ========== 数据 ==========
         var data = {bodies:[], wardrobe:[]};
         var current = 'bodies';
         var tempImg = '';
         var tempProjects = [];
         var tempColors = [];
+        var editingId = null;
         var allProjects = ['米甜','邦倪兔','儞洛','未语集','悸动瞬息','未启之扉','露露灵','魔屋阿特'];
         var filterProject = '';
 
-        // 本地存储
+        // HTML转义，防止名称里的特殊字符破坏页面
+        function esc(s){
+            if(s == null) return '';
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        }
+
+        // ========== 本地存储（带异常处理） ==========
         function loadData(){
             var s = localStorage.getItem('bjd');
             if(s){
                 try{
-                    data = JSON.parse(s);
+                    var d = JSON.parse(s);
+                    if(d && d.bodies && d.wardrobe) data = d;
                 }catch(e){
                     console.log('load error', e);
                 }
             }
         }
-        
+
         function saveData(){
-            localStorage.setItem('bjd', JSON.stringify(data));
+            try{
+                localStorage.setItem('bjd', JSON.stringify(data));
+            }catch(e){
+                alert('⚠️ 存储空间不足！图片太多啦~\n请删除一些带大图的项目，或之后少上传几张图片。');
+            }
         }
 
-        // 切换标签页
+        // ========== 标签页切换 ==========
         function switchTab(tab){
             current = tab;
             document.getElementById('nav-bodies').className = tab == 'bodies' ? 'active' : '';
@@ -365,48 +379,81 @@
             renderAll();
         }
 
-        // 显示添加模态框
-        function showAdd(){
-            var id = current == 'bodies' ? 'modal-body' : 'modal-wardrobe';
-            document.getElementById(id).className = 'modal show';
+        // ========== 模态框 ==========
+        function resetFormState(){
             tempImg = '';
             tempProjects = [];
             tempColors = [];
+            editingId = null;
             document.getElementById('b-prev').innerHTML = '';
             document.getElementById('w-prev').innerHTML = '';
             document.getElementById('b-projects').innerHTML = '';
             document.getElementById('w-colors').innerHTML = '';
-            // 重置预设标签样式
+            // 关键修复：清空文件选择器，否则再次选同一张图不会触发 onchange
+            document.getElementById('b-file').value = '';
+            document.getElementById('w-file').value = '';
             var ps = document.querySelectorAll('.preset-tag');
-            for(var i = 0; i < ps.length; i++){
-                ps[i].className = 'preset-tag';
+            for(var i = 0; i < ps.length; i++) ps[i].className = 'preset-tag';
+        }
+
+        function showAdd(){
+            resetFormState();
+            if(current == 'bodies'){
+                document.getElementById('form-body').reset();
+                document.getElementById('body-modal-title').textContent = '🧸 添加素体';
+                document.getElementById('modal-body').className = 'modal show';
+            }else{
+                document.getElementById('form-wardrobe').reset();
+                document.getElementById('wardrobe-modal-title').textContent = '👗 添加物品';
+                document.getElementById('modal-wardrobe').className = 'modal show';
             }
         }
 
-        // 关闭模态框
         function closeModal(id){
             document.getElementById(id).className = 'modal';
             var form = document.getElementById(id).querySelector('form');
-            if(form){
-                form.reset();
-            }
-            tempProjects = [];
-            tempColors = [];
+            if(form) form.reset();
+            resetFormState();
         }
 
-        // 图片预览
+        // ========== 图片：读取 + 压缩（修复localStorage爆容量） ==========
         function preview(input, pid){
             var file = input.files[0];
             if(!file) return;
             var reader = new FileReader();
             reader.onload = function(e){
-                tempImg = e.target.result;
-                document.getElementById(pid).innerHTML = '<img src="' + e.target.result + '">';
+                compressImage(e.target.result, function(dataUrl){
+                    tempImg = dataUrl;
+                    document.getElementById(pid).innerHTML = '<img src="' + dataUrl + '">';
+                });
             };
             reader.readAsDataURL(file);
+            input.value = ''; // 允许再次选择同一文件
         }
 
-        // ========== 企划方功能 ==========
+        function compressImage(dataUrl, cb){
+            var img = new Image();
+            img.onload = function(){
+                var max = 800;
+                var w = img.width, h = img.height;
+                if(w > max || h > max){
+                    if(w > h){ h = Math.round(h * max / w); w = max; }
+                    else { w = Math.round(w * max / h); h = max; }
+                }
+                try{
+                    var c = document.createElement('canvas');
+                    c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    cb(c.toDataURL('image/jpeg', 0.75));
+                }catch(e){
+                    cb(dataUrl);
+                }
+            };
+            img.onerror = function(){ cb(dataUrl); };
+            img.src = dataUrl;
+        }
+
+        // ========== 企划方标签 ==========
         function toggleProject(el, name){
             var idx = tempProjects.indexOf(name);
             if(idx == -1){
@@ -430,31 +477,28 @@
             input.value = '';
         }
 
-        function removeProject(name){
-            var idx = tempProjects.indexOf(name);
-            if(idx > -1){
-                tempProjects.splice(idx, 1);
-                renderProjectTags();
-                // 同步更新预设按钮
-                var ps = document.querySelectorAll('#b-project-presets .preset-tag');
-                for(var i = 0; i < ps.length; i++){
-                    if(ps[i].textContent == name){
-                        ps[i].className = 'preset-tag';
-                    }
-                }
+        function removeProject(idx){
+            tempProjects.splice(idx, 1);
+            renderProjectTags();
+            syncProjectPresets();
+        }
+
+        function syncProjectPresets(){
+            var ps = document.querySelectorAll('#b-project-presets .preset-tag');
+            for(var i = 0; i < ps.length; i++){
+                ps[i].className = tempProjects.indexOf(ps[i].textContent) > -1 ? 'preset-tag active' : 'preset-tag';
             }
         }
 
         function renderProjectTags(){
-            var box = document.getElementById('b-projects');
             var html = '';
             for(var i = 0; i < tempProjects.length; i++){
-                html += '<span class="tag-item">' + tempProjects[i] + '<span class="del" onclick="removeProject(\'' + tempProjects[i] + '\')">×</span></span>';
+                html += '<span class="tag-item">' + esc(tempProjects[i]) + '<span class="del" onclick="removeProject(' + i + ')">×</span></span>';
             }
-            box.innerHTML = html;
+            document.getElementById('b-projects').innerHTML = html;
         }
 
-        // ========== 颜色功能 ==========
+        // ========== 颜色标签 ==========
         function toggleColor(el, name){
             var idx = tempColors.indexOf(name);
             if(idx == -1){
@@ -478,46 +522,33 @@
             input.value = '';
         }
 
-        function removeColor(name){
-            var idx = tempColors.indexOf(name);
-            if(idx > -1){
-                tempColors.splice(idx, 1);
-                renderColorTags();
-                var ps = document.querySelectorAll('#w-color-presets .preset-tag');
-                for(var i = 0; i < ps.length; i++){
-                    if(ps[i].textContent == name){
-                        ps[i].className = 'preset-tag';
-                    }
-                }
+        function removeColor(idx){
+            tempColors.splice(idx, 1);
+            renderColorTags();
+            var ps = document.querySelectorAll('#w-color-presets .preset-tag');
+            for(var i = 0; i < ps.length; i++){
+                ps[i].className = tempColors.indexOf(ps[i].textContent) > -1 ? 'preset-tag active' : 'preset-tag';
             }
         }
 
         function renderColorTags(){
-            var box = document.getElementById('w-colors');
             var html = '';
             for(var i = 0; i < tempColors.length; i++){
-                html += '<span class="tag-item">' + tempColors[i] + '<span class="del" onclick="removeColor(\'' + tempColors[i] + '\')">×</span></span>';
+                html += '<span class="tag-item">' + esc(tempColors[i]) + '<span class="del" onclick="removeColor(' + i + ')">×</span></span>';
             }
-            box.innerHTML = html;
+            document.getElementById('w-colors').innerHTML = html;
         }
 
-        // ========== 筛选功能 ==========
+        // ========== 筛选 ==========
         function setFilterProject(name){
-            if(filterProject == name){
-                filterProject = '';
-            }else{
-                filterProject = name;
-            }
+            filterProject = (filterProject == name) ? '' : name;
             renderFilterProjects();
             renderBodies();
         }
 
         function renderFilterProjects(){
             var box = document.getElementById('f-projects');
-            if(!box){
-                console.log('filter box not found');
-                return;
-            }
+            if(!box) return;
             var html = '';
             for(var i = 0; i < allProjects.length; i++){
                 var active = filterProject == allProjects[i] ? ' active' : '';
@@ -526,7 +557,7 @@
             box.innerHTML = html;
         }
 
-        // ========== 保存数据 ==========
+        // ========== 保存（新增 / 编辑） ==========
         function saveBody(e){
             e.preventDefault();
             if(tempProjects.length == 0){
@@ -534,7 +565,7 @@
                 return;
             }
             var body = {
-                id: Date.now(),
+                id: editingId || Date.now(),
                 name: document.getElementById('b-name').value,
                 size: document.getElementById('b-size').value,
                 projects: tempProjects.slice(),
@@ -549,7 +580,13 @@
                 footW: document.getElementById('b-foot-w').value,
                 notes: document.getElementById('b-notes').value
             };
-            data.bodies.push(body);
+            if(editingId){
+                for(var i = 0; i < data.bodies.length; i++){
+                    if(data.bodies[i].id == editingId){ data.bodies[i] = body; break; }
+                }
+            }else{
+                data.bodies.push(body);
+            }
             saveData();
             closeModal('modal-body');
             renderBodies();
@@ -558,7 +595,7 @@
         function saveWardrobe(e){
             e.preventDefault();
             var item = {
-                id: Date.now(),
+                id: editingId || Date.now(),
                 name: document.getElementById('w-name').value,
                 type: document.getElementById('w-type').value,
                 size: document.getElementById('w-size').value,
@@ -567,61 +604,5 @@
                 image: tempImg,
                 notes: document.getElementById('w-notes').value
             };
-            data.wardrobe.push(item);
-            saveData();
-            closeModal('modal-wardrobe');
-            renderWardrobe();
-        }
-
-        // ========== 渲染 ==========
-        function renderAll(){
-            renderFilterProjects();
-            renderBodies();
-            renderWardrobe();
-        }
-
-        function renderBodies(){
-            var list = document.getElementById('bodies-list');
-            var empty = document.getElementById('bodies-empty');
-            var fs = document.getElementById('f-size').value;
-            
-            var arr = [];
-            for(var i = 0; i < data.bodies.length; i++){
-                var b = data.bodies[i];
-                if(fs && b.size != fs) continue;
-                if(filterProject){
-                    var hasP = false;
-                    for(var j = 0; j < b.projects.length; j++){
-                        if(b.projects[j] == filterProject){
-                            hasP = true;
-                            break;
-                        }
-                    }
-                    if(!hasP) continue;
-                }
-                arr.push(b);
-            }
-            
-            if(arr.length == 0){
-                list.innerHTML = '';
-                empty.className = 'empty show';
-                return;
-            }
-            empty.className = 'empty';
-            
-            var html = '';
-            for(var i = 0; i < arr.length; i++){
-                var b = arr[i];
-                html += '<div class="body-card">';
-                html += '<div class="img">' + (b.image ? '<img src="' + b.image + '">' : '🧸') + '</div>';
-                html += '<div class="info">';
-                html += '<div class="name">' + b.name + '</div>';
-                html += '<div class="meta">' + b.size + ' · ' + b.skin + (b.brand ? ' · ' + b.brand : '') + '</div>';
-                if(b.projects && b.projects.length){
-                    html += '<div class="projects">';
-                    for(var j = 0; j < b.projects.length; j++){
-                        html += '<span class="project-tag">' + b.projects[j] + '</span>';
-                    }
-                    html += '</div>';
-                }
-                html += '<div clas
+            if(editingId){
+                for(var i = 0; i < data.wardrobe.length; 
