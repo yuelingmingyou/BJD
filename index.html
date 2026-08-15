@@ -29,6 +29,7 @@
         
         .form-group{margin-bottom:14px}
         .form-group label{display:block;margin-bottom:6px;font-size:13px;font-weight:700;color:#c9184a}
+        .form-group label .req{color:#ff4d6d;margin-left:2px}
         .form-group input,.form-group select{width:100%;padding:12px 15px;border:2px solid #ffb3c6;border-radius:14px;font-size:15px;color:#a4133c;background:#fff0f3}
         
         .upload{border:3px dashed #ffb3c6;border-radius:18px;padding:30px;text-align:center;background:#fff0f3;cursor:pointer}
@@ -52,6 +53,8 @@
         .wardrobe-item .info{flex:1}
         .wardrobe-item .name{font-size:15px;font-weight:700;color:#c9184a;margin-bottom:5px}
         .wardrobe-item .meta{display:flex;flex-wrap:wrap;gap:6px;font-size:12px;color:#ff8fab}
+        .wardrobe-item .colors{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+        .wardrobe-item .colors span{padding:3px 10px;background:#ffb3c6;color:#fff;border-radius:10px;font-size:11px;font-weight:600}
         
         .fab{position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#ff758f,#e83e5c);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(255,77,109,0.4);z-index:100}
         
@@ -69,9 +72,19 @@
         .empty .text{font-size:16px;color:#ff8fab;font-weight:700}
         
         .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+        .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
         
         .preview{margin-top:10px}
         .preview img{max-width:150px;border-radius:14px;border:3px solid #ffb3c6}
+        
+        .color-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+        .color-tag{display:flex;align-items:center;gap:5px;padding:6px 12px;background:linear-gradient(135deg,#ff8fab,#ff758f);color:#fff;border-radius:14px;font-size:12px;font-weight:600}
+        .color-tag button{width:18px;height:18px;border-radius:50%;border:none;background:rgba(255,255,255,0.3);color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+        .color-add{padding:6px 14px;background:#fff0f3;color:#e83e5c;border:2px dashed #ffb3c6;border-radius:14px;font-size:12px;font-weight:600;cursor:pointer}
+        
+        .range-row{display:flex;gap:10px;align-items:center}
+        .range-row input{flex:1}
+        .range-row span{color:#ff8fab;font-size:12px}
     </style>
 </head>
 <body>
@@ -98,8 +111,30 @@
                         <option value="四分">四分</option>
                         <option value="三分">三分</option>
                     </select>
-                    <input type="text" id="f-brand" placeholder="厂家筛选" oninput="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
-                    <button class="btn btn-sm btn-secondary" onclick="clearFilters()">清空</button>
+                    <input type="text" id="f-project" placeholder="企划筛选" oninput="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
+                </div>
+                <div class="grid3" style="margin-bottom:15px">
+                    <div class="range-row">
+                        <input type="number" id="f-head-min" placeholder="头围最小" step="0.1" onchange="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3">
+                        <span>~</span>
+                        <input type="number" id="f-head-max" placeholder="最大" step="0.1" onchange="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3">
+                    </div>
+                    <div class="range-row">
+                        <input type="number" id="f-hip-min" placeholder="臀围最小" step="0.1" onchange="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3">
+                        <span>~</span>
+                        <input type="number" id="f-hip-max" placeholder="最大" step="0.1" onchange="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3">
+                    </div>
+                    <div class="range-row">
+                        <input type="number" id="f-footw-min" placeholder="脚宽最小" step="0.1" onchange="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3">
+                        <span>~</span>
+                        <input type="number" id="f-footw-max" placeholder="最大" step="0.1" onchange="renderBodies()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3">
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;margin-bottom:15px">
+                    <button class="btn btn-sm btn-secondary" onclick="clearFilters()">🗑️ 清空筛选</button>
+                    <button class="btn btn-sm btn-secondary" onclick="exportData()">💾 导出</button>
+                    <button class="btn btn-sm btn-secondary" onclick="document.getElementById('import-file').click()">📁 导入</button>
+                    <input type="file" id="import-file" style="display:none" accept=".json" onchange="importData(event)">
                 </div>
                 <div id="bodies-list"></div>
                 <div class="empty" id="bodies-empty">
@@ -125,6 +160,7 @@
                         <option value="眼珠">眼珠</option>
                     </select>
                     <input type="text" id="f-color" placeholder="颜色筛选" oninput="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
+                    <input type="text" id="f-body" placeholder="适配体子筛选" oninput="renderWardrobe()" style="padding:10px;border-radius:12px;border:2px solid #ffb3c6;background:#fff0f3;flex:1;min-width:120px">
                 </div>
                 <div id="wardrobe-list"></div>
                 <div class="empty" id="wardrobe-empty">
@@ -156,11 +192,11 @@
                 </div>
                 <div class="grid2">
                     <div class="form-group">
-                        <label>名称 *</label>
+                        <label>名称<span class="req">*</span></label>
                         <input type="text" id="b-name" required placeholder="萌萌体">
                     </div>
                     <div class="form-group">
-                        <label>尺寸 *</label>
+                        <label>尺寸<span class="req">*</span></label>
                         <select id="b-size" required>
                             <option value="">请选择</option>
                             <option>十二分</option><option>八分</option><option>六分</option>
@@ -170,16 +206,16 @@
                 </div>
                 <div class="grid2">
                     <div class="form-group">
-                        <label>厂家 *</label>
-                        <input type="text" id="b-brand" required placeholder="SOOM">
+                        <label>企划方<span class="req">*</span></label>
+                        <input type="text" id="b-project" required placeholder="萌职人">
                     </div>
                     <div class="form-group">
-                        <label>企划方</label>
-                        <input type="text" id="b-project" placeholder="萌职人">
+                        <label>厂家（工厂）</label>
+                        <input type="text" id="b-brand" placeholder="SOOM">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>肤色 *</label>
+                    <label>肤色<span class="req">*</span></label>
                     <select id="b-skin" required>
                         <option value="">请选择</option>
                         <option>白肌</option><option>普肌</option><option>黄肌</option>
@@ -240,28 +276,27 @@
                 </div>
                 <div class="grid2">
                     <div class="form-group">
-                        <label>名称 *</label>
+                        <label>名称<span class="req">*</span></label>
                         <input type="text" id="w-name" required>
                     </div>
                     <div class="form-group">
-                        <label>类型 *</label>
+                        <label>类型<span class="req">*</span></label>
                         <select id="w-type" required>
                             <option value="">请选择</option>
                             <option>上衣</option><option>下装</option><option>连衣裙</option>
                             <option>外套</option><option>鞋子</option><option>配饰</option>
-                            <option>假发</option><option>眼珠</option><option>其他</option>
+                            <option>假发</option><option>眼珠</option>
                         </select>
                     </div>
                 </div>
-                <div class="grid2">
-                    <div class="form-group">
-                        <label>颜色</label>
-                        <input type="text" id="w-color" placeholder="粉色">
-                    </div>
-                    <div class="form-group">
-                        <label>适用尺寸</label>
-                        <input type="text" id="w-size" placeholder="六分、四分">
-                    </div>
+                <div class="form-group">
+                    <label>适用尺寸</label>
+                    <input type="text" id="w-size" placeholder="六分、四分等">
+                </div>
+                <div class="form-group">
+                    <label>颜色标签（可添加多个）</label>
+                    <input type="text" id="w-color-input" placeholder="输入颜色，如：粉色，按回车添加" onkeydown="addColor(event)">
+                    <div class="color-tags" id="w-colors"></div>
                 </div>
                 <div class="form-group">
                     <label>适配体子</label>
@@ -280,6 +315,7 @@
         var data={bodies:[],wardrobe:[]};
         var current='bodies';
         var tempImg='';
+        var tempColors=[];
 
         function load(){var s=localStorage.getItem('bjd');if(s)try{data=JSON.parse(s)}catch(e){}}
         function save(){localStorage.setItem('bjd',JSON.stringify(data))}
@@ -297,13 +333,18 @@
             var id=current=='bodies'?'modal-body':'modal-wardrobe';
             document.getElementById(id).className='modal show';
             tempImg='';
+            tempColors=[];
             document.getElementById('b-prev').innerHTML='';
             document.getElementById('w-prev').innerHTML='';
+            document.getElementById('w-colors').innerHTML='';
         }
 
         function closeModal(id){
             document.getElementById(id).className='modal';
-            document.getElementById(id).querySelector('form').reset();
+            var form=document.getElementById(id).querySelector('form');
+            if(form)form.reset();
+            tempColors=[];
+            document.getElementById('w-colors').innerHTML='';
         }
 
         function preview(input,pid){
@@ -317,22 +358,53 @@
             r.readAsDataURL(f);
         }
 
+        // 颜色标签
+        function addColor(e){
+            if(e.key!='Enter')return;
+            e.preventDefault();
+            var v=e.target.value.trim();
+            if(!v)return;
+            if(tempColors.indexOf(v)==-1){
+                tempColors.push(v);
+                renderColors();
+            }
+            e.target.value='';
+        }
+
+        function removeColor(i){
+            tempColors.splice(i,1);
+            renderColors();
+        }
+
+        function renderColors(){
+            var h='';
+            for(var i=0;i<tempColors.length;i++){
+                h+='<span class="color-tag">'+tempColors[i]+'<button type="button" onclick="removeColor('+i+')">×</button></span>';
+            }
+            h+='<span class="color-add" onclick="focusColor()">+ 添加</span>';
+            document.getElementById('w-colors').innerHTML=h;
+        }
+
+        function focusColor(){
+            document.getElementById('w-color-input').focus();
+        }
+
         function saveBody(e){
             e.preventDefault();
             data.bodies.push({
                 id:Date.now(),
                 name:document.getElementById('b-name').value,
                 size:document.getElementById('b-size').value,
-                brand:document.getElementById('b-brand').value,
                 project:document.getElementById('b-project').value,
+                brand:document.getElementById('b-brand').value,
                 skin:document.getElementById('b-skin').value,
                 image:tempImg,
-                head:document.getElementById('b-head').value,
-                height:document.getElementById('b-height').value,
-                neck:document.getElementById('b-neck').value,
-                hip:document.getElementById('b-hip').value,
-                footL:document.getElementById('b-foot-l').value,
-                footW:document.getElementById('b-foot-w').value,
+                head:parseFloat(document.getElementById('b-head').value)||0,
+                height:parseFloat(document.getElementById('b-height').value)||0,
+                neck:parseFloat(document.getElementById('b-neck').value)||0,
+                hip:parseFloat(document.getElementById('b-hip').value)||0,
+                footL:parseFloat(document.getElementById('b-foot-l').value)||0,
+                footW:parseFloat(document.getElementById('b-foot-w').value)||0,
                 notes:document.getElementById('b-notes').value
             });
             save();
@@ -346,8 +418,8 @@
                 id:Date.now(),
                 name:document.getElementById('w-name').value,
                 type:document.getElementById('w-type').value,
-                color:document.getElementById('w-color').value,
                 size:document.getElementById('w-size').value,
+                colors:tempColors.slice(),
                 body:document.getElementById('w-body').value,
                 image:tempImg,
                 notes:document.getElementById('w-notes').value
@@ -366,13 +438,22 @@
             var list=document.getElementById('bodies-list');
             var empty=document.getElementById('bodies-empty');
             var fs=document.getElementById('f-size').value;
-            var fb=document.getElementById('f-brand').value.toLowerCase();
+            var fp=document.getElementById('f-project').value.toLowerCase();
+            var hmin=parseFloat(document.getElementById('f-head-min').value)||0;
+            var hmax=parseFloat(document.getElementById('f-head-max').value)||999;
+            var hipmin=parseFloat(document.getElementById('f-hip-min').value)||0;
+            var hipmax=parseFloat(document.getElementById('f-hip-max').value)||999;
+            var fwmin=parseFloat(document.getElementById('f-footw-min').value)||0;
+            var fwmax=parseFloat(document.getElementById('f-footw-max').value)||999;
             
             var arr=[];
             for(var i=0;i<data.bodies.length;i++){
                 var b=data.bodies[i];
                 if(fs&&b.size!=fs)continue;
-                if(fb&&b.brand.toLowerCase().indexOf(fb)==-1)continue;
+                if(fp&&b.project.toLowerCase().indexOf(fp)==-1)continue;
+                if(b.head&&(b.head<hmin||b.head>hmax))continue;
+                if(b.hip&&(b.hip<hipmin||b.hip>hipmax))continue;
+                if(b.footW&&(b.footW<fwmin||b.footW>fwmax))continue;
                 arr.push(b);
             }
             
@@ -386,7 +467,7 @@
                 h+='<div class="img">'+(b.image?'<img src="'+b.image+'">':'🧸')+'</div>';
                 h+='<div class="info">';
                 h+='<div class="name">'+b.name+'</div>';
-                h+='<div class="meta">'+b.brand+(b.project?' · '+b.project:'')+' · '+b.size+' · '+b.skin+'</div>';
+                h+='<div class="meta">'+(b.brand?b.brand+' · ':'')+b.project+' · '+b.size+' · '+b.skin+'</div>';
                 h+='<div class="specs">';
                 if(b.head)h+='<span class="spec"><span>头围 </span><span>'+b.head+'</span></span>';
                 if(b.height)h+='<span class="spec"><span>身高 </span><span>'+b.height+'</span></span>';
@@ -406,12 +487,20 @@
             var empty=document.getElementById('wardrobe-empty');
             var ft=document.getElementById('f-type').value;
             var fc=document.getElementById('f-color').value.toLowerCase();
+            var fb=document.getElementById('f-body').value.toLowerCase();
             
             var arr=[];
             for(var i=0;i<data.wardrobe.length;i++){
                 var w=data.wardrobe[i];
                 if(ft&&w.type!=ft)continue;
-                if(fc&&(!w.color||w.color.toLowerCase().indexOf(fc)==-1))continue;
+                if(fc){
+                    var hasColor=false;
+                    for(var j=0;j<w.colors.length;j++){
+                        if(w.colors[j].toLowerCase().indexOf(fc)!=-1){hasColor=true;break}
+                    }
+                    if(!hasColor)continue;
+                }
+                if(fb&&(!w.body||w.body.toLowerCase().indexOf(fb)==-1))continue;
                 arr.push(w);
             }
             
@@ -427,9 +516,15 @@
                 h+='<div class="name">'+w.name+'</div>';
                 h+='<div class="meta">';
                 h+='<span>'+w.type+'</span>';
-                if(w.color)h+='<span> · '+w.color+'</span>';
                 if(w.size)h+='<span> · '+w.size+'</span>';
                 h+='</div>';
+                if(w.colors&&w.colors.length){
+                    h+='<div class="colors">';
+                    for(var j=0;j<w.colors.length;j++){
+                        h+='<span>'+w.colors[j]+'</span>';
+                    }
+                    h+='</div>';
+                }
                 if(w.body)h+='<div style="font-size:12px;color:#e83e5c;margin-top:5px">适配: '+w.body+'</div>';
                 if(w.notes)h+='<div style="font-size:12px;color:#ff8fab;margin-top:5px">'+w.notes+'</div>';
                 h+='</div>';
@@ -452,21 +547,37 @@
 
         function clearFilters(){
             document.getElementById('f-size').value='';
-            document.getElementById('f-brand').value='';
+            document.getElementById('f-project').value='';
+            document.getElementById('f-head-min').value='';
+            document.getElementById('f-head-max').value='';
+            document.getElementById('f-hip-min').value='';
+            document.getElementById('f-hip-max').value='';
+            document.getElementById('f-footw-min').value='';
+            document.getElementById('f-footw-max').value='';
             renderBodies();
         }
 
-        // 点击外部关闭
-        document.addEventListener('click',function(e){
-            if(e.target.className=='modal show'){
-                e.target.className='modal';
-                e.target.querySelector('form').reset();
-            }
-        });
+        function exportData(){
+            var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+            var url=URL.createObjectURL(blob);
+            var a=document.createElement('a');
+            a.href=url;
+            a.download='bjd-'+new Date().toISOString().slice(0,10)+'.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
 
-        load();
-        render();
-    </script>
-</body>
-</html>
-
+        function importData(e){
+            var f=e.target.files[0];
+            if(!f)return;
+            var r=new FileReader();
+            r.onload=function(ev){
+                try{
+                    var imp=JSON.parse(ev.target.result);
+                    if(confirm('导入 '+imp.bodies.length+' 个素体，'+imp.wardrobe.length+' 个衣橱物品？')){
+                        data=imp;
+                        save();
+                        render();
+                        alert('导入成功！');
+                    }
+         
