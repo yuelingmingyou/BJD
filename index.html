@@ -605,4 +605,223 @@
                 notes: document.getElementById('w-notes').value
             };
             if(editingId){
-                for(var i = 0; i < data.wardrobe.length; 
+                for(var i = 0; i < data.wardrobe.length; i++){
+                    if(data.wardrobe[i].id == editingId){ data.wardrobe[i] = item; break; }
+                }
+            }else{
+                data.wardrobe.push(item);
+            }
+            saveData();
+            closeModal('modal-wardrobe');
+            renderWardrobe();
+        }
+
+        // ========== 编辑 / 删除 ==========
+        function editBody(id){
+            var b = null;
+            for(var i = 0; i < data.bodies.length; i++){
+                if(data.bodies[i].id == id){ b = data.bodies[i]; break; }
+            }
+            if(!b) return;
+            resetFormState();
+            editingId = id;
+            document.getElementById('body-modal-title').textContent = '🧸 编辑素体';
+            document.getElementById('b-name').value = b.name || '';
+            document.getElementById('b-size').value = b.size || '';
+            document.getElementById('b-brand').value = b.brand || '';
+            document.getElementById('b-skin').value = b.skin || '';
+            document.getElementById('b-head').value = b.head || '';
+            document.getElementById('b-height').value = b.height || '';
+            document.getElementById('b-neck').value = b.neck || '';
+            document.getElementById('b-hip').value = b.hip || '';
+            document.getElementById('b-foot-l').value = b.footL || '';
+            document.getElementById('b-foot-w').value = b.footW || '';
+            document.getElementById('b-notes').value = b.notes || '';
+            tempProjects = (b.projects || []).slice();
+            tempImg = b.image || '';
+            if(tempImg) document.getElementById('b-prev').innerHTML = '<img src="' + tempImg + '">';
+            renderProjectTags();
+            syncProjectPresets();
+            document.getElementById('modal-body').className = 'modal show';
+        }
+
+        function deleteBody(id){
+            if(!confirm('确定删除这个素体吗？')) return;
+            data.bodies = data.bodies.filter(function(b){ return b.id != id; });
+            saveData();
+            renderBodies();
+        }
+
+        function editWardrobe(id){
+            var w = null;
+            for(var i = 0; i < data.wardrobe.length; i++){
+                if(data.wardrobe[i].id == id){ w = data.wardrobe[i]; break; }
+            }
+            if(!w) return;
+            resetFormState();
+            editingId = id;
+            document.getElementById('wardrobe-modal-title').textContent = '👗 编辑物品';
+            document.getElementById('w-name').value = w.name || '';
+            document.getElementById('w-type').value = w.type || '';
+            document.getElementById('w-size').value = w.size || '';
+            document.getElementById('w-body').value = w.body || '';
+            document.getElementById('w-notes').value = w.notes || '';
+            tempColors = (w.colors || []).slice();
+            tempImg = w.image || '';
+            if(tempImg) document.getElementById('w-prev').innerHTML = '<img src="' + tempImg + '">';
+            renderColorTags();
+            var ps = document.querySelectorAll('#w-color-presets .preset-tag');
+            for(var i = 0; i < ps.length; i++){
+                ps[i].className = tempColors.indexOf(ps[i].textContent) > -1 ? 'preset-tag active' : 'preset-tag';
+            }
+            document.getElementById('modal-wardrobe').className = 'modal show';
+        }
+
+        function deleteWardrobe(id){
+            if(!confirm('确定删除这件物品吗？')) return;
+            data.wardrobe = data.wardrobe.filter(function(w){ return w.id != id; });
+            saveData();
+            renderWardrobe();
+        }
+
+        // ========== 渲染 ==========
+        function renderAll(){
+            renderFilterProjects();
+            renderBodies();
+            renderWardrobe();
+        }
+
+        function renderBodies(){
+            var list = document.getElementById('bodies-list');
+            var empty = document.getElementById('bodies-empty');
+            var fs = document.getElementById('f-size').value;
+
+            var arr = [];
+            for(var i = 0; i < data.bodies.length; i++){
+                var b = data.bodies[i];
+                if(fs && b.size != fs) continue;
+                if(filterProject){
+                    var hasP = false;
+                    var ps = b.projects || [];
+                    for(var j = 0; j < ps.length; j++){
+                        if(ps[j] == filterProject){ hasP = true; break; }
+                    }
+                    if(!hasP) continue;
+                }
+                arr.push(b);
+            }
+
+            if(arr.length == 0){
+                list.innerHTML = '';
+                empty.className = 'empty show';
+                return;
+            }
+            empty.className = 'empty';
+
+            var html = '';
+            for(var i = 0; i < arr.length; i++){
+                var b = arr[i];
+                html += '<div class="body-card">';
+                html += '<div class="img">' + (b.image ? '<img src="' + b.image + '">' : '🧸') + '</div>';
+                html += '<div class="info">';
+                html += '<div class="name">' + esc(b.name) + '</div>';
+                html += '<div class="meta">' + esc(b.size) + ' · ' + esc(b.skin) + (b.brand ? ' · ' + esc(b.brand) : '') + '</div>';
+                if(b.projects && b.projects.length){
+                    html += '<div class="projects">';
+                    for(var j = 0; j < b.projects.length; j++){
+                        html += '<span class="project-tag">' + esc(b.projects[j]) + '</span>';
+                    }
+                    html += '</div>';
+                }
+                // 尺寸规格
+                var specs = [];
+                if(b.head) specs.push(['头围', b.head]);
+                if(b.height) specs.push(['身高', b.height]);
+                if(b.neck) specs.push(['脖围', b.neck]);
+                if(b.hip) specs.push(['臀围', b.hip]);
+                if(b.footL) specs.push(['脚长', b.footL]);
+                if(b.footW) specs.push(['脚宽', b.footW]);
+                if(specs.length){
+                    html += '<div class="specs" style="margin-top:8px">';
+                    for(var k = 0; k < specs.length; k++){
+                        html += '<div class="spec"><span>' + specs[k][0] + '</span> <span>' + esc(specs[k][1]) + '</span></div>';
+                    }
+                    html += '</div>';
+                }
+                if(b.notes){
+                    html += '<div class="meta" style="margin-top:8px">📝 ' + esc(b.notes) + '</div>';
+                }
+                html += '<div class="card-actions">';
+                html += '<button onclick="editBody(' + b.id + ')">✏️ 编辑</button>';
+                html += '<button class="del" onclick="deleteBody(' + b.id + ')">🗑 删除</button>';
+                html += '</div>';
+                html += '</div></div>';
+            }
+            list.innerHTML = html;
+        }
+
+        function renderWardrobe(){
+            var list = document.getElementById('wardrobe-list');
+            var empty = document.getElementById('wardrobe-empty');
+            var ft = document.getElementById('f-type').value;
+            var fc = document.getElementById('f-color').value.trim();
+
+            var arr = [];
+            for(var i = 0; i < data.wardrobe.length; i++){
+                var w = data.wardrobe[i];
+                if(ft && w.type != ft) continue;
+                if(fc){
+                    var hasC = false;
+                    var cs = w.colors || [];
+                    for(var j = 0; j < cs.length; j++){
+                        if(cs[j].indexOf(fc) > -1){ hasC = true; break; }
+                    }
+                    if(!hasC) continue;
+                }
+                arr.push(w);
+            }
+
+            if(arr.length == 0){
+                list.innerHTML = '';
+                empty.className = 'empty show';
+                return;
+            }
+            empty.className = 'empty';
+
+            var html = '';
+            for(var i = 0; i < arr.length; i++){
+                var w = arr[i];
+                html += '<div class="wardrobe-item">';
+                html += '<div class="img">' + (w.image ? '<img src="' + w.image + '">' : '👗') + '</div>';
+                html += '<div class="info">';
+                html += '<div class="name">' + esc(w.name) + '</div>';
+                html += '<div class="meta">';
+                html += '<span>' + esc(w.type) + '</span>';
+                if(w.size) html += '<span>· ' + esc(w.size) + '</span>';
+                if(w.body) html += '<span>· 适配:' + esc(w.body) + '</span>';
+                html += '</div>';
+                if(w.colors && w.colors.length){
+                    html += '<div class="colors">';
+                    for(var j = 0; j < w.colors.length; j++){
+                        html += '<span class="color-tag">' + esc(w.colors[j]) + '</span>';
+                    }
+                    html += '</div>';
+                }
+                if(w.notes){
+                    html += '<div class="meta" style="margin-top:6px">📝 ' + esc(w.notes) + '</div>';
+                }
+                html += '<div class="card-actions">';
+                html += '<button onclick="editWardrobe(' + w.id + ')">✏️ 编辑</button>';
+                html += '<button class="del" onclick="deleteWardrobe(' + w.id + ')">🗑 删除</button>';
+                html += '</div>';
+                html += '</div></div>';
+            }
+            list.innerHTML = html;
+        }
+
+        // ========== 初始化（原代码缺失的关键一步） ==========
+        loadData();
+        renderAll();
+    </script>
+</body>
+</html>
